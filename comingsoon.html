@@ -226,18 +226,21 @@ body::after {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 14px 16px;
-  cursor: default;
+  cursor: pointer;
   text-decoration: none;
   color: inherit;
-  opacity: 0.75;
+  opacity: 1;
   transition: all 0.25s;
 }
 .platform-item:hover {
-  opacity: 0.9;
-  border-color: var(--borderh);
+  opacity: 1;
+  border-color: var(--accent);
   background: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.platform-item:active {
+  transform: scale(0.98);
 }
 .platform-icon {
   width: 44px;
@@ -269,16 +272,21 @@ body::after {
   font-size: 11px;
   color: var(--ink3);
 }
-.coming-soon-tag {
+.working-tag {
   font-size: 9px;
   font-weight: 700;
-  color: var(--ink3);
-  background: var(--bg2);
+  color: var(--green);
+  background: var(--greenl);
   padding: 5px 10px;
   border-radius: 100px;
   letter-spacing: 1px;
   text-transform: uppercase;
   white-space: nowrap;
+}
+.external-icon {
+  font-size: 12px;
+  margin-left: 4px;
+  opacity: 0.6;
 }
 
 /* TELEGRAM BUTTON */
@@ -377,24 +385,24 @@ body::after {
     <div class="platform-list">
 
       <!-- Next Toppers -->
-      <div class="platform-item">
+      <a href="https://nxttoppers.lovable.app/" target="_blank" class="platform-item">
         <div class="platform-icon nt">🎯</div>
         <div class="platform-info">
-          <div class="platform-name">Next Toppers</div>
-          <div class="platform-meta">Premium Batches · Working</div>
+          <div class="platform-name">Next Toppers <span class="external-icon">↗</span></div>
+          <div class="platform-meta">Premium Batches · Click to access</div>
         </div>
-        <span class="coming-soon-tag">Working</span>
-      </div>
+        <span class="working-tag">Working</span>
+      </a>
 
       <!-- Mission JEET -->
-      <div class="platform-item">
+      <a href="https://mission-jeet.lovable.app/" target="_blank" class="platform-item">
         <div class="platform-icon mj">🏆</div>
         <div class="platform-info">
-          <div class="platform-name">Mission JEET</div>
-          <div class="platform-meta">Full Syllabus · Working</div>
+          <div class="platform-name">Mission JEET <span class="external-icon">↗</span></div>
+          <div class="platform-meta">Full Syllabus · Click to access</div>
         </div>
-        <span class="coming-soon-tag">Working</span>
-      </div>
+        <span class="working-tag">Working</span>
+      </a>
 
     </div>
 
