@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Mtaiirus — Apps & APKs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F2EB;
+  --bg2: #ECEAE2;
+  --ink: #1A1814;
+  --ink2: #6B6760;
+  --ink3: #B0ADA7;
+  --accent: #D4540E;
+  --accentl: #F0A87A;
+  --accentb: rgba(212,84,14,.08);
+  --green: #2D6A3F;
+  --greenl: #E4F0E8;
+  --blue: #1A4B8C;
+  --bluel: #E4EBF7;
+  --card: #FFFDFB;
+  --border: rgba(26,24,20,.1);
+  --borderh: rgba(26,24,20,.2);
+  --purple: #6B4CB0;
+  --purplel: #F0ECF8;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+
+/* Floating words */
+.floating-words{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;opacity:.04;font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.8rem,5vw,4rem);color:var(--ink);white-space:nowrap;user-select:none}
+.float-word{position:absolute;animation:floatAround 26s infinite alternate ease-in-out;letter-spacing:-2px}
+.float-word:nth-child(1){top:8%;left:3%;animation-duration:22s}
+.float-word:nth-child(2){top:22%;right:5%;animation-duration:30s;animation-delay:-5s}
+.float-word:nth-child(3){bottom:18%;left:8%;animation-duration:24s;animation-delay:-8s}
+.float-word:nth-child(4){bottom:32%;right:4%;animation-duration:28s;animation-delay:-13s}
+.float-word:nth-child(5){top:48%;left:28%;animation-duration:32s;animation-delay:-4s}
+.float-word:nth-child(6){top:68%;right:18%;animation-duration:20s;animation-delay:-10s}
+.float-word:nth-child(7){top:14%;left:58%;animation-duration:27s;animation-delay:-16s}
+.float-word:nth-child(8){bottom:8%;left:42%;animation-duration:34s;animation-delay:-7s}
+@keyframes floatAround{0%{transform:translate(0,0) rotate(0deg)}25%{transform:translate(35px,-25px) rotate(1.5deg)}50%{transform:translate(-25px,30px) rotate(-1.5deg)}75%{transform:translate(20px,15px) rotate(.8deg)}100%{transform:translate(-15px,-20px) rotate(-.8deg)}}
+
+/* Grain overlay */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
+
+/* ── HEADER ── */
+.hdr{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(245,242,235,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,60px);z-index:1000}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.blogo{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;background:#fff;border:1px solid var(--border)}
+.blogo img{width:36px;height:36px;object-fit:contain;display:block}
+.bname{font-family:'Syne',sans-serif;font-size:clamp(16px,4vw,20px);font-weight:800;color:var(--ink);letter-spacing:1.5px}
+.bname span{color:var(--accent)}
+.hdr-back{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--ink2);text-decoration:none;border:1px solid var(--border);border-radius:7px;padding:7px 14px;transition:all .2s;background:transparent;white-space:nowrap}
+.hdr-back:hover{color:var(--ink);border-color:var(--borderh);background:rgba(26,24,20,.04)}
+
+/* ── PAGE WRAPPER ── */
+.page{padding:clamp(80px,10vw,120px) clamp(16px,5vw,60px) clamp(48px,8vw,80px);max-width:900px;margin:0 auto;position:relative;z-index:1}
+
+/* ── PAGE HEADER ── */
+.page-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purplel);color:var(--purple);font-size:11px;font-weight:700;padding:6px 14px;border-radius:100px;letter-spacing:.8px;margin-bottom:20px;text-transform:uppercase}
+.page-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--purple);flex-shrink:0;animation:dotPulse 2s infinite}
+@keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.page-title{font-family:'Syne',sans-serif;font-size:clamp(32px,7vw,62px);font-weight:800;line-height:.95;letter-spacing:-2px;margin-bottom:12px;color:var(--ink)}
+.page-title em{font-style:normal;color:var(--accent)}
+.page-desc{font-size:14px;color:var(--ink2);line-height:1.8;max-width:480px;margin-bottom:36px}
+
+/* ── SECTION LABEL ── */
+.slbl-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.slbl-line{width:24px;height:2px;background:var(--accent);border-radius:2px;flex-shrink:0}
+.slbl-txt{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:2px}
+
+/* ── APP LIST ── */
+.app-list{display:flex;flex-direction:column;gap:10px}
+
+/* LIVE items — full clickable link */
+a.app-item{display:flex;align-items:center;gap:16px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;text-decoration:none;color:inherit;transition:all .25s;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
+a.app-item::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transform-origin:center;transition:transform .25s;border-radius:0 2px 2px 0}
+a.app-item:hover{border-color:var(--borderh);box-shadow:0 8px 32px rgba(26,24,20,.09);transform:translateX(4px)}
+a.app-item:hover::before{transform:scaleY(1)}
+a.app-item:active{transform:translateX(2px);box-shadow:0 4px 16px rgba(26,24,20,.06)}
+
+/* SOON items — same look but cursor pointer + links to comingsoon.html */
+.app-item-soon{display:flex;align-items:center;gap:16px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;text-decoration:none;color:inherit;transition:all .25s;position:relative;overflow:hidden;opacity:.72;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.app-item-soon:hover{opacity:1;border-color:var(--borderh);box-shadow:0 8px 32px rgba(26,24,20,.07);transform:translateX(3px)}
+.app-item-soon:active{transform:translateX(2px)}
+
+.app-ico{width:46px;height:46px;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--border);flex-shrink:0}
+.app-ico img{width:100%;height:100%;object-fit:contain;display:block}
+.app-ico-fallback{font-family:'Syne',sans-serif;font-size:15px;font-weight:800}
+
+.app-info{flex:1;min-width:0}
+.app-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.2px;margin-bottom:3px}
+.app-desc{font-size:12px;color:var(--ink2);line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.app-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.app-badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:100px;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap}
+.badge-live{background:var(--greenl);color:var(--green)}
+.badge-soon{background:var(--bg2);color:var(--ink3);border:1px solid var(--border)}
+.badge-mod{background:#FFF8F0;color:var(--accent);border:1px solid rgba(212,84,14,.2)}
+.app-arrow{color:var(--ink3);font-size:18px;transition:all .25s;line-height:1}
+a.app-item:hover .app-arrow{color:var(--accent);transform:translateX(3px)}
+.app-item-soon:hover .app-arrow{color:var(--accentl);transform:translateX(3px)}
+
+/* ── APK INFO CARD ── */
+.apk-info{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-top:36px}
+.apk-info-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:16px;letter-spacing:-.3px}
+.apk-steps{display:flex;flex-direction:column;gap:12px}
+.apk-step{display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--ink2);line-height:1.6}
+.apk-step-num{width:28px;height:28px;border-radius:8px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--accent);flex-shrink:0}
+.apk-step strong{color:var(--ink);font-weight:600}
+
+/* ── BOTTOM NOTE ── */
+.bottom-note{margin-top:40px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;display:flex;align-items:flex-start;gap:14px}
+.note-ico{font-size:22px;flex-shrink:0;margin-top:1px}
+.note-text{font-size:13px;color:var(--ink2);line-height:1.75}
+.note-text strong{color:var(--ink);font-weight:700}
+.note-text a{color:var(--accent);text-decoration:none;font-weight:600}
+.note-text a:hover{text-decoration:underline}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .45s ease,transform .45s ease}
+.rv.on{opacity:1;transform:translateY(0)}
+
+@media(max-width:600px){
+  .app-desc{display:none}
+  a.app-item,.app-item-soon{padding:14px 16px;gap:12px}
+  .app-ico{width:40px;height:40px;border-radius:10px}
+  .app-name{font-size:14px}
+  .bottom-note{flex-direction:column;gap:10px}
+  .apk-info{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- Floating words -->
+<div class="floating-words">
+  <div class="float-word">MOD APPS</div>
+  <div class="float-word">PREMIUM UNLOCKED</div>
+  <div class="float-word">NO ADS</div>
+  <div class="float-word">PW · UNACADEMY</div>
+  <div class="float-word">FREE ACCESS</div>
+  <div class="float-word">LATEST VERSIONS</div>
+  <div class="float-word">MTAIIRUS</div>
+  <div class="float-word">APK DOWNLOADS</div>
+</div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <a href="index.html" class="brand">
+    <div class="blogo">
+      <img src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" alt="Mtaiirus"
+        onerror="this.parentElement.innerHTML='<span style=\'font-family:Syne,sans-serif;font-size:19px;font-weight:800;color:var(--accent)\'>M</span>'">
+    </div>
+    <span class="bname">MTAI<span>IRUS</span></span>
+  </a>
+  <a href="index.html" class="hdr-back">← Back</a>
+</header>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- Page heading -->
+  <div class="rv">
+    <div class="page-tag"><span class="page-tag-dot"></span>Apps & APKs</div>
+    <h1 class="page-title">Premium Apps, <em>Unlocked</em></h1>
+    <p class="page-desc">Download modded APKs of India's top ed-tech platforms. Premium features unlocked, no ads, latest versions — all tested and safe.</p>
+  </div>
+
+  <!-- ── MOD APPS ── -->
+  <div class="slbl-row rv"><div class="slbl-line"></div><span class="slbl-txt">Modded Apps</span></div>
+
+  <div class="app-list">
+
+    <a href="https://drive.google.com/file/d/example1/view" target="_blank" rel="noopener" class="app-item rv">
+      <div class="app-ico">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvmNCtUxGTpR8gFKlx_lWZyT0-2LIb8Om63g&s"
+          alt="Physics Wallah Mod"
+          onerror="this.parentElement.innerHTML='<span class=\'app-ico-fallback\' style=\'color:#6B4CB0\'>PW</span>'">
+      </div>
+      <div class="app-info">
+        <div class="app-name">Physics Wallah (Mod)</div>
+        <div class="app-desc">Premium batches unlocked · No ads · All courses accessible · Latest v14.5.2</div>
+      </div>
+      <div class="app-meta">
+        <span class="app-badge badge-mod">Mod</span>
+        <span class="app-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="https://drive.google.com/file/d/example2/view" target="_blank" rel="noopener" class="app-item rv">
+      <div class="app-ico">
+        <img src="https://play-lh.googleusercontent.com/7DGKmCj88YPDGOBX0UTqRQDOJtEMkCGnJ4fPJ7JmJ5-0o4hDZzW4rJz1lH5O3n2k=s360"
+          alt="Unacademy Mod"
+          onerror="this.parentElement.innerHTML='<span class=\'app-ico-fallback\' style=\'color:#1A4B8C\'>U</span>'">
+      </div>
+      <div class="app-info">
+        <div class="app-name">Unacademy (Mod)</div>
+        <div class="app-desc">Plus subscription unlocked · Live classes · All educators · Latest v12.8.0</div>
+      </div>
+      <div class="app-meta">
+        <span class="app-badge badge-mod">Mod</span>
+        <span class="app-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="https://drive.google.com/file/d/example3/view" target="_blank" rel="noopener" class="app-item rv">
+      <div class="app-ico">
+        <img src="https://play-lh.googleusercontent.com/8FmG8xfwNlVQXkPjLQJXjGEbpK8DgIX9YH5pBvqjRv8qxkFlFJtD6P6LsEQOJq6O3w=s360"
+          alt="Vedantu Mod"
+          onerror="this.parentElement.innerHTML='<span class=\'app-ico-fallback\' style=\'color:#E53935\'>V</span>'">
+      </div>
+      <div class="app-info">
+        <div class="app-name">Vedantu (Mod)</div>
+        <div class="app-desc">Pro content unlocked · Live & recorded · All subjects · Latest v9.2.1</div>
+      </div>
+      <div class="app-meta">
+        <span class="app-badge badge-mod">Mod</span>
+        <span class="app-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ── COMING SOON APPS ── -->
+  <div class="slbl-row rv" style="margin-top:36px"><div class="slbl-line"></div><span class="slbl-txt">Coming Soon</span></div>
+
+  <div class="app-list">
+
+    <a href="comingsoon.html" class="app-item-soon rv">
+      <div class="app-ico">
+        <img src="https://play-lh.googleusercontent.com/dBSAxAj9_zGdXz7qXHqTDhBQxNCaUt5w0IcLk7GxM-m7KhGxM_O0KjThQJ5x_YPSUQ=s360"
+          alt="Byju's Mod"
+          onerror="this.parentElement.innerHTML='<span class=\'app-ico-fallback\' style=\'color:#813588\'>B</span>'">
+      </div>
+      <div class="app-info">
+        <div class="app-name">Byju's (Mod)</div>
+        <div class="app-desc">Premium learning program · All classes · Interactive content</div>
+      </div>
+      <div class="app-meta">
+        <span class="app-badge badge-soon">Soon</span>
+        <span class="app-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="comingsoon.html" class="app-item-soon rv">
+      <div class="app-ico">
+        <img src="https://play-lh.googleusercontent.com/wvVxjA2EiE28NRQUqOGFXJOoAzT3GNEfTdBj5FxPYKsGQVqGIVJMkqPEYkTLTF-QW70=s360"
+          alt="Aakash Mod"
+          onerror="this.parentElement.innerHTML='<span class=\'app-ico-fallback\' style=\'color:#0066CC\'>A</span>'">
+      </div>
+      <div class="app-info">
+        <div class="app-name">Aakash iTutor (Mod)</div>
+        <div class="app-desc">Complete test series · Video solutions · Study material unlocked</div>
+      </div>
+      <div class="app-meta">
+        <span class="app-badge badge-soon">Soon</span>
+        <span class="app-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="comingsoon.html" class="app-item-soon rv">
+      <div class="app-ico">
+        <img src="https://play-lh.googleusercontent.com/XtNPOYHdVJqTROKQYGFWQq5KZpCx1oJZxKjGIHkEXXUMJY8TFKQpNKwOHKLIWGLQLQ=s360"
+          alt="Allen Mod"
+          onerror="this.parentElement.innerHTML='<span class=\'app-ico-fallback\' style=\'color:#FF5722\'>AL</span>'">
+      </div>
+      <div class="app-info">
+        <div class="app-name">Allen Digital (Mod)</div>
+        <div class="app-desc">Classroom content · DPPs · Test series · Performance analytics</div>
+      </div>
+      <div class="app-meta">
+        <span class="app-badge badge-soon">Soon</span>
+        <span class="app-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- APK Installation Guide -->
+  <div class="apk-info rv">
+    <div class="apk-info-title">📦 How to Install APKs</div>
+    <div class="apk-steps">
+      <div class="apk-step">
+        <span class="apk-step-num">1</span>
+        <span><strong>Download</strong> the APK file from the link above to your device.</span>
+      </div>
+      <div class="apk-step">
+        <span class="apk-step-num">2</span>
+        <span><strong>Enable "Unknown Sources"</strong> in Settings → Security → Install unknown apps.</span>
+      </div>
+      <div class="apk-step">
+        <span class="apk-step-num">3</span>
+        <span><strong>Install</strong> the APK by opening the downloaded file and tapping Install.</span>
+      </div>
+      <div class="apk-step">
+        <span class="apk-step-num">4</span>
+        <span><strong>Open & Enjoy</strong> — all premium features are unlocked automatically. No login required.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom note -->
+  <div class="bottom-note rv">
+    <span class="note-ico">⚠️</span>
+    <div class="note-text">
+      <strong>Use at your own discretion.</strong><br>
+      All APKs are modded for educational purposes. We test each version before uploading. Join <a href="https://t.me/mtaiirus" target="_blank" rel="noopener">t.me/mtaiirus</a> for new app drops and update alerts.
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ── REDIRECT TARGET ── */
+  var REDIRECT = 'kehamhai.html';
+
+  /* ── DEVTOOLS REDIRECT ── */
+  var _dtFired = false;
+  var _threshold = 160;
+
+  function _redirect() {
+    if (_dtFired) return;
+    _dtFired = true;
+    window.location.replace(REDIRECT);
+  }
+
+  /* Size-based detection */
+  function _checkSize() {
+    var w = window.outerWidth  - window.innerWidth;
+    var h = window.outerHeight - window.innerHeight;
+    if (w > _threshold || h > _threshold) _redirect();
+  }
+  setInterval(_checkSize, 600);
+
+  /* Debugger timing trap */
+  setInterval(function() {
+    (function() {
+      var t = new Date();
+      debugger;
+      if (new Date() - t > 100) _redirect();
+    })();
+  }, 3000);
+
+  /* ── BLOCK RIGHT-CLICK ── */
+  document.addEventListener('contextmenu', function(e) { e.preventDefault(); e.stopPropagation(); return false; }, true);
+
+  /* ── BLOCK TEXT SELECT / DRAG / COPY / CUT ── */
+  ['selectstart','dragstart','copy','cut'].forEach(function(ev) {
+    document.addEventListener(ev, function(e) { e.preventDefault(); return false; });
+  });
+
+  /* ── BLOCK KEYBOARD SHORTCUTS ── */
+  document.addEventListener('keydown', function(e) {
+    var k = e.key || '';
+    if (e.keyCode === 123 || k === 'F12') { e.preventDefault(); e.stopPropagation(); return false; }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I','J','C','i','j','c'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; }
+    if ((e.ctrlKey || e.metaKey) && ['u','U','s','S','p','P','a','A'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; }
+  }, true);
+
+  /* ── BLOCK PRINT ── */
+  window.addEventListener('beforeprint', function(e) { e.stopImmediatePropagation(); window.print = function() { return false; }; }, true);
+
+  /* ── SILENCE CONSOLE ── */
+  try {
+    var _n = function() {};
+    ['log','warn','error','info','debug','table','dir','dirxml','trace','group','groupCollapsed','groupEnd','time','timeEnd','profile','profileEnd','count','clear'].forEach(function(m) {
+      if (console[m]) console[m] = _n;
+    });
+  } catch(_) {}
+
+  /* ── USER-SELECT OFF ── */
+  document.documentElement.style.setProperty('-webkit-user-select','none');
+  document.documentElement.style.setProperty('-moz-user-select','none');
+  document.documentElement.style.setProperty('-ms-user-select','none');
+  document.documentElement.style.setProperty('user-select','none');
+
+})();
+
+/* ── SCROLL REVEAL ── */
+(function() {
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e, i) {
+      if (e.isIntersecting) {
+        setTimeout(function() { e.target.classList.add('on'); }, i * 70);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+  document.querySelectorAll('.rv').forEach(function(el) { obs.observe(el); });
+})();
+</script>
+</body>
+</html>
