@@ -32,6 +32,117 @@
     html{scroll-behavior:smooth}
     body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 
+    /* ── PERFECT ANNOUNCEMENT BUTTON ── */
+    .announcement-float-btn {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #D4540E, #e8651f);
+      color: #fff;
+      border: 2px solid rgba(255,255,255,.15);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 
+        0 8px 24px rgba(212,84,14,.4),
+        0 2px 8px rgba(26,24,20,.2),
+        inset 0 1px 0 rgba(255,255,255,.15);
+      z-index: 9998;
+      transition: all .3s cubic-bezier(.4,0,.2,1);
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      animation: floatIn .6s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes floatIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .announcement-float-btn::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, transparent, rgba(212,84,14,.3), transparent, rgba(240,168,122,.2), transparent);
+      animation: rotateBorder 4s linear infinite;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    @keyframes rotateBorder {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .announcement-float-btn:hover::before {
+      opacity: 1;
+    }
+    .announcement-float-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.2), transparent 60%);
+      pointer-events: none;
+    }
+    .announcement-float-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 
+        0 12px 32px rgba(212,84,14,.5),
+        0 4px 12px rgba(26,24,20,.3),
+        inset 0 1px 0 rgba(255,255,255,.2);
+      border-color: rgba(255,255,255,.25);
+    }
+    .announcement-float-btn:active {
+      transform: scale(.92);
+      box-shadow: 
+        0 4px 12px rgba(212,84,14,.3),
+        0 1px 4px rgba(26,24,20,.2);
+      transition: all .1s;
+    }
+    .announcement-float-btn .pulse-ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 2px solid rgba(212,84,14,.4);
+      animation: pulseRing 2.5s ease-out infinite;
+      pointer-events: none;
+    }
+    .announcement-float-btn .pulse-ring:nth-child(2) {
+      animation-delay: .8s;
+      border-color: rgba(240,168,122,.3);
+    }
+    @keyframes pulseRing {
+      0% { transform: scale(1); opacity: 1; }
+      50% { opacity: .5; }
+      100% { transform: scale(1.8); opacity: 0; }
+    }
+    .announcement-float-btn .badge-dot {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 14px;
+      height: 14px;
+      background: #fff;
+      border-radius: 50%;
+      border: 2px solid #D4540E;
+      animation: badgePulse 2s ease-in-out infinite;
+    }
+    @keyframes badgePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    .announcement-float-btn .badge-dot::after {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border-radius: 50%;
+      background: #D4540E;
+    }
+
     .floating-words{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;opacity:.05;font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.8rem,5vw,5rem);color:var(--ink);white-space:nowrap;user-select:none}
     .float-word{position:absolute;animation:floatAround 26s infinite alternate ease-in-out;letter-spacing:-2px}
     .float-word:nth-child(1){top:8%;left:3%;animation-duration:22s}
@@ -50,7 +161,6 @@
     .brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
     .blogo{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;background:#fff;border:1px solid var(--border)}
     .blogo img{width:36px;height:36px;object-fit:contain;display:block}
-    /* FALLBACK LOGO — uses Mtaiirus M */
     .bname{font-family:'Syne',sans-serif;font-size:clamp(16px,4vw,20px);font-weight:800;color:var(--ink);letter-spacing:1.5px}
     .bname span{color:var(--accent)}
     .nav{display:flex;align-items:center;gap:2px}
@@ -256,6 +366,13 @@
       .btn-primary,.btn-accent,.btn-ghost,.btn-light,.btn-outline-light{font-size:13px;padding:13px 18px}
       .pcard-big{min-height:200px}
       .pcard-big-num{font-size:52px}
+      .announcement-float-btn {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
     }
     @media(max-width:400px){
       .hbtns{flex-direction:column;align-items:flex-start}
@@ -286,8 +403,15 @@
   <div class="float-word">MTAIIRUS</div>
 </div>
 
+<!-- PERFECT ANNOUNCEMENT BUTTON -->
+<a href="announcement.html" class="announcement-float-btn" title="Latest Announcements" aria-label="Open Announcements">
+  <span class="pulse-ring"></span>
+  <span class="pulse-ring"></span>
+  <span class="badge-dot"></span>
+  <i class="fas fa-bullhorn"></i>
+</a>
+
 <header class="hdr">
-  <!-- BRAND updated to Mtaiirus with fallback logo -->
   <a href="/" class="brand">
     <div class="blogo"><img src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" alt="Mtaiirus" onerror="this.parentElement.innerHTML='<span style=\'font-family:Syne,sans-serif;font-size:19px;font-weight:800;color:var(--accent)\'>M</span>'"></div>
     <span class="bname">MTAI<span>IRUS</span></span>
@@ -307,7 +431,8 @@
   <a href="#subjects" onclick="cd()">📚 Subjects</a>
   <a href="#features" onclick="cd()">✨ Features</a>
   <a href="#faq" onclick="cd()">❓ FAQ</a>
-  <a href="https://t.me/mtaiirus" onclick="cd()">📢 Telegram</a>
+  <a href="announcement.html" onclick="cd()">📢 Announcements</a>
+  <a href="https://t.me/mtaiirus" onclick="cd()">💬 Telegram</a>
 </div>
 
 <section id="home">
@@ -534,7 +659,7 @@
     </div>
     <div class="fcol"><h4>Access</h4><ul><li><a href="apps.html">Apps</a></li><li><a href="web.html">Web</a></li></ul></div>
     <div class="fcol"><h4>Subjects</h4><ul><li><a href="#subjects">Mathematics</a></li><li><a href="#subjects">Physics</a></li><li><a href="#subjects">Chemistry</a></li><li><a href="#subjects">Biology</a></li></ul></div>
-    <div class="fcol"><h4>Community</h4><ul><li><a href="https://t.me/mtaiirus">Telegram Channel</a></li><li><a href="https://t.me/mtaiirus">Get Support</a></li></ul></div>
+    <div class="fcol"><h4>Community</h4><ul><li><a href="announcement.html">Announcements</a></li><li><a href="https://t.me/mtaiirus">Telegram Channel</a></li><li><a href="https://t.me/mtaiirus">Get Support</a></li></ul></div>
     <div class="fcol"><h4>Site</h4><ul><li><a href="#platforms">Platforms</a></li><li><a href="#features">Features</a></li><li><a href="#faq">FAQ</a></li></ul></div>
   </div>
   <div class="fbot"><p>© 2025 Mtaiirus</p><p>Made with <span class="heart">♥</span> in India</p></div>
@@ -543,108 +668,40 @@
 <script>
 (function() {
   'use strict';
-
-  /* ── REDIRECT TARGET ── */
   var REDIRECT = 'kehamhai.html';
-
-  /* ── DEVTOOLS REDIRECT ── */
   var _dtFired = false;
   var _threshold = 160;
-
-  function _redirect() {
-    if (_dtFired) return;
-    _dtFired = true;
-    window.location.replace(REDIRECT);
-  }
-
-  /* Size-based detection */
-  function _checkSize() {
-    var w = window.outerWidth  - window.innerWidth;
-    var h = window.outerHeight - window.innerHeight;
-    if (w > _threshold || h > _threshold) _redirect();
-  }
+  function _redirect() { if (_dtFired) return; _dtFired = true; window.location.replace(REDIRECT); }
+  function _checkSize() { var w = window.outerWidth - window.innerWidth; var h = window.outerHeight - window.innerHeight; if (w > _threshold || h > _threshold) _redirect(); }
   setInterval(_checkSize, 600);
-
-  /* Debugger timing trap */
-  setInterval(function() {
-    (function() {
-      var t = new Date();
-      debugger;
-      if (new Date() - t > 100) _redirect();
-    })();
-  }, 3000);
-
-  /* ── BLOCK RIGHT-CLICK ── */
+  setInterval(function() { (function() { var t = new Date(); debugger; if (new Date() - t > 100) _redirect(); })(); }, 3000);
   document.addEventListener('contextmenu', function(e) { e.preventDefault(); e.stopPropagation(); return false; }, true);
-
-  /* ── BLOCK TEXT SELECT / DRAG / COPY / CUT ── */
-  ['selectstart','dragstart','copy','cut'].forEach(function(ev) {
-    document.addEventListener(ev, function(e) { e.preventDefault(); return false; });
-  });
-
-  /* ── BLOCK KEYBOARD SHORTCUTS ── */
-  document.addEventListener('keydown', function(e) {
-    var k = e.key || '';
-    if (e.keyCode === 123 || k === 'F12') { e.preventDefault(); e.stopPropagation(); return false; }
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I','J','C','i','j','c'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; }
-    if ((e.ctrlKey || e.metaKey) && ['u','U','s','S','p','P','a','A'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; }
-  }, true);
-
-  /* ── BLOCK PRINT ── */
+  ['selectstart','dragstart','copy','cut'].forEach(function(ev) { document.addEventListener(ev, function(e) { e.preventDefault(); return false; }); });
+  document.addEventListener('keydown', function(e) { var k = e.key || ''; if (e.keyCode === 123 || k === 'F12') { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I','J','C','i','j','c'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && ['u','U','s','S','p','P','a','A'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } }, true);
   window.addEventListener('beforeprint', function(e) { e.stopImmediatePropagation(); window.print = function() { return false; }; }, true);
-
-  /* ── SILENCE CONSOLE ── */
-  try {
-    var _n = function() {};
-    ['log','warn','error','info','debug','table','dir','dirxml','trace','group','groupCollapsed','groupEnd','time','timeEnd','profile','profileEnd','count','clear'].forEach(function(m) {
-      if (console[m]) console[m] = _n;
-    });
-  } catch(_) {}
-
-  /* ── USER-SELECT OFF ── */
+  try { var _n = function() {}; ['log','warn','error','info','debug','table','dir','dirxml','trace','group','groupCollapsed','groupEnd','time','timeEnd','profile','profileEnd','count','clear'].forEach(function(m) { if (console[m]) console[m] = _n; }); } catch(_) {}
   document.documentElement.style.setProperty('-webkit-user-select','none');
   document.documentElement.style.setProperty('-moz-user-select','none');
   document.documentElement.style.setProperty('-ms-user-select','none');
   document.documentElement.style.setProperty('user-select','none');
-
 })();
 
-/* ── SCROLL REVEAL ── */
 (function() {
-  var obs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e, i) {
-      if (e.isIntersecting) { setTimeout(function() { e.target.classList.add('on'); }, i * 60); obs.unobserve(e.target); }
-    });
-  }, { threshold: 0.06, rootMargin: '0px 0px -24px 0px' });
+  var obs = new IntersectionObserver(function(entries) { entries.forEach(function(e, i) { if (e.isIntersecting) { setTimeout(function() { e.target.classList.add('on'); }, i * 60); obs.unobserve(e.target); } }); }, { threshold: 0.06, rootMargin: '0px 0px -24px 0px' });
   document.querySelectorAll('.rv').forEach(function(el) { obs.observe(el); });
 })();
 
-/* ── HAMBURGER ── */
 (function() {
-  var ham = document.getElementById('ham');
-  var drawer = document.getElementById('drawer');
-  if (!ham || !drawer) return;
-  ham.addEventListener('click', function(e) {
-    e.stopPropagation();
-    drawer.classList.toggle('open');
-    ham.textContent = drawer.classList.contains('open') ? '✕' : '☰';
-  });
+  var ham = document.getElementById('ham'); var drawer = document.getElementById('drawer'); if (!ham || !drawer) return;
+  ham.addEventListener('click', function(e) { e.stopPropagation(); drawer.classList.toggle('open'); ham.textContent = drawer.classList.contains('open') ? '✕' : '☰'; });
   function cd() { drawer.classList.remove('open'); ham.textContent = '☰'; }
   document.addEventListener('click', function(e) { if (!ham.contains(e.target) && !drawer.contains(e.target)) cd(); });
   document.addEventListener('touchstart', function(e) { if (!ham.contains(e.target) && !drawer.contains(e.target)) cd(); }, { passive: true });
   window.cd = cd;
 })();
 
-/* ── FAQ ── */
 (function() {
-  document.querySelectorAll('.faqq').forEach(function(q) {
-    q.addEventListener('click', function() {
-      var item = q.parentElement;
-      var wasOpen = item.classList.contains('open');
-      document.querySelectorAll('.faqitem').forEach(function(i) { i.classList.remove('open'); });
-      if (!wasOpen) item.classList.add('open');
-    });
-  });
+  document.querySelectorAll('.faqq').forEach(function(q) { q.addEventListener('click', function() { var item = q.parentElement; var wasOpen = item.classList.contains('open'); document.querySelectorAll('.faqitem').forEach(function(i) { i.classList.remove('open'); }); if (!wasOpen) item.classList.add('open'); }); });
 })();
 </script>
 </body>
