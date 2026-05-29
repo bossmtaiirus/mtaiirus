@@ -1,0 +1,544 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>EduBatches · standalone lecture player</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --accent: #5a4bda; --accent-light: #7c6ef0; --bg-dark: #000000; }
+  body { background: #000; overflow: hidden; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; user-select: none; height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; }
+
+  /* main player container — fills entire viewport, no browser UI interference */
+  .player-wrap { width: 100%; height: 100%; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
+
+  #video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+
+  /* iframe fallback (embed mode) */
+  #iframe-wrap { position: absolute; inset: 0; display: none; z-index: 5; background: #000; }
+  #iframe-wrap iframe { width: 100%; height: 100%; border: none; background: #000; }
+  #iframe-wrap.active { display: block; }
+
+  /* overlays */
+  .ov { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 20; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; pointer-events: auto; }
+  .ov.hidden { display: none; }
+
+  #no-video-ov svg { width: 68px; height: 68px; opacity: .3; color: white; }
+  #no-video-ov h2 { font-size: 1rem; font-weight: 500; color: white; letter-spacing: -0.2px; }
+  #no-video-ov p { font-size: .78rem; color: rgba(255,255,255,.45); }
+
+  #loading-ov { background: rgba(0,0,0,.7); backdrop-filter: blur(8px); padding: 18px 28px; border-radius: 28px; color: white; font-size: .82rem; }
+  .spinner { width: 30px; height: 30px; border: 3px solid rgba(255,255,255,.15); border-top-color: var(--accent-light); border-radius: 50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #error-ov { background: rgba(10,10,10,.96); border: 1px solid rgba(255,255,255,.1); padding: 24px 26px; border-radius: 24px; color: white; min-width: 300px; max-width: 88vw; gap: 12px; backdrop-filter: blur(4px); }
+  #error-ov h3 { font-size: .9rem; font-weight: 500; }
+  #err-details { font-size: .7rem; color: rgba(255,255,255,.55); word-break: break-all; line-height: 1.5; max-height: 70px; overflow: auto; }
+  .err-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+  .ebtn { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); color: white; padding: 7px 13px; border-radius: 40px; font-size: .76rem; cursor: pointer; transition: background .18s; }
+  .ebtn:hover { background: rgba(255,255,255,.14); }
+  .ebtn.pri { background: var(--accent); border-color: var(--accent); }
+  .ebtn.pri:hover { background: var(--accent-light); }
+
+  /* title bar (minimal) */
+  #title-bar { position: absolute; top: 0; left: 0; right: 0; padding: 12px 18px; background: linear-gradient(to bottom,rgba(0,0,0,.7),transparent); display: flex; align-items: center; justify-content: space-between; z-index: 10; transition: opacity .3s; pointer-events: auto; }
+  #vid-title { font-size: .82rem; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: calc(100% - 56px); text-shadow: 0 1px 4px rgba(0,0,0,.6); letter-spacing: -0.2px; }
+  #close-btn { width: 34px; height: 34px; border-radius: 30px; background: rgba(0,0,0,.5); backdrop-filter: blur(6px); border: none; color: white; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+  #close-btn:hover { background: rgba(255,255,255,.2); transform: scale(0.96); }
+
+  /* control bar */
+  #controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.4) 70%,transparent 100%); padding: 18px 16px 14px; z-index: 10; transition: opacity .3s; pointer-events: auto; }
+
+  .player-wrap.hide-ui #controls,
+  .player-wrap.hide-ui #title-bar { opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+  .player-wrap.hide-ui { cursor: none; }
+
+  /* progress bar */
+  #prog-wrap { width: 100%; height: 18px; display: flex; align-items: center; cursor: pointer; margin-bottom: 9px; }
+  #prog-track { width: 100%; height: 4px; background: rgba(255,255,255,.2); border-radius: 6px; position: relative; transition: height .13s; }
+  #prog-wrap:hover #prog-track { height: 6px; }
+  #prog-buf { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(255,255,255,.25); border-radius: 6px; pointer-events: none; }
+  #prog-fill { height: 100%; background: var(--accent); border-radius: 6px; width: 0%; position: relative; pointer-events: none; box-shadow: 0 0 3px rgba(90,75,218,0.5); }
+  #prog-fill::after { content: ''; position: absolute; right: -7px; top: 50%; transform: translateY(-50%) scale(0); width: 14px; height: 14px; background: white; border-radius: 50%; transition: transform .12s; box-shadow: 0 0 4px rgba(0,0,0,.5); }
+  #prog-wrap:hover #prog-fill::after { transform: translateY(-50%) scale(1); }
+  #prog-tip { position: absolute; bottom: 22px; transform: translateX(-50%); background: rgba(0,0,0,.85); color: white; font-size: .68rem; padding: 4px 8px; border-radius: 8px; pointer-events: none; white-space: nowrap; font-family: monospace; display: none; }
+
+  /* buttons row */
+  .ctrl-row { display: flex; align-items: center; gap: 4px; }
+  .spacer { flex: 1; }
+  .cbtn { width: 36px; height: 36px; border-radius: 30px; background: rgba(0,0,0,.4); backdrop-filter: blur(4px); border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; flex-shrink: 0; }
+  .cbtn:hover { background: rgba(255,255,255,.18); transform: scale(1.02); }
+  .cbtn svg { width: 18px; height: 18px; fill: white; }
+
+  .vol-grp { display: flex; align-items: center; gap: 2px; background: rgba(0,0,0,.3); border-radius: 40px; padding: 0 5px; }
+  #vol-sl { width: 70px; height: 4px; -webkit-appearance: none; appearance: none; background: rgba(255,255,255,.3); border-radius: 4px; outline: none; cursor: pointer; }
+  #vol-sl::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: white; border-radius: 50%; cursor: pointer; box-shadow: 0 0 2px black; }
+
+  #time-dsp { font-size: .73rem; color: rgba(255,255,255,.9); font-variant-numeric: tabular-nums; white-space: nowrap; padding: 0 8px; font-weight: 500; text-shadow: 0 1px 2px black; }
+
+  #spd-btn { font-size: .73rem; font-weight: 600; color: white; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,.2); border-radius: 30px; padding: 4px 10px; cursor: pointer; white-space: nowrap; height: 30px; display: flex; align-items: center; transition: all .15s; }
+  #spd-btn:hover { background: rgba(255,255,255,.15); }
+
+  #spd-pop { position: absolute; bottom: 70px; right: 20px; background: rgba(16,16,20,.98); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.12); border-radius: 20px; overflow: hidden; z-index: 30; min-width: 98px; display: none; box-shadow: 0 10px 20px rgba(0,0,0,.5); }
+  #spd-pop.open { display: block; }
+  #spd-pop button { width: 100%; padding: 10px 18px; text-align: left; font-size: .78rem; font-weight: 500; color: rgba(255,255,255,.8); background: none; border: none; cursor: pointer; transition: background .1s; }
+  #spd-pop button:hover { background: rgba(255,255,255,.1); }
+  #spd-pop button.on { color: var(--accent-light); font-weight: 700; background: rgba(90,75,218,0.2); }
+
+  #seek-flash { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: white; font-size: 1rem; font-weight: 700; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); padding: 10px 20px; border-radius: 50px; z-index: 25; pointer-events: none; opacity: 0; transition: opacity .2s; letter-spacing: 0.5px; }
+  #seek-flash.show { opacity: 1; }
+  #kb-hint { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: white; font-size: .75rem; background: rgba(0,0,0,.7); backdrop-filter: blur(10px); padding: 6px 16px; border-radius: 40px; z-index: 25; pointer-events: none; opacity: 0; white-space: nowrap; }
+  #kb-hint.show { animation: fadeTip 1.5s ease forwards; }
+  @keyframes fadeTip { 0%{opacity:0;transform:translate(-50%,-50%) scale(0.92)} 15%{opacity:1;transform:translate(-50%,-50%) scale(1)} 70%{opacity:1} 100%{opacity:0} }
+
+  @media(max-width:540px) {
+    #vol-sl { width: 55px; }
+    .cbtn { width: 32px; height: 32px; }
+    .cbtn svg { width: 16px; height: 16px; }
+    #time-dsp { font-size: .65rem; }
+    #spd-btn { font-size: .7rem; padding: 3px 8px; height: 28px; }
+  }
+
+  /* disable body scroll / no chrome overflow */
+  ::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+<div class="player-wrap" id="wrap">
+
+  <div id="title-bar">
+    <div id="vid-title">📺 EduBatches Player</div>
+    <button id="close-btn" onclick="closePlayer()" aria-label="Close">✕</button>
+  </div>
+
+  <video id="video" playsinline preload="metadata"></video>
+
+  <!-- iframe fallback for restricted streams -->
+  <div id="iframe-wrap">
+    <iframe id="iframe-player" allowfullscreen allow="autoplay; fullscreen; encrypted-media" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-presentation"></iframe>
+  </div>
+
+  <!-- overlays -->
+  <div class="ov" id="no-video-ov">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2" width="56" height="56">
+      <rect x="2" y="4" width="20" height="16" rx="2"/>
+      <path d="M9 8l6 4-6 4V8z" fill="currentColor" stroke="none"/>
+    </svg>
+    <h2>No Lecture Selected</h2>
+    <p>Open from EduBatches dashboard</p>
+  </div>
+
+  <div class="ov hidden" id="loading-ov">
+    <div class="spinner"></div>
+    <span style="color:white;font-size:.8rem">Loading stream...</span>
+  </div>
+
+  <div class="ov hidden" id="error-ov">
+    <h3>⚠️ Playback failed</h3>
+    <div id="err-details"></div>
+    <div class="err-btns">
+      <button class="ebtn pri" onclick="retryNative()">Retry</button>
+      <button class="ebtn" onclick="tryIframe()">Switch to Embed</button>
+      <button class="ebtn" onclick="openInBrowser()">Open in tab</button>
+      <button class="ebtn" onclick="copyUrl()">Copy link</button>
+    </div>
+  </div>
+
+  <div id="seek-flash"></div>
+  <div id="kb-hint"></div>
+
+  <div id="controls">
+    <div id="prog-wrap">
+      <div id="prog-track">
+        <div id="prog-buf"></div>
+        <div id="prog-fill"></div>
+        <div id="prog-tip"></div>
+      </div>
+    </div>
+    <div class="ctrl-row">
+      <button class="cbtn" id="play-btn" onclick="togglePlay()" title="Play/Pause (Space)">
+        <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="cbtn" onclick="seekBy(-10)" title="Rewind 10s (←)">
+        <svg viewBox="0 0 24 24"><path d="M12.5 4C8.09 4 4.54 7.55 4.54 11.96H2l3.23 3.23.06.13 3.36-3.36H6.54A5.96 5.96 0 0 1 12.5 6c3.3 0 5.96 2.66 5.96 5.96S15.8 17.92 12.5 17.92c-1.65 0-3.14-.67-4.22-1.76l-1.42 1.42C8.24 18.99 10.25 19.92 12.5 19.92c4.41 0 7.96-3.55 7.96-7.96S16.91 4 12.5 4zm-.5 5v4.25l3.64 2.16.66-1.12L13.25 12.5V9H12z"/></svg>
+      </button>
+      <button class="cbtn" onclick="seekBy(10)" title="Forward 10s (→)">
+        <svg viewBox="0 0 24 24"><path d="M11.5 4c4.41 0 7.96 3.55 7.96 7.96H22l-3.23 3.23-.06.13-3.36-3.36h2.11A5.96 5.96 0 0 0 11.5 6 5.96 5.96 0 0 0 5.54 11.96 5.96 5.96 0 0 0 11.5 17.92c1.65 0 3.14-.67 4.22-1.76l1.42 1.42c-1.38 1.31-3.25 2.1-5.64 2.1C7.09 19.68 3.54 16.13 3.54 11.72S7.09 4 11.5 4zm.5 5v4.25l3.64 2.16-.66 1.12L11.5 14.3V9H12z"/></svg>
+      </button>
+      <div class="vol-grp">
+        <button class="cbtn" onclick="toggleMute()" title="Mute (M)">
+          <svg id="vol-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+        <input type="range" id="vol-sl" min="0" max="1" step="0.02" value="0.8" oninput="setVol(this.value)">
+      </div>
+      <span id="time-dsp">0:00 / 0:00</span>
+      <div class="spacer"></div>
+      <button id="spd-btn" onclick="toggleSpeedMenu()">1×</button>
+      <div id="spd-pop"></div>
+      <button class="cbtn" onclick="toggleFS()" title="Fullscreen (F)">
+        <svg id="fs-icon" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.7/hls.min.js"></script>
+<script>
+  // --------------------------------------------------------------
+  //  EduBatches STANDALONE PLAYER — opens in current tab (no extra chrome popup)
+  //  Full control, no external window management, stays inside browser tab.
+  // --------------------------------------------------------------
+  
+  // DOM elements
+  const wrap = document.getElementById('wrap');
+  const vid = document.getElementById('video');
+  const iframeWrap = document.getElementById('iframe-wrap');
+  const iframeEl = document.getElementById('iframe-player');
+  const playIcon = document.getElementById('play-icon');
+  const volIcon = document.getElementById('vol-icon');
+  const volSl = document.getElementById('vol-sl');
+  const timeDsp = document.getElementById('time-dsp');
+  const progWrap = document.getElementById('prog-wrap');
+  const progFill = document.getElementById('prog-fill');
+  const progBuf = document.getElementById('prog-buf');
+  const progTip = document.getElementById('prog-tip');
+  const spdBtn = document.getElementById('spd-btn');
+  const spdPop = document.getElementById('spd-pop');
+  const fsIcon = document.getElementById('fs-icon');
+  const seekFlash = document.getElementById('seek-flash');
+  const kbHint = document.getElementById('kb-hint');
+  const titleEl = document.getElementById('vid-title');
+  const errDetails = document.getElementById('err-details');
+
+  const OV = {
+    none: document.getElementById('no-video-ov'),
+    loading: document.getElementById('loading-ov'),
+    error: document.getElementById('error-ov'),
+  };
+
+  let currentUrl = null;
+  const PROXY = "https://swplayer.maxxphi4321.workers.dev/?url=";
+  let hlsInst = null;
+  let hideTimer = null;
+  let sfTimer = null;
+  let isMuted = false;
+  let prevVol = 0.8;
+  let usingIframe = false;
+  const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+  let curSpeed = 1;
+
+  function showOv(name) {
+    Object.entries(OV).forEach(([k, el]) => el.classList.toggle('hidden', k !== name));
+  }
+
+  function proxyUrl(url) {
+    if (!url) return url;
+    if (url.startsWith("https://swplayer.maxxphi4321.workers.dev")) return url;
+    if (url.startsWith("blob:")) return url;
+    if (url.includes('.m3u8') || url.includes('manifest')) return PROXY + encodeURIComponent(url);
+    return PROXY + encodeURIComponent(url);
+  }
+
+  function buildSpeedMenu() {
+    spdPop.innerHTML = SPEEDS.map(s =>
+      `<button onclick="setSpeed(${s})" data-s="${s}" class="${s===1 ? 'on' : ''}">${s}×</button>`
+    ).join('');
+  }
+
+  function setSpeed(s) {
+    curSpeed = s;
+    vid.playbackRate = s;
+    spdBtn.textContent = s + '×';
+    spdPop.querySelectorAll('button').forEach(btn => {
+      let val = parseFloat(btn.dataset.s);
+      btn.classList.toggle('on', Math.abs(val - s) < 0.01);
+    });
+    spdPop.classList.remove('open');
+    save('speed', s);
+    hint(`⚡ ${s}× speed`);
+  }
+
+  function toggleSpeedMenu() { spdPop.classList.toggle('open'); }
+
+  function destroyHls() {
+    if (hlsInst) { hlsInst.destroy(); hlsInst = null; }
+    vid.src = '';
+    vid.load();
+  }
+
+  function tryNative(url) {
+    destroyHls();
+    vid.src = url;
+    vid.load();
+    vid.play().then(() => showOv(null)).catch(err => {
+      if (err.name === 'NotAllowedError') showOv(null);
+      else {
+        console.warn('native error', err.message);
+        if (typeof Hls !== 'undefined' && Hls.isSupported() && (url.includes('.m3u8') || url.includes('m3u8'))) {
+          tryHls(url);
+        } else {
+          showError(`Cannot play directly: ${err.message}`);
+        }
+      }
+    });
+  }
+
+  function tryHls(url) {
+    if (typeof Hls === 'undefined' || !Hls.isSupported()) {
+      showError('HLS not supported in this browser.');
+      return;
+    }
+    destroyHls();
+    showOv('loading');
+    hlsInst = new Hls({ enableWorker: true, lowLatencyMode: false });
+    hlsInst.loadSource(url);
+    hlsInst.attachMedia(vid);
+    hlsInst.on(Hls.Events.MANIFEST_PARSED, () => {
+      vid.play().catch(() => {});
+      showOv(null);
+    });
+    hlsInst.on(Hls.Events.ERROR, (event, data) => {
+      if (data.fatal) {
+        destroyHls();
+        showError(`Stream error: ${data.details}\nTry embed mode.`);
+      }
+    });
+  }
+
+  function loadVideo(url, title) {
+    if (!url) return;
+    currentUrl = url;
+    usingIframe = false;
+    iframeWrap.classList.remove('active');
+    iframeEl.src = '';
+    document.getElementById('controls').style.display = '';
+    showOv('loading');
+    titleEl.textContent = title || 'Lecture Stream';
+    document.title = (title || 'Lecture') + ' · EduBatches';
+
+    let finalUrl = proxyUrl(url);
+    const lower = finalUrl.toLowerCase();
+    if (lower.includes('.m3u8') || lower.includes('master.m3u8')) {
+      tryHls(finalUrl);
+    } else {
+      tryNative(finalUrl);
+    }
+  }
+
+  function retryNative() {
+    if (currentUrl) loadVideo(currentUrl, titleEl.textContent);
+  }
+
+  function tryIframe() {
+    if (!currentUrl) return;
+    usingIframe = true;
+    iframeEl.srcdoc = ''; 
+    iframeEl.src = currentUrl;
+    iframeWrap.classList.add('active');
+    document.getElementById('controls').style.display = 'none';
+    showOv(null);
+    hint('🌐 Embedded view active');
+  }
+
+  function showError(msg) {
+    showOv('error');
+    errDetails.textContent = msg;
+  }
+
+  function togglePlay() {
+    if (usingIframe || !currentUrl) return;
+    if (vid.paused) vid.play().catch(e => showError(e.message));
+    else vid.pause();
+  }
+
+  function seekBy(secs) {
+    if (!vid.duration) return;
+    vid.currentTime = Math.min(Math.max(vid.currentTime + secs, 0), vid.duration);
+    flash(secs > 0 ? `+${secs}s` : `${secs}s`);
+  }
+
+  function flash(msg) {
+    seekFlash.textContent = msg;
+    seekFlash.classList.add('show');
+    clearTimeout(sfTimer);
+    sfTimer = setTimeout(() => seekFlash.classList.remove('show'), 700);
+  }
+
+  function setVol(v) {
+    let volVal = parseFloat(v);
+    vid.volume = volVal;
+    if (volVal === 0) isMuted = true;
+    else isMuted = false;
+    updateVolIcon();
+    save('vol', volVal);
+  }
+
+  function toggleMute() {
+    if (isMuted) {
+      vid.volume = prevVol > 0 ? prevVol : 0.8;
+      volSl.value = vid.volume;
+      isMuted = false;
+    } else {
+      prevVol = vid.volume;
+      vid.volume = 0;
+      volSl.value = 0;
+      isMuted = true;
+    }
+    updateVolIcon();
+    hint(isMuted ? '🔇 Muted' : `🔊 Volume ${Math.round(vid.volume*100)}%`);
+  }
+
+  function updateVolIcon() {
+    const v = vid.volume;
+    if (isMuted || v === 0) volIcon.innerHTML = '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
+    else if (v < 0.4) volIcon.innerHTML = '<path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5z"/>';
+    else volIcon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+  }
+
+  function toggleFS() {
+    if (!document.fullscreenElement) wrap.requestFullscreen().catch(e=>{});
+    else document.exitFullscreen();
+  }
+
+  // progress utils
+  function getFrac(clientX) {
+    const r = progWrap.getBoundingClientRect();
+    return Math.min(Math.max((clientX - r.left) / r.width, 0), 1);
+  }
+  let scrub = false;
+  progWrap.addEventListener('mousedown', e => { scrub = true; seekFrac(getFrac(e.clientX)); });
+  progWrap.addEventListener('touchstart', e => { scrub = true; seekFrac(getFrac(e.touches[0].clientX)); }, { passive: true });
+  document.addEventListener('mousemove', e => { if (scrub) seekFrac(getFrac(e.clientX)); });
+  document.addEventListener('touchmove', e => { if (scrub) seekFrac(getFrac(e.touches[0].clientX)); }, { passive: true });
+  document.addEventListener('mouseup', () => scrub = false);
+  document.addEventListener('touchend', () => scrub = false);
+
+  progWrap.addEventListener('mousemove', e => {
+    if (!vid.duration) return;
+    const f = getFrac(e.clientX);
+    const r = progWrap.getBoundingClientRect();
+    progTip.style.display = 'block';
+    progTip.style.left = (f * r.width) + 'px';
+    progTip.textContent = fmt(f * vid.duration);
+  });
+  progWrap.addEventListener('mouseleave', () => { progTip.style.display = 'none'; });
+  function seekFrac(f) { if (vid.duration) vid.currentTime = f * vid.duration; }
+
+  // video event wiring
+  vid.addEventListener('play', () => { setPI(false); resetHide(); });
+  vid.addEventListener('pause', () => setPI(true));
+  vid.addEventListener('timeupdate', () => {
+    if (!vid.duration) return;
+    progFill.style.width = (vid.currentTime / vid.duration * 100) + '%';
+    timeDsp.textContent = fmt(vid.currentTime) + ' / ' + fmt(vid.duration);
+  });
+  vid.addEventListener('progress', () => {
+    if (vid.duration && vid.buffered.length) {
+      let end = vid.buffered.end(vid.buffered.length-1);
+      progBuf.style.width = (end / vid.duration * 100) + '%';
+    }
+  });
+  vid.addEventListener('waiting', () => showOv('loading'));
+  vid.addEventListener('canplay', () => showOv(null));
+  vid.addEventListener('playing', () => showOv(null));
+  vid.addEventListener('error', () => {
+    if (usingIframe) return;
+    if (!hlsInst) showError(`Media error: ${vid.error?.message || 'source failed'}`);
+  });
+
+  function setPI(paused) {
+    playIcon.innerHTML = paused ? '<path d="M8 5v14l11-7z"/>' : '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+  }
+
+  function fmt(s) {
+    if (!isFinite(s)) return '0:00';
+    const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = Math.floor(s%60);
+    return h > 0 ? `${h}:${pad(m)}:${pad(sec)}` : `${m}:${pad(sec)}`;
+  }
+  function pad(n) { return String(n).padStart(2,'0'); }
+
+  // auto-hide UI
+  function resetHide() {
+    wrap.classList.remove('hide-ui');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => {
+      if (!vid.paused && !spdPop.classList.contains('open') && !usingIframe) wrap.classList.add('hide-ui');
+    }, 2800);
+  }
+  wrap.addEventListener('mousemove', resetHide);
+  wrap.addEventListener('touchstart', () => { wrap.classList.toggle('hide-ui'); resetHide(); }, { passive: true });
+  vid.addEventListener('pause', () => wrap.classList.remove('hide-ui'));
+  vid.addEventListener('click', togglePlay);
+  vid.addEventListener('dblclick', toggleFS);
+
+  // keyboard controls
+  function hint(msg) {
+    kbHint.textContent = msg;
+    kbHint.classList.remove('show');
+    void kbHint.offsetWidth;
+    kbHint.classList.add('show');
+    clearTimeout(window._hintTimer);
+    window._hintTimer = setTimeout(() => kbHint.classList.remove('show'), 1500);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT') return;
+    switch (e.key) {
+      case ' ': case 'k': e.preventDefault(); togglePlay(); break;
+      case 'ArrowRight': e.preventDefault(); seekBy(10); break;
+      case 'ArrowLeft': e.preventDefault(); seekBy(-10); break;
+      case 'ArrowUp': e.preventDefault(); setVol(Math.min(1, vid.volume + 0.1).toFixed(2)); volSl.value = vid.volume; hint(`🔊 ${Math.round(vid.volume*100)}%`); break;
+      case 'ArrowDown': e.preventDefault(); setVol(Math.max(0, vid.volume - 0.1).toFixed(2)); volSl.value = vid.volume; hint(`🔉 ${Math.round(vid.volume*100)}%`); break;
+      case 'm': case 'M': toggleMute(); break;
+      case 'f': case 'F': toggleFS(); break;
+      case 'Escape': if (document.fullscreenElement) document.exitFullscreen(); else closePlayer(); break;
+      case '>': { let idx = SPEEDS.indexOf(curSpeed); if (idx < SPEEDS.length-1) setSpeed(SPEEDS[idx+1]); break; }
+      case '<': { let idx = SPEEDS.indexOf(curSpeed); if (idx > 0) setSpeed(SPEEDS[idx-1]); break; }
+    }
+  });
+
+  document.addEventListener('fullscreenchange', () => {
+    fsIcon.innerHTML = !!document.fullscreenElement
+      ? '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>'
+      : '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>';
+  });
+
+  function openInBrowser() { if (currentUrl) window.open(currentUrl, '_blank', 'noopener,noreferrer'); }
+  function copyUrl() { if(currentUrl) navigator.clipboard.writeText(currentUrl).then(()=>hint('📋 Copied')).catch(()=>hint('failed')); }
+  function closePlayer() {
+    if (window.history.length > 1) window.history.back();
+    else window.close();
+  }
+
+  function save(k, v) { try { localStorage.setItem('edu_'+k, v); } catch {} }
+  function restorePrefs() {
+    try {
+      let v = localStorage.getItem('edu_vol');
+      if (v !== null) { vid.volume = parseFloat(v); volSl.value = v; prevVol = parseFloat(v); }
+      let s = localStorage.getItem('edu_speed');
+      if (s !== null) setSpeed(parseFloat(s));
+    } catch {}
+  }
+
+  // INIT: parse URL params but NEVER open new window/popup
+  function init() {
+    buildSpeedMenu();
+    restorePrefs();
+    const params = new URLSearchParams(window.location.search);
+    const rawUrl = params.get('url');
+    const rawTitle = params.get('title');
+    if (rawUrl) {
+      let decodedUrl = rawUrl;
+      try { decodedUrl = decodeURIComponent(rawUrl); } catch(e) {}
+      let titleDecoded = rawTitle ? decodeURIComponent(rawTitle) : 'Lecture';
+      loadVideo(decodedUrl, titleDecoded);
+    } else {
+      showOv('none');
+      titleEl.textContent = '📁 No Lecture';
+    }
+  }
+  init();
+</script>
+</body>
+</html>
