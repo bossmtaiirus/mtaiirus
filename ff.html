@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,6 +54,7 @@
 
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
   @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes slideUp { from{opacity:0;transform:translateY(100%)} to{opacity:1;transform:translateY(0)} }
   @keyframes dotsTravel {
     0%   { left:66px; width:8px;  height:8px;  opacity:0.3; background:var(--ink3); }
     25%  { left:46px; width:14px; height:14px; opacity:1;   background:var(--accent); }
@@ -119,6 +121,45 @@
     transition: opacity 0.2s;
   }
   .back-btn:hover { opacity: 0.8; }
+
+  /* ── PDF VIEWER OVERLAY ── */
+  .pdf-overlay {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(26,24,20,0.85); backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease both;
+  }
+  .pdf-overlay.open { display: flex; flex-direction: column; }
+  .pdf-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; background: var(--card);
+    border-bottom: 1px solid var(--border); gap: 12px;
+    flex-shrink: 0;
+  }
+  .pdf-toolbar-title {
+    font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700;
+    color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .pdf-toolbar-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .pdf-toolbar-btn {
+    width: 36px; height: 36px; border-radius: 8px; background: var(--bg2);
+    color: var(--ink2); display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; font-size: 16px;
+  }
+  .pdf-toolbar-btn:hover { background: var(--accentb); color: var(--accent); }
+  .pdf-toolbar-btn.danger:hover { background: rgba(212,84,14,.15); color: var(--accent); }
+  .pdf-container {
+    flex: 1; background: #525659; display: flex; align-items: center;
+    justify-content: center; padding: 16px; overflow: auto;
+  }
+  .pdf-container iframe {
+    width: 100%; height: 100%; border: none; border-radius: 8px;
+    background: #fff; max-width: 900px; box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+  .pdf-loading {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    color: var(--bg); font-weight: 600;
+  }
 
   .hero {
     background: var(--ink);
@@ -485,6 +526,7 @@
     .btn{padding:8px 10px;font-size:0.78rem;gap:4px;}
     .hero-stats{gap:16px;}
     .faculty-card{flex-direction:column;align-items:center;text-align:center;}
+    .pdf-container{padding:8px;}
   }
   @media(max-width:360px){
     .courses-grid{grid-template-columns:1fr;}
@@ -492,6 +534,27 @@
 </style>
 </head>
 <body>
+
+<!-- PDF VIEWER OVERLAY -->
+<div class="pdf-overlay" id="pdfOverlay">
+  <div class="pdf-toolbar">
+    <span class="pdf-toolbar-title" id="pdfTitle">PDF Viewer</span>
+    <div class="pdf-toolbar-actions">
+      <button class="pdf-toolbar-btn" onclick="downloadPdf()" title="Download PDF">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+      <button class="pdf-toolbar-btn danger" onclick="closePdfViewer()" title="Close">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="pdf-container" id="pdfContainer">
+    <div class="pdf-loading" id="pdfLoading">
+      <div class="dots-loader"><div></div><div></div><div></div></div>
+      <span>Loading PDF…</span>
+    </div>
+  </div>
+</div>
 
 <div id="page-home" class="page active">
   <header class="header" id="home-header">
@@ -510,9 +573,7 @@
       <div class="header-search-row">
         <input id="home-search-input" class="header-search-input" type="search" placeholder="Search batches…" oninput="filterCourses()" autofocus />
         <button class="header-close-btn" onclick="closeHomeSearch()">
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <path d="M18 6 6 18M6 6l12 12"/>
-          </svg>
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
         </button>
       </div>
     </div>
@@ -616,6 +677,67 @@
   document.documentElement.style.setProperty('user-select','none');
 })();
 
+// ══════════════════ PDF VIEWER ══════════════════
+let currentPdfUrl = '';
+let currentPdfName = '';
+
+function openPdfViewer(url, name) {
+  currentPdfUrl = url;
+  currentPdfName = name || 'PDF Document';
+  document.getElementById('pdfTitle').textContent = currentPdfName;
+  document.getElementById('pdfLoading').style.display = 'flex';
+  document.getElementById('pdfOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  
+  const container = document.getElementById('pdfContainer');
+  // Remove existing iframe
+  const existingIframe = container.querySelector('iframe');
+  if (existingIframe) existingIframe.remove();
+  
+  // Create new iframe
+  const iframe = document.createElement('iframe');
+  iframe.src = url;
+  iframe.onload = function() {
+    document.getElementById('pdfLoading').style.display = 'none';
+  };
+  iframe.onerror = function() {
+    document.getElementById('pdfLoading').innerHTML = '<span>⚠️ Failed to load PDF. <a href="' + url + '" target="_blank" style="color:var(--accentl);">Open in new tab</a></span>';
+  };
+  container.appendChild(iframe);
+}
+
+function closePdfViewer() {
+  document.getElementById('pdfOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  const container = document.getElementById('pdfContainer');
+  const existingIframe = container.querySelector('iframe');
+  if (existingIframe) existingIframe.remove();
+  document.getElementById('pdfLoading').style.display = 'flex';
+  currentPdfUrl = '';
+  currentPdfName = '';
+}
+
+function downloadPdf() {
+  if (currentPdfUrl) {
+    const a = document.createElement('a');
+    a.href = currentPdfUrl;
+    a.download = currentPdfName || 'document.pdf';
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+}
+
+// Close PDF viewer with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.getElementById('pdfOverlay').classList.contains('open')) {
+    closePdfViewer();
+  }
+});
+
+// ══════════════════ STATE ══════════════════
 const SW_KEY = 'swEnrolledCourses';
 let allCourses = [];
 let currentFilter = 'all';
@@ -799,7 +921,10 @@ function renderClassCard(cls){
   else if(isCompleted&&hasRec){ if(cls.mp4Recordings.length>1){ videoSection='<div style="display:flex;flex-wrap:wrap;gap:6px;">'+cls.mp4Recordings.map(r=>`<button class="btn btn-primary btn-sm" onclick="openPlayer('${esc(r.url)}', '${esc(cls.title)}', '${esc(r.quality)}')">▶ ${esc(r.quality)}</button>`).join('')+'</div>'; } else { videoSection=`<button class="btn btn-primary" style="width:100%;" onclick="openPlayer('${esc(cls.mp4Recordings[0].url)}', '${esc(cls.title)}')">▶ Watch Recording</button>`; } }
   else if(isUpcoming){ videoSection='<button class="btn btn-disabled" style="width:100%;" disabled>⏳ Upcoming</button>'; }
   else { videoSection=`<button class="btn btn-outline" style="width:100%;" onclick="openLink('${esc(cls.class_link||'')}')">▶ Play Video</button>`; }
-  const notesSection=hasNotes?cls.classPdf.map(pdf=>`<div class="pdf-row"><div class="pdf-row-info"><span class="pdf-row-name">${esc(pdf.name)}</span></div><button class="btn btn-primary btn-sm" onclick="openLink('${esc(pdf.url)}')">View</button></div>`).join(''):'<p style="font-size:0.8rem;color:var(--ink3);padding:8px 0;">No notes for this lecture</p>';
+  
+  // Notes section with built-in PDF viewer
+  const notesSection=hasNotes?cls.classPdf.map(pdf=>`<div class="pdf-row"><div class="pdf-row-info"><span class="pdf-row-name">${esc(pdf.name)}</span></div><button class="btn btn-primary btn-sm" onclick="openPdfViewer('${esc(pdf.url)}', '${esc(pdf.name)}')">📄 View</button></div>`).join(''):'<p style="font-size:0.8rem;color:var(--ink3);padding:8px 0;">No notes for this lecture</p>';
+  
   const cardId='card-'+Math.random().toString(36).slice(2);
   return `<div class="class-card"><div class="class-card-head"><div class="class-icon">🎬</div><div style="flex:1;min-width:0;"><div class="class-title">${esc(cls.title)}</div>${cls.teacherName?`<div class="class-teacher">By ${esc(cls.teacherName)}</div>`:''}${dateStr}</div>${statusBadge}</div><div class="class-card-tabs"><button class="class-tab-btn active" onclick="switchClassTab(this,'${cardId}','video')">Lecture</button><button class="class-tab-btn" onclick="switchClassTab(this,'${cardId}','notes')" ${!hasNotes?'disabled':''}>Notes${hasNotes?` (${cls.classPdf.length})`:' (0)'}</button></div><div id="${cardId}-video" class="class-tab-panel active">${videoSection}</div><div id="${cardId}-notes" class="class-tab-panel">${notesSection}</div></div>`;
 }
@@ -821,7 +946,9 @@ async function loadNotesTab(){
 }
 
 function selectNotesTopic(idx){ const el=document.getElementById('notes-inner'); notesTopicSelected=el._topics[idx]; renderNotesTopic(notesTopicSelected); }
-function renderNotesTopic(topic){ document.getElementById('notes-inner').innerHTML=`<button class="btn btn-ghost" style="margin-bottom:12px;" onclick="backToNotesTopics()">← Back to Topics</button><h3 style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:14px;">${esc(topic.topicName)}</h3>${topic.pdfs.map(pdf=>`<div class="pdf-row"><div class="pdf-row-info"><div><div class="pdf-row-name">${esc(pdf.title)}</div>${pdf.teacherName?`<div style="font-size:0.7rem;color:var(--ink3);">By ${esc(pdf.teacherName)}</div>`:''}</div></div><button class="btn btn-primary btn-sm" onclick="openLink('${esc(pdf.uploadPdf)}')">View</button></div>`).join('')}`; }
+function renderNotesTopic(topic){
+  document.getElementById('notes-inner').innerHTML=`<button class="btn btn-ghost" style="margin-bottom:12px;" onclick="backToNotesTopics()">← Back to Topics</button><h3 style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:14px;">${esc(topic.topicName)}</h3>${topic.pdfs.map(pdf=>`<div class="pdf-row"><div class="pdf-row-info"><div><div class="pdf-row-name">${esc(pdf.title)}</div>${pdf.teacherName?`<div style="font-size:0.7rem;color:var(--ink3);">By ${esc(pdf.teacherName)}</div>`:''}</div></div><button class="btn btn-primary btn-sm" onclick="openPdfViewer('${esc(pdf.uploadPdf)}', '${esc(pdf.title)}')">📄 View</button></div>`).join('')}`;
+}
 function backToNotesTopics(){ notesTopicSelected=null; loadNotesTab(); }
 
 async function renderTimetabTab(b){
