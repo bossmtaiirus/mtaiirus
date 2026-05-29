@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -217,6 +216,7 @@ const OV = {
 
 // ── State ──
 let currentUrl = null;
+const PROXY = "https://swplayer.maxxphi4321.workers.dev/?url=";
 let hlsInst    = null;
 let hideTimer  = null;
 let sfTimer    = null;
@@ -253,8 +253,15 @@ function safeDecode(s) {
 // ══════════════════════════════════════════════
 // LOAD VIDEO — tries multiple strategies
 // ══════════════════════════════════════════════
+function proxyUrl(url) {
+  // Only proxy external video hosts that need it
+  if (url.startsWith("https://swplayer.maxxphi4321.workers.dev")) return url;
+  return PROXY + encodeURIComponent(url);
+}
+
 function loadVideo(url, title) {
-  currentUrl  = url;
+  currentUrl  = url; // original
+  url = proxyUrl(url); // proxied
   usingIframe = false;
   titleEl.textContent = title || 'Lecture';
   document.title = (title || 'Lecture') + ' — EduBatches';
