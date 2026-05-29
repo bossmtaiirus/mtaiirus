@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -194,7 +195,8 @@
     display: none;
     flex-direction: column;
     gap: 15px;
-    min-width: 280px;
+    min-width: 320px;
+    max-width: 90%;
   }
 
   .error-message.active {
@@ -205,6 +207,13 @@
     background: #5a4bda;
     padding: 10px 20px;
     justify-content: center;
+  }
+
+  .error-message .error-details {
+    font-size: 11px;
+    opacity: 0.7;
+    word-break: break-all;
+    margin-top: 5px;
   }
 
   .loading {
@@ -259,6 +268,26 @@
     font-size: 14px;
   }
 
+  .debug-info {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.5);
+    color: #0f0;
+    font-family: monospace;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 20;
+    display: none;
+    max-width: 80%;
+    word-break: break-all;
+  }
+
+  .debug-info.active {
+    display: block;
+  }
+
   @media (max-width: 640px) {
     .controls-row {
       gap: 8px;
@@ -288,7 +317,7 @@
   <div class="video-title" id="video-title">No Lecture Selected</div>
   <button class="close-btn" onclick="closePlayer()">✕</button>
   
-  <video id="video" controlslist="nodownload"></video>
+  <video id="video" controlslist="nodownload" crossorigin="anonymous"></video>
   
   <div class="loading" id="loading">
     <span>Loading video...</span>
@@ -305,9 +334,13 @@
   
   <div class="error-message" id="error-message">
     <span>⚠️ Unable to play this video</span>
+    <div class="error-details" id="error-details"></div>
     <button onclick="retryVideo()">Retry</button>
     <button onclick="openInBrowser()">Open in Browser</button>
+    <button onclick="copyVideoUrl()">Copy Video URL</button>
   </div>
+  
+  <div class="debug-info" id="debug-info"></div>
   
   <div class="controls">
     <div class="progress-bar" id="progress-bar">
@@ -356,10 +389,26 @@
   const videoTitle = document.getElementById('video-title');
   const loadingDiv = document.getElementById('loading');
   const errorDiv = document.getElementById('error-message');
+  const errorDetails = document.getElementById('error-details');
   const noVideoDiv = document.getElementById('no-video');
+  const debugInfo = document.getElementById('debug-info');
   
   let currentVideoUrl = null;
   let controlsTimeout = null;
+  
+  // Enable debug mode (set to true to see debug info)
+  const DEBUG = true;
+  
+  function logDebug(message) {
+    if (DEBUG) {
+      console.log('[Player Debug]', message);
+      debugInfo.innerHTML = message;
+      debugInfo.classList.add('active');
+      setTimeout(() => {
+        debugInfo.classList.remove('active');
+      }, 5000);
+    }
+  }
   
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // GET URL PARAMETERS
@@ -382,8 +431,12 @@
       loadingDiv.classList.remove('active');
       errorDiv.classList.remove('active');
       videoTitle.textContent = 'No Lecture Selected';
+      logDebug('No video URL provided');
       return false;
     }
+    
+    logDebug(`Loading video: ${url}`);
+    logDebug(`Title: ${title}`);
     
     currentVideoUrl = url;
     videoTitle.textContent = title || 'Lecture Video';
@@ -395,7 +448,7 @@
     video.src = '';
     video.load();
     
-    // Set new source
+    // Set new source with proper type
     video.src = url;
     video.load();
     
@@ -404,10 +457,23 @@
     if (playPromise !== undefined) {
       playPromise.then(() => {
         loadingDiv.classList.remove('active');
+        logDebug('Video playing successfully');
       }).catch(error => {
         loadingDiv.classList.remove('active');
         errorDiv.classList.add('active');
-        console.error('Playback error:', error);
+        let errorMsg = error.message;
+        
+        // Provide more helpful error messages
+        if (error.name === 'NotSupportedError') {
+          errorMsg = 'Video format not supported by your browser';
+        } else if (error.name === 'NotAllowedError') {
+          errorMsg = 'Autoplay blocked. Please click play manually.';
+        } else if (error.name === 'AbortError') {
+          errorMsg = 'Video loading was aborted';
+        }
+        
+        errorDetails.innerHTML = `Error: ${errorMsg}<br>URL: ${url.substring(0, 100)}${url.length > 100 ? '...' : ''}`;
+        logDebug(`Playback error: ${error.message}`);
       });
     }
     
@@ -416,7 +482,11 @@
   
   function togglePlay() {
     if (video.paused) {
-      video.play();
+      video.play().catch(e => {
+        logDebug(`Play failed: ${e.message}`);
+        errorDiv.classList.add('active');
+        errorDetails.innerHTML = `Error: ${e.message}`;
+      });
     } else {
       video.pause();
     }
@@ -449,6 +519,16 @@
     }
   }
   
+  function copyVideoUrl() {
+    if (currentVideoUrl) {
+      navigator.clipboard.writeText(currentVideoUrl).then(() => {
+        alert('Video URL copied to clipboard!');
+      }).catch(() => {
+        alert('Failed to copy URL');
+      });
+    }
+  }
+  
   function closePlayer() {
     window.close();
   }
@@ -476,11 +556,39 @@
   video.addEventListener('error', (e) => {
     loadingDiv.classList.remove('active');
     errorDiv.classList.add('active');
-    console.error('Video error:', e);
+    
+    let errorMsg = 'Unknown error';
+    if (video.error) {
+      switch (video.error.code) {
+        case 1:
+          errorMsg = 'Video loading aborted';
+          break;
+        case 2:
+          errorMsg = 'Network error - Cannot load video';
+          break;
+        case 3:
+          errorMsg = 'Video decoding failed - Format may not be supported';
+          break;
+        case 4:
+          errorMsg = 'Video not found or access denied';
+          break;
+        default:
+          errorMsg = video.error.message || 'Unknown error';
+      }
+    }
+    
+    errorDetails.innerHTML = `Error: ${errorMsg}<br>URL: ${currentVideoUrl ? currentVideoUrl.substring(0, 100) : 'Unknown'}${currentVideoUrl && currentVideoUrl.length > 100 ? '...' : ''}`;
+    logDebug(`Video error: ${errorMsg}`);
   });
   
   video.addEventListener('canplay', () => {
     loadingDiv.classList.remove('active');
+    logDebug('Video can play');
+  });
+  
+  video.addEventListener('waiting', () => {
+    loadingDiv.classList.add('active');
+    logDebug('Video waiting/buffering');
   });
   
   // Progress bar seeking
@@ -535,20 +643,41 @@
   }
   
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // TEST VIDEO URLS (for debugging)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Uncomment to test with a known working video
+  // const testVideoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
+  
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // INITIALIZE
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   function init() {
     const params = getUrlParams();
     
+    logDebug('Player initialized');
+    logDebug(`URL params: url=${params.url ? 'present' : 'missing'}, title=${params.title || 'missing'}`);
+    
     if (params.url) {
       // Decode URL and title
-      const decodedUrl = decodeURIComponent(params.url);
-      const decodedTitle = params.title ? decodeURIComponent(params.title) : 'Lecture Video';
+      let decodedUrl = decodeURIComponent(params.url);
+      let decodedTitle = params.title ? decodeURIComponent(params.title) : 'Lecture Video';
+      
+      // Fix double encoding if present
+      try {
+        while (decodedUrl !== decodeURIComponent(decodedUrl)) {
+          decodedUrl = decodeURIComponent(decodedUrl);
+        }
+      } catch(e) {}
+      
+      logDebug(`Decoded URL: ${decodedUrl}`);
+      logDebug(`Decoded Title: ${decodedTitle}`);
+      
       loadVideo(decodedUrl, decodedTitle);
     } else {
       // No video URL - show "No lecture selected" message
       noVideoDiv.classList.add('active');
       videoTitle.textContent = 'No Lecture Selected';
+      logDebug('No video URL in parameters');
     }
   }
   
