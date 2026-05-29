@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Farewell Message — FT. RUNWAY</title>
+    <!-- ultra simple, minimal styling: only text, no decorative extras, 
+         just clear typography with the main phrase and subtitle "(FT. RUNWAY)" -->
+    <style>
+        /* reset margins and paddings so nothing interferes with the centered text block */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* body: neutral, plain background, only serves as a canvas for text */
+        body {
+            background-color: #ffffff;   /* pure white background — clean & minimal */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            line-height: 1.2;
+        }
+
+        /* wrapper: holds both text lines, simple block, no images or extra design */
+        .text-block {
+            text-align: center;
+            padding: 1.2rem;
+            width: 100%;
+        }
+
+        /* main message: "BYE MY FRIEND" — bold, clear, friendly, dominant */
+        .main-message {
+            font-size: clamp(2.4rem, 12vw, 6rem);
+            font-weight: 800;
+            letter-spacing: 0.01em;
+            color: #1e293b;        /* deep slate — easy on eyes, pure text presence */
+            margin-bottom: 0.75rem;
+            white-space: normal;
+            word-break: keep-all;
+            line-height: 1.15;
+        }
+
+        /* secondary line: "(FT. RUNWAY)" — slightly smaller, but still plain text,
+           no icons, no decorative borders, only characters */
+        .sub-line {
+            font-size: clamp(1rem, 4.5vw, 1.8rem);
+            font-weight: 450;
+            color: #334155;        /* muted medium-dark slate, still readable */
+            letter-spacing: 0.02em;
+            background: transparent;
+            white-space: normal;
+            word-break: break-word;
+            margin-top: 0.25rem;
+            font-family: inherit;
+        }
+
+        /* ensure ultra-small devices keep both lines readable without overflow */
+        @media (max-width: 480px) {
+            .main-message {
+                font-size: clamp(1.8rem, 10vw, 3.6rem);
+                margin-bottom: 0.5rem;
+            }
+            .sub-line {
+                font-size: clamp(0.85rem, 4vw, 1.3rem);
+                letter-spacing: 0.01em;
+            }
+        }
+
+        /* no hover effects, no shadows, no borders, no background images.
+           Exactly two lines of pure text: "BYE MY FRIEND" + below "(FT. RUNWAY)".
+        */
+    </style>
+</head>
+<body>
+    <div class="text-block">
+        <div class="main-message">BYE MY FRIEND</div>
+        <div class="sub-line">(FT. RUNWAY)</div>
+    </div>
+</body>
+</html>
