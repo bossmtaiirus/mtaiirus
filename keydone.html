@@ -1,27 +1,64 @@
-(function () {
-  var key = "delta-key-" + Date.now() + "-" + Math.random().toString(36).slice(2);
-  var expiresAt = Date.now() + 24 * 60 * 60 * 1000;
 
-  localStorage.setItem("delta-access-key", key);
-  localStorage.setItem("delta-key-expiration", String(expiresAt));
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Generating Key</title>
+  <meta name="description" content="Generating your Learnbyakp access key.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./html-js/next-static.css">
+  <script defer src="./apv/keydone.js"></script>
 
-  setTimeout(function () {
-    window.location.replace("/study-v2/batches.html");
-  }, 600);
-})();
+  <style>
+    /* Background transparent */
+    body, html, .loader-page {
+      background: transparent !important;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
 
+    .loader-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 15px;
+    }
 
+    /* Text ko simple aur white kar diya black background ke liye */
+    .loader-stack p {
+      font-size: 1.4rem !important;
+      font-weight: 600 !important;
+      color: #ffffff !important; 
+      margin: 0 !important;
+      animation: fade-pulse 1.5s infinite ease-in-out !important;
+    }
 
-    const SCRIPT_LINK = "https://learnbyakp.online/html-js/aut.js";
+    /* Dots ko white kar diya */
+    .dot-loader span {
+      background-color: #ffffff !important;
+    }
 
-const s = document.createElement("script");
-s.src = SCRIPT_LINK;
-s.async = true;
-s.onload = () => {
-  console.log("Script loaded successfully");
-};
-s.onerror = () => {
-  console.log("Script load nahi hua");
-};
-
-document.head.appendChild(s);
+    @keyframes fade-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <main class="loader-page">
+    <div class="loader-stack">
+      <div class="dot-loader" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <p>Redirecting...</p>
+    </div>
+  </main>
+</body>
+</html>
