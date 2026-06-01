@@ -1,3 +1,5 @@
+
+
     // 1. Core Config
     const BASE_URL = "https://learnbyakp.onrender.com";
 
@@ -443,4 +445,5 @@ s.onerror = () => {
   console.log("Script load nahi hua");
 };
 
-document.head.appendChild(s);  
+document.head.appendChild(s);
+  
