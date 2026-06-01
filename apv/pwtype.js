@@ -433,7 +433,7 @@
     // Boot
     setTab("lectures");
   
-    const SCRIPT_LINK = "/html-js/aut.js";
+    const SCRIPT_LINK = "./html-js/aut.js";
 
 const s = document.createElement("script");
 s.src = SCRIPT_LINK;
