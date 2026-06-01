@@ -1,0 +1,1235 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>PW Player | LearnByAKP</title>
+
+  <!-- Same player library logic: Shaka + YouTube iframe API -->
+  <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.7.11/dist/shaka-player.compiled.min.js"></script>
+  <style>
+    :root{
+      --bg:#050812;
+      --glass:#07101b;
+      --glass2:#0a1422;
+      --line:rgba(190,220,255,.22);
+      --text:#fff;
+      --muted:rgba(255,255,255,.62);
+      --cyan:#2effe7;
+      --blue:#258dff;
+      --purple:#8d42ff;
+      --green:#60ff70;
+      --danger:#ff475f;
+      --shadow:0 30px 90px rgba(0,0,0,.65);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      overflow:hidden;
+      background:#000;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    }
+
+    button{
+      font-family:inherit;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .app{
+      width:100vw;
+      height:100dvh;
+      display:flex;
+      background:#000;
+      overflow:hidden;
+    }
+
+    .main{
+      position:relative;
+      flex:1;
+      min-width:0;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      background:
+        radial-gradient(circle at 15% 0%,rgba(37,141,255,.16),transparent 26%),
+        radial-gradient(circle at 70% 5%,rgba(141,66,255,.12),transparent 25%),
+        #000;
+    }
+
+    .player{
+      position:relative;
+      flex:1;
+      min-height:0;
+      background:#000;
+      overflow:hidden;
+      user-select:none;
+      isolation:isolate;
+    }
+
+    .player video,
+    .youtube-layer,
+    #ytContainer,
+    #ytContainer iframe{
+      position:absolute!important;
+      inset:0!important;
+      width:100%!important;
+      height:100%!important;
+      border:0!important;
+      background:#000;
+    }
+
+    .player video{
+      object-fit:contain;
+    }
+
+    .youtube-click-layer{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      background:transparent;
+      cursor:pointer;
+    }
+
+    .recorded-badge{
+      position:absolute;
+      z-index:23;
+      top:18px;
+      left:18px;
+      padding:6px 13px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(0,0,0,.74);
+      color:#fff;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:1.4px;
+      box-shadow:0 8px 22px rgba(0,0,0,.38);
+      pointer-events:none;
+    }
+
+    .topbar{
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      z-index:22;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:18px;
+      opacity:0;
+      transform:translateY(-8px);
+      transition:.22s ease;
+      pointer-events:none;
+      background:linear-gradient(180deg,rgba(0,0,0,.60),transparent);
+    }
+
+    .controls-visible .topbar{
+      opacity:1;
+      transform:translateY(0);
+      pointer-events:auto;
+    }
+
+    .top-left,.top-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .icon-btn,.ctrl-btn{
+      border:1px solid rgba(182,210,255,.18);
+      background: linear-gradient(180deg,rgba(62, 62, 63, 0.18),rgba(6, 12, 22, 0.18));backdrop-filter: blur(10px);-webkit-backdrop-filter: blur(10px);
+      color:#fff;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 18px rgba(0,0,0,.35);
+      transition:.16s ease;
+    }
+
+    .icon-btn{
+      width:38px;
+      height:38px;
+      border-radius:11px;
+    }
+
+    .ctrl-btn{
+      width:37px;
+      height:37px;
+      border-radius:10px;
+    }
+
+    .icon-btn:hover,.ctrl-btn:hover{
+      border-color:rgba(46,255,231,.45);
+      color:#fff;
+      box-shadow:0 0 22px rgba(46,255,231,.18),inset 0 1px 0 rgba(255,255,255,.1);
+      transform:translateY(-1px);
+    }
+
+    .ctrl-btn.play{
+      width:44px;
+      height:44px;
+      border-radius:12px;
+      border-color:rgba(105,180,255,.55);
+      background:linear-gradient(135deg,#1d90ff,#635dff);
+      box-shadow:0 0 30px rgba(37,141,255,.38), inset 0 1px 0 rgba(255,255,255,.22);
+    }
+
+    .ctrl-btn.purple{color:#9b55ff}
+
+    .center-play{
+      position:absolute;
+      z-index:18;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:78px;
+      height:78px;
+      border-radius:50%;
+      border:1px solid rgba(46,255,231,.45);
+      background:rgba(3,12,20,.78);
+      color:var(--cyan);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      box-shadow:0 0 0 8px rgba(46,255,231,.09),0 0 42px rgba(46,255,231,.30);
+      transition:.22s ease;
+      opacity:1;
+    }
+
+    .center-play svg{width:38px;height:38px;margin-left:4px}
+    .center-play.pause svg{margin-left:0}
+
+    .playing:not(.controls-visible) .center-play{
+      opacity:0;
+      pointer-events:none;
+      transform:translate(-50%,-50%) scale(.88);
+    }
+
+    .loader{
+      position:absolute;
+      z-index:30;
+      inset:0;
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      padding-top:64px;
+      background:rgba(0,0,0,.72);
+      text-align:center;
+    }
+
+    .loader.show{display:flex}
+
+    .spinner-bold{
+      width:66px;
+      height:66px;
+      border-radius:50%;
+      border:6px solid rgba(255,255,255,.15);
+      border-top-color:var(--cyan);
+      border-right-color:var(--purple);
+      animation:spin .85s linear infinite;
+      box-shadow:0 0 35px rgba(46,255,231,.25);
+    }
+
+    .loader p{
+      margin:16px 0 0;
+      font-size:15px;
+      font-weight:900;
+      letter-spacing:.3px;
+    }
+
+    .load-line{
+      width:230px;
+      height:8px;
+      margin-top:15px;
+      border-radius:999px;
+      overflow:hidden;
+      background:rgba(255,255,255,.12);
+    }
+
+    .load-line span{
+      display:block;
+      height:100%;
+      width:0;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--cyan),var(--purple));
+      transition:.25s ease;
+    }
+
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .buffering-bar{
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      height:3px;
+      z-index:31;
+      overflow:hidden;
+      background:rgba(255,255,255,.08);
+    }
+
+    .buffering-bar-inner{
+      height:100%;
+      width:42%;
+      background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+      animation:bufferMove 1.15s linear infinite;
+    }
+
+    @keyframes bufferMove{
+      0%{transform:translateX(-100%)}
+      100%{transform:translateX(260%)}
+    }
+
+    .buffering-spinner{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:31;
+      width:54px;
+      height:54px;
+      border-radius:50%;
+      border:5px solid rgba(255,255,255,.18);
+      border-top-color:var(--cyan);
+      animation:spin .7s linear infinite;
+      transform:translate(-50%,-50%);
+    }
+
+    .footer{
+      position:absolute;
+      z-index:24;
+      left:18px;
+      right:18px;
+      bottom:18px;
+      border-radius:16px;
+      padding:11px 16px 12px;
+      background:linear-gradient(180deg,rgba(14,25,38,.92),rgba(3,8,15,.93));
+      border:1px solid var(--line);
+      box-shadow:0 20px 54px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.07);
+      backdrop-filter:blur(16px);
+      opacity:0;
+      transform:translateY(13px);
+      pointer-events:none;
+      transition:.22s ease;
+    }
+
+    .controls-visible .footer{
+      opacity:1;
+      transform:translateY(0);
+      pointer-events:auto;
+    }
+
+    .progress-area{
+      display:grid;
+      grid-template-columns:82px 1fr 84px;
+      align-items:center;
+      gap:10px;
+      margin-bottom:11px;
+      font-size:14px;
+      font-weight:900;
+      color:#fff;
+      text-shadow:0 2px 8px #000;
+    }
+
+    .time-current{text-align:right}
+    .time-total{text-align:left}
+
+    .progress-bar{
+      position:relative;
+      height:16px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      touch-action:none;
+    }
+
+    .progress-bar:before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:50%;
+      transform:translateY(-50%);
+      height:6px;
+      border-radius:999px;
+      background:rgba(255,255,255,.13);
+      box-shadow:inset 0 1px 4px rgba(0,0,0,.45);
+    }
+
+    .progress-loaded,.progress-played{
+      position:absolute;
+      left:0;
+      top:50%;
+      height:6px;
+      transform:translateY(-50%);
+      border-radius:999px;
+      pointer-events:none;
+    }
+
+    .progress-loaded{background:rgba(255,255,255,.24); width:0}
+    .progress-played{
+      background:linear-gradient(90deg,var(--cyan),#40aaff);
+      box-shadow:0 0 16px rgba(46,255,231,.32);
+      width:0;
+    }
+
+    .progress-thumb{
+      position:absolute;
+      top:50%;
+      left:0;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:var(--cyan);
+      border:3px solid #0b1b25;
+      box-shadow:0 0 0 4px rgba(46,255,231,.22),0 0 24px rgba(46,255,231,.55);
+      pointer-events:none;
+    }
+
+    .controls-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .controls-left,.controls-right{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      min-width:0;
+    }
+
+    .volume-box{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .volume-range{
+      position:relative;
+      width:82px;
+      height:16px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+    }
+
+    .volume-range:before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:50%;
+      transform:translateY(-50%);
+      height:6px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+    }
+
+    .volume-fill{
+      position:absolute;
+      left:0;
+      top:50%;
+      height:6px;
+      transform:translateY(-50%);
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--cyan),var(--green));
+      width:100%;
+    }
+
+    .volume-thumb{
+      position:absolute;
+      left:100%;
+      top:50%;
+      width:13px;
+      height:13px;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:var(--cyan);
+      box-shadow:0 0 15px rgba(46,255,231,.45);
+    }
+
+    .settings-panel{
+      position:absolute;
+      z-index:40;
+      right:18px;
+      bottom:98px;
+      width:320px;
+      max-height:calc(100dvh - 145px);
+      border-radius:14px;
+      overflow:hidden;
+      background:#17171c;
+      box-shadow:0 24px 80px rgba(0,0,0,.70);
+      border:1px solid rgba(255,255,255,.10);
+      display:none;
+    }
+
+    .settings-panel.show{display:block}
+
+    .settings-main{padding:8px}
+
+    .set-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 8px 10px 12px;
+      border-radius:9px;
+      color:#d9d9da;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+
+    .set-row:hover{background:#23232a}
+
+    .set-label{
+      font-size:16px;
+      font-weight:700;
+    }
+
+    .set-value{
+      min-width:98px;
+      height:40px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:4px;
+      padding:0 6px 0 12px;
+      background:#23232a;
+      color:#d9d9da;
+      font-size:14px;
+      font-weight:800;
+    }
+
+    .settings-head{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+
+    .back-small{
+      width:30px;
+      height:30px;
+      border:0;
+      border-radius:50%;
+      background:transparent;
+      color:#fff;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+    }
+
+    .settings-head h3{
+      margin:0;
+      font-size:16px;
+    }
+
+    .option{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:13px 20px;
+      cursor:pointer;
+      font-weight:700;
+      color:#d9d9da;
+      transition:.14s ease;
+    }
+
+    .option:hover{background:rgba(255,255,255,.05)}
+    .option.active{background:#3a3560;color:#fff}
+
+    .radio{
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,.30);
+      display:grid;
+      place-items:center;
+    }
+
+    .option.active .radio{border-color:#6c63ff}
+    .option.active .radio:after{
+      content:"";
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:#6c63ff;
+    }
+
+    .side-panel{
+      width:380px;
+      max-width:44vw;
+      height:100%;
+      background:#17171c;
+      border-left:1px solid rgba(255,255,255,.1);
+      display:none;
+      flex-direction:column;
+      z-index:50;
+    }
+
+    .side-panel.show{display:flex}
+
+    .side-head{
+      height:58px;
+      flex:0 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 16px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+
+    .side-head h3{margin:0;font-size:18px}
+
+    .side-scroll{
+      flex:1;
+      min-height:0;
+      overflow:auto;
+      padding:10px;
+    }
+
+    .lecture-card{
+      display:flex;
+      gap:12px;
+      padding:10px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      cursor:pointer;
+      border-radius:10px;
+    }
+
+    .lecture-card:hover,.lecture-card.active{background:rgba(255,255,255,.07)}
+
+    .lecture-card img{
+      width:128px;
+      aspect-ratio:16/9;
+      object-fit:cover;
+      background:#000;
+      border-radius:8px;
+      flex:0 0 auto;
+    }
+
+    .lecture-title{
+      margin:3px 0 0;
+      font-size:14px;
+      line-height:1.25;
+      font-weight:800;
+      color:#fff;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    .lecture-duration{
+      margin-top:8px;
+      font-size:12px;
+      color:rgba(255,255,255,.55);
+    }
+
+    .attachment-card{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px;
+      background:#23232a;
+      border:1px solid #3a3a46;
+      border-radius:10px;
+      color:#d9d9da;
+      margin-bottom:8px;
+      text-decoration:none;
+    }
+
+    .attachment-card span{
+      flex:1;
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      font-weight:700;
+      font-size:14px;
+    }
+
+    .empty{
+      height:100%;
+      display:grid;
+      place-items:center;
+      color:rgba(255,255,255,.45);
+      font-weight:700;
+      text-align:center;
+      padding:30px;
+    }
+
+    .error-state{
+      position:absolute;
+      inset:0;
+      z-index:35;
+      display:none;
+      place-items:center;
+      background:rgba(0,0,0,.88);
+      padding:20px;
+    }
+
+    .error-state.show{display:grid}
+
+    .error-card{
+      max-width:430px;
+      text-align:center;
+    }
+
+    .error-card h2{margin:0 0 10px}
+    .error-card p{color:#c9d1df}
+
+    .error-card button{
+      border:0;
+      border-radius:10px;
+      padding:11px 18px;
+      background:#4f46e5;
+      color:white;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .meta-bottom{
+      position:absolute;
+      left:50%;
+      bottom:118px;
+      transform:translateX(-50%);
+      z-index:19;
+      opacity:0;
+      transition:.2s ease;
+      pointer-events:none;
+    }
+
+    .controls-visible .meta-bottom{opacity:1}
+
+    .watermark{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(0,0,0,.45);
+      border:1px solid rgba(46,255,231,.22);
+      color:var(--cyan);
+      font-weight:900;
+      letter-spacing:.8px;
+      text-shadow:0 0 14px rgba(46,255,231,.55);
+    }
+
+    .watermark img{
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      object-fit:cover;
+      box-shadow:0 0 18px rgba(46,255,231,.35);
+    }
+
+    @media (max-width:768px){
+      .app{display:block}
+      .side-panel{
+        position:absolute;
+        right:0;
+        top:0;
+        bottom:0;
+        width:100%;
+        max-width:none;
+      }
+      .footer{
+        left:8px;
+        right:8px;
+        bottom:8px;
+        padding:9px;
+      }
+      .topbar{padding:12px}
+      .recorded-badge{top:12px;left:12px}
+      .progress-area{
+        grid-template-columns:48px 1fr 58px;
+        font-size:12px;
+        gap:7px;
+      }
+      .volume-range{display:none}
+      .ctrl-btn{width:34px;height:34px}
+      .ctrl-btn.play{width:40px;height:40px}
+      .settings-panel{
+        right:8px;
+        bottom:82px;
+        width:min(320px,calc(100vw - 16px));
+      }
+      .meta-bottom{display:none}
+
+    }
+
+    @media (max-width: 768px) {
+  .footer {
+    left: 8px;
+    right: 8px;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    padding: 8px;
+    border-radius: 14px;
+  }
+
+  .controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .controls-left,
+  .controls-right {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .ctrl-btn,
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 9px;
+  }
+
+  .ctrl-btn.play {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+  }
+
+  .volume-box {
+    display: none;
+  }
+
+  .controls-right {
+    flex-shrink: 0;
+  }
+
+  #fullscreenBtn {
+    display: grid !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .progress-area {
+    grid-template-columns: 45px 1fr 55px;
+    gap: 6px;
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .progress-bar {
+    height: 14px;
+  }
+
+  .progress-thumb {
+    width: 16px;
+    height: 16px;
+  }
+}
+@media (max-width: 430px) {
+  .footer {
+    left: 6px;
+    right: 6px;
+    padding: 7px;
+  }
+
+  .controls-row {
+    gap: 4px;
+  }
+
+  .controls-left,
+  .controls-right {
+    gap: 4px;
+  }
+
+  .ctrl-btn,
+  .icon-btn {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+  }
+
+  .ctrl-btn.play {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  .ctrl-btn svg,
+  .icon-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  #fullscreenIcon {
+    width: 18px;
+    height: 18px;
+  }
+}
+  
+    /* ===== LearnByAKP mobile control fix =====
+       Android/browser navigation bar ke upar controls ko raise karta hai,
+       aur fullscreen button ko mobile portrait me visible rakhta hai.
+    */
+    @media (max-width: 768px) {
+      html, body {
+        width: 100%;
+        min-height: 100%;
+        overflow: hidden;
+      }
+
+      .app,
+      .main,
+      .player {
+        width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        overflow: hidden;
+      }
+
+      .footer {
+        left: 8px !important;
+        right: 8px !important;
+        bottom: calc(58px + env(safe-area-inset-bottom)) !important;
+        padding: 8px 8px 9px !important;
+        border-radius: 15px !important;
+        max-height: 118px;
+      }
+
+      .progress-area {
+        grid-template-columns: 46px minmax(0, 1fr) 58px !important;
+        gap: 6px !important;
+        font-size: 11px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .controls-row {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 6px !important;
+      }
+
+      .controls-left,
+      .controls-right {
+        min-width: 0;
+        display: flex !important;
+        align-items: center;
+        gap: 5px !important;
+      }
+
+      .controls-left {
+        justify-content: flex-start;
+        overflow: hidden;
+      }
+
+      .controls-right {
+        justify-content: flex-end;
+        flex-shrink: 0;
+      }
+
+      .volume-box {
+        display: none !important;
+      }
+
+      .ctrl-btn,
+      .icon-btn {
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px !important;
+        border-radius: 9px !important;
+        padding: 0 !important;
+      }
+
+      .ctrl-btn.play {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+      }
+
+      .ctrl-btn svg,
+      .icon-btn svg {
+        width: 17px !important;
+        height: 17px !important;
+      }
+
+      #fullscreenBtn {
+        display: grid !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative;
+        z-index: 28;
+      }
+
+      #fullscreenIcon {
+        width: 18px !important;
+        height: 18px !important;
+      }
+
+      .settings-panel {
+        bottom: calc(140px + env(safe-area-inset-bottom)) !important;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .footer {
+        left: 6px !important;
+        right: 6px !important;
+      }
+
+      .controls-row {
+        gap: 4px !important;
+      }
+
+      .controls-left,
+      .controls-right {
+        gap: 4px !important;
+      }
+
+      .ctrl-btn,
+      .icon-btn {
+        width: 30px !important;
+        height: 30px !important;
+        min-width: 30px !important;
+      }
+
+      .ctrl-btn.play {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+      }
+    }
+
+    /* Browser fullscreen mode me Android nav bar nahi hota, isliye controls ko niche normal rakho */
+    #rootPlayer:fullscreen .footer,
+    #rootPlayer:-webkit-full-screen .footer,
+    #player:fullscreen .footer,
+    #player:-webkit-full-screen .footer {
+      bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+    }
+
+    #rootPlayer:fullscreen .settings-panel,
+    #rootPlayer:-webkit-full-screen .settings-panel,
+    #player:fullscreen .settings-panel,
+    #player:-webkit-full-screen .settings-panel {
+      bottom: calc(92px + env(safe-area-inset-bottom)) !important;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <main id="rootPlayer" class="main controls-visible">
+      <section id="player" class="player controls-visible">
+        <video id="video" playsinline></video>
+
+        <div id="youtubeLayer" class="youtube-layer" style="display:none;">
+          <div id="ytContainer"></div>
+          <div class="youtube-click-layer" id="ytClickLayer"></div>
+        </div>
+
+        <div class="recorded-badge">RECORDED</div>
+
+        <div id="topbar" class="topbar">
+          <div class="top-left">
+            <button id="backBtn" class="icon-btn" title="Back">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M19 12H5" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M12 19L5 12L12 5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="top-right">
+            <button id="fullscreenBtn2" class="icon-btn" title="Fullscreen">
+              <svg id="fullscreenIcon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button id="downloadBtn" class="ctrl-btn purple" title="Download/Open">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+              </svg>
+            </button>
+            <button id="settingsBtn" class="icon-btn" title="Settings">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+              </svg>
+            </button>
+            
+          </div>
+        </div>
+
+        <button id="centerPlay" class="center-play" title="Play/Pause">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+
+        <div class="meta-bottom">
+          <div class="watermark">
+            <img src="../lo.png" alt="">
+            <span>LearnByAKP</span>
+          </div>
+        </div>
+
+        <div id="loader" class="loader show">
+          <div class="spinner-bold"></div>
+          <p id="loaderText">Initializing...</p>
+          <div class="load-line"><span id="loaderBar"></span></div>
+          <p id="loaderPercent">0%</p>
+        </div>
+
+        <div id="buffering" style="display:none;">
+          <div class="buffering-bar"><div class="buffering-bar-inner"></div></div>
+          <div class="buffering-spinner"></div>
+        </div>
+
+        <div id="errorState" class="error-state">
+          <div class="error-card">
+            <h2 id="errorTitl">Use another player</h2>
+            <p id="errorTex">Click below to play</p>
+            <button onclick="redirectToPlayer()">Play video</button>
+          </div>
+        </div>
+
+        <div id="settingsPanel" class="settings-panel">
+          <div id="settingsMain" class="settings-main">
+            <div class="set-row" data-open="speed">
+              <span class="set-label">Speed</span>
+              <span class="set-value"><span id="speedValue">1</span><svg width="20" height="20" viewBox="0 0 20 20"><path d="M8 14L12 10L8 6L8 14Z" fill="#B3B3BC"/></svg></span>
+            </div>
+            <div id="qualityRow" class="set-row" data-open="quality" style="display:none;">
+              <span class="set-label">Quality</span>
+              <span class="set-value"><span id="qualityValue">Auto</span><svg width="20" height="20" viewBox="0 0 20 20"><path d="M8 14L12 10L8 6L8 14Z" fill="#B3B3BC"/></svg></span>
+            </div>
+          </div>
+          <div id="speedSub" style="display:none;"></div>
+          <div id="qualitySub" style="display:none;"></div>
+        </div>
+
+        <div id="footer" class="footer">
+          <div class="progress-area">
+            <span id="currentTime" class="time-current">00:00</span>
+            <div id="progressBar" class="progress-bar">
+              <div id="progressLoaded" class="progress-loaded"></div>
+              <div id="progressPlayed" class="progress-played"></div>
+              <div id="progressThumb" class="progress-thumb"></div>
+            </div>
+            <span id="durationTime" class="time-total">00:00</span>
+          </div>
+
+          <div class="controls-row">
+            <div class="controls-left">
+              <button id="rewindBtn" class="ctrl-btn" title="-10 sec">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11 7v10l-7-5 7-5zm9 0v10l-7-5 7-5z"/></svg>
+              </button>
+
+              <button id="playBtn" class="ctrl-btn play" title="Play/Pause">
+                <svg id="playIcon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+
+              <button id="forwardBtn" class="ctrl-btn" title="+10 sec">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 7v10l7-5-7-5zm9 0v10l7-5-7-5z"/></svg>
+              </button>
+
+              <div class="volume-box">
+                <button id="muteBtn" class="ctrl-btn" title="Mute">
+                  <svg id="volumeIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3A4.5 4.5 0 0014 8v8a4.5 4.5 0 002.5-4z"/></svg>
+                </button>
+                <div id="volumeRange" class="volume-range">
+                  <div id="volumeFill" class="volume-fill"></div>
+                  <div id="volumeThumb" class="volume-thumb"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="controls-right">
+              <button id="attachmentsBtn" class="ctrl-btn" title="Attachments">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 115.66 5.66l-9.2 9.19a2 2 0 01-2.82-2.83l8.48-8.48"/></svg>
+              </button>
+              <button id="lecturesBtn" class="ctrl-btn" title="Lectures">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+              </button>
+              
+              <button id="fullscreenBtn" class="icon-btn" title="Fullscreen">
+              <svg id="fullscreenIcon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside id="lecturePanel" class="side-panel">
+      <div class="side-head">
+        <h3>Lectures</h3>
+        <button class="icon-btn" id="closeLectures">✕</button>
+      </div>
+      <div id="lectureList" class="side-scroll"><div class="empty">No lectures loaded.</div></div>
+    </aside>
+
+    <aside id="attachmentPanel" class="side-panel">
+      <div class="side-head">
+        <h3>Attachments</h3>
+        <button class="icon-btn" id="closeAttachments">✕</button>
+      </div>
+      <div id="attachmentList" class="side-scroll"><div class="empty">No attachments available.</div></div>
+    </aside>
+  </div>
+
+
+<script>
+  function redirectToPlayer() {
+    // Current URL ke saare query params
+    const currentParams = new URLSearchParams(window.location.search); // [web:19]
+
+    // Jo specific params tum khud set karna chahte ho
+    const specificId = currentParams.get('subject_id');   // ya koi custom value
+    const specificEp = currentParams.get('ep');   // ya koi custom value
+    
+    // Current params se specific params hata do
+    currentParams.delete('sm'); // [web:11][web:15]
+    currentParams.delete('ep'); // [web:11][web:15]
+
+    // Ab naya params object banao play.php ke liye
+    const newParams = new URLSearchParams();
+
+    // 1) Sabse pehle specific params set karo
+    if (specificId !== null) {
+      newParams.set('batchSubjectId', specificId); // [web:19]
+    }
+    if (specificEp !== null) {
+      newParams.set('ep', specificEp); // [web:19]
+    }
+
+    // 2) Baaki ke saare params (jo delete nahi kiye) add kar do
+    for (const [key, value] of currentParams.entries()) { // [web:19]
+      newParams.append(key, value); // [web:19]
+    }
+
+    // Final redirect URL
+    const finalUrl = "https://stream.studyratna.cc/play.php?"+ newParams.toString(); // [web:19]
+
+    window.location.href = finalUrl;
+  }
+</script>
+  <script src="/apv/player.js"></script>
+</body>
+</html>
+  
