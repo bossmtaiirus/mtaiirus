@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Video Downloader</title>
+  <meta name="description" content="HLS video downloader converted to simple HTML, CSS and JavaScript.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./html-js/next-static.css">
+  <script defer src="./apv/download.js"></script>
+</head>
+<body>
+  <div class="page page-soft">
+    <header class="topbar topbar-dark">
+      <a class="icon-button" href="./pw.html" aria-label="Back"><span aria-hidden="true">&#8592;</span></a>
+      <h1>Video Downloader</h1>
+      <span class="topbar-spacer"></span>
+    </header>
+
+    <main class="download-shell">
+      <section class="panel download-card">
+        <div class="form-stack">
+          <label class="input-group">
+            <span>Master URL (.m3u8)</span>
+            <input id="masterUrl" type="url" placeholder="https://example.com/master.m3u8">
+          </label>
+          <label class="input-group">
+            <span>URL Prefix (Auth Tokens)</span>
+            <input id="urlPrefix" type="text" placeholder="?URLPrefix=...&Expires=...&Signature=...">
+          </label>
+          <label class="input-group">
+            <span>Encryption Key (32 hex chars)</span>
+            <input id="keyInput" type="text" placeholder="fe2f2e27290c72ba8556bda6c3a7ffc2" maxlength="32">
+          </label>
+        </div>
+
+        <div class="action-row">
+          <button class="btn btn-primary btn-block" id="fetchPlaylist" type="button">Fetch Playlist</button>
+          <button class="btn btn-primary btn-block" id="loadSegments" type="button" hidden>Load Segments</button>
+          <button class="btn btn-primary btn-block" id="downloadMp4" type="button" hidden>Download MP4</button>
+          <div class="split-actions" id="runningActions" hidden>
+            <button class="btn btn-outline" id="pauseDownload" type="button">Pause</button>
+            <button class="btn btn-danger" id="stopDownload" type="button">Stop</button>
+          </div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-track"><span id="progressBar"></span></div>
+          <p id="statusText">Ready</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card"><strong id="qualityCount">0</strong><span>Qualities</span></div>
+          <div class="stat-card"><strong id="segmentCount">0</strong><span>Segments</span></div>
+          <div class="stat-card"><strong id="estimatedSize">N/A</strong><span>Est. Size</span></div>
+          <div class="stat-card"><strong id="downloadedSize">0.00 MB</strong><span>Downloaded</span></div>
+        </div>
+
+        <section id="qualitySection" class="quality-section" hidden>
+          <h2>Available Qualities:</h2>
+          <div id="qualityList" class="quality-list"></div>
+        </section>
+
+        <section class="log-panel" aria-label="Video downloader log">
+          <p class="log-title">--- Video Downloader Log ---</p>
+          <div id="logList"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+
