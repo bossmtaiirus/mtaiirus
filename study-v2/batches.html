@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PW Batches - JituVault</title>
+
+  <style>
+    /* RESET & VARIABLES */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, sans-serif; }
+    :root {
+      --primary: #5a4bda; --primary2: #7c3aed; --bg: #f5f6fb; --card: #ffffff; 
+      --text: #111827; --muted: #6b7280; --border: #e5e7eb; --danger: #ef4444; 
+      --success: #22c55e; --shadow: 0 12px 32px -8px rgba(15, 23, 42, 0.12);
+      --hover-shadow: 0 16px 40px -8px rgba(90, 75, 218, 0.25);
+    }
+    body { min-height: 100vh; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; transition: background 0.3s ease, color 0.3s ease; }
+    
+    /* DARK MODE VARIABLES */
+    body.dark {
+      --bg: #070816; --card: #101223; --text: #f8fafc; --muted: #94a3b8; 
+      --border: #1e243b; --shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.4);
+      --hover-shadow: 0 16px 40px -8px rgba(124, 58, 237, 0.25);
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; border: none; background: transparent; outline: none; }
+    .hidden { display: none !important; }
+    svg { width: 20px; height: 20px; flex-shrink: 0; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* HEADER */
+    .app-header { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); transition: background 0.3s, border 0.3s; }
+    body.dark .app-header { background: rgba(16, 18, 35, 0.75); }
+
+    .nav { max-width: 1220px; margin: auto; display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 20px; letter-spacing: -0.5px; }
+    .logo-img { width: 44px; height: 44px; border-radius: 14px; object-fit: cover; box-shadow: 0 8px 20px rgba(90, 75, 218, 0.2); }
+
+    /* BUTTONS */
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-btn, .btn { border-radius: 12px; background: var(--card); color: var(--text); border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); }
+    .btn { height: 44px; padding: 0 18px; }
+    .icon-btn { width: 44px; height: 44px; }
+    .btn:hover, .icon-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--primary); color: var(--primary); }
+    
+    .btn.primary { background: linear-gradient(135deg, var(--primary), var(--primary2)); color: #fff; border: none; box-shadow: 0 8px 20px rgba(90, 75, 218, 0.25); }
+    .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(90, 75, 218, 0.35); color: #fff; }
+    .btn.telegram { background: #0088cc; color: #fff; border: none; }
+    .btn.telegram:hover { background: #0077b5; color: #fff; }
+
+    /* SEARCH */
+    .search-wrap { max-width: 1220px; margin: 0 auto; padding: 0 16px 16px; animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .search-box { position: relative; }
+    .search-box input { width: 100%; height: 50px; border: 1px solid var(--border); border-radius: 16px; background: var(--card); color: var(--text); padding: 0 48px; outline: none; transition: 0.2s; font-size: 15px; }
+    .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(90, 75, 218, 0.1); }
+    .search-icon, .clear-search { position: absolute; top: 50%; transform: translateY(-50%); color: var(--muted); }
+    .search-icon { left: 16px; pointer-events: none; }
+    .clear-search { right: 12px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+    .clear-search:hover { background: var(--border); color: var(--text); }
+
+    /* SIDE MENU */
+    .side-menu { position: fixed; inset: 0; z-index: 80; pointer-events: none; }
+    .side-menu.open { pointer-events: auto; }
+    .menu-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s ease; }
+    .side-menu.open .menu-overlay { opacity: 1; }
+    .menu-panel { position: absolute; right: 0; top: 0; height: 100%; width: min(340px, 90vw); background: var(--card); border-left: 1px solid var(--border); padding: 24px; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: -10px 0 30px rgba(0,0,0,0.1); overflow-y: auto; will-change: transform; }
+    .side-menu.open .menu-panel { transform: translateX(0); }
+    .menu-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .menu-list { display: grid; gap: 12px; }
+    .menu-link { display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--text); border: 1px solid transparent; border-radius: 14px; padding: 14px 16px; font-weight: 700; transition: 0.2s; background: rgba(148, 163, 184, 0.05); }
+    .menu-link:hover { background: rgba(90, 75, 218, 0.08); color: var(--primary); border-color: rgba(90, 75, 218, 0.2); transform: translateX(4px); }
+
+    /* MAIN LAYOUT */
+    main { max-width: 1220px; margin: auto; padding: 24px 16px 60px; }
+    
+    /* TABS */
+    .tabs-container { display: flex; gap: 8px; margin-bottom: 24px; background: rgba(148, 163, 184, 0.1); padding: 6px; border-radius: 16px; width: fit-content; border: 1px solid var(--border); }
+    .tab-btn { padding: 10px 24px; border-radius: 12px; font-weight: 700; color: var(--muted); transition: 0.2s; font-size: 15px; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { background: var(--card); color: var(--primary); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+
+    /* TOOLBAR */
+    .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 24px; }
+
+    /* ALERT BOX */
+    .alert { margin-bottom: 28px; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 20px; padding: 20px; display: flex; gap: 16px; align-items: center; }
+    .alert-icon { color: var(--danger); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+    .alert-icon svg { width: 28px; height: 28px; }
+    .alert h3 { color: #991b1b; font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+    .alert p { color: #b91c1c; font-size: 14px; font-weight: 500; }
+    .alert .alert-actions { margin-left: auto; display: flex; gap: 10px; flex-wrap: wrap; }
+    body.dark .alert { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); }
+    body.dark .alert h3 { color: #fca5a5; }
+    body.dark .alert p { color: #f87171; }
+
+    /* GRID & CARDS */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; will-change: transform; }
+    .card:hover { transform: translateY(-4px) scale(1.005); border-color: var(--primary); box-shadow: var(--hover-shadow); }
+    .thumb { position: relative; aspect-ratio: 16/9; background: var(--border); overflow: hidden; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s; }
+    .card:hover .thumb img { transform: scale(1.05); }
+    
+    .badge { position: absolute; border-radius: 10px; padding: 6px 12px; color: #fff; font-size: 12px; font-weight: 800; letter-spacing: 0.5px; z-index: 10; backdrop-filter: blur(4px); }
+    .badge.right { top: 12px; right: 12px; background: rgba(34, 197, 94, 0.9); }
+    .badge.left { top: 12px; left: 12px; background: rgba(239, 68, 68, 0.9); }
+    .badge.trending { top: 12px; left: 12px; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4); }
+
+    .card-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+    .course-title { font-size: 16px; line-height: 1.4; font-weight: 800; }
+    .card-actions { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* EMPTY / LOADING */
+    .empty { padding: 48px 20px; text-align: center; border: 2px dashed var(--border); border-radius: 24px; background: var(--card); grid-column: 1 / -1; }
+    .empty h3 { color: var(--text); margin-bottom: 8px; font-weight: 800; }
+    .empty p { color: var(--muted); font-size: 14px; }
+    .load-wrap { text-align: center; margin-top: 40px; }
+    .load-wrap .btn { min-width: 180px; height: 50px; font-size: 16px; }
+
+    /* SKELETON */
+    .skeleton { background: linear-gradient(90deg, var(--border) 25%, rgba(148, 163, 184, 0.2) 50%, var(--border) 75%); background-size: 200% 100%; animation: shine 1.5s infinite linear; border-radius: 12px; }
+    @keyframes shine { to { background-position: -200% 0; } }
+    .sk-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; padding-bottom: 20px; }
+    .sk-img { aspect-ratio: 16/9; border-radius: 0; }
+    .sk-line { height: 14px; margin: 16px 20px; }
+    .sk-line.w1 { width: 40%; }
+    .sk-line.w2 { width: 80%; height: 24px; }
+    .sk-line.w3 { width: 60%; }
+    .sk-btn { height: 44px; margin: 16px 20px 0; }
+
+    /* DRAWER / FILTER */
+    .filter-drawer { position: fixed; inset: 0; z-index: 90; pointer-events: none; }
+    .filter-drawer.open { pointer-events: auto; }
+    .drawer-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); opacity: 0; transition: 0.3s; }
+    .filter-drawer.open .drawer-overlay { opacity: 1; }
+    .drawer-panel { position: absolute; left: 50%; bottom: 0; transform: translate(-50%, 100%); width: min(760px, 100%); max-height: 85vh; background: var(--card); border-radius: 28px 28px 0 0; border: 1px solid var(--border); box-shadow: 0 -10px 40px rgba(0,0,0,0.15); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; will-change: transform; }
+    .filter-drawer.open .drawer-panel { transform: translate(-50%, 0); }
+    .drawer-head, .drawer-footer { padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .drawer-head { border-bottom: 1px solid var(--border); }
+    .drawer-head h2 { font-size: 18px; font-weight: 800; }
+    .drawer-footer { border-top: 1px solid var(--border); gap: 12px; }
+    .drawer-body { padding: 24px; overflow-y: auto; }
+    .filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 16px; }
+    .check-card { border: 1px solid var(--border); border-radius: 14px; padding: 14px; display: flex; align-items: center; gap: 12px; background: var(--card); cursor: pointer; transition: 0.2s; font-weight: 600; font-size: 14px; }
+    .check-card:hover { border-color: var(--primary); background: rgba(90, 75, 218, 0.03); }
+    .check-card input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
+
+    /* MODAL */
+    .modal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal.show { display: flex; }
+    .modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
+    .modal-card { position: relative; width: min(400px, 100%); background: var(--card); border: 1px solid var(--border); border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden; animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .modal-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+    .modal-content { padding: 24px; text-align: center; }
+    .modal-content h2 { font-size: 22px; font-weight: 800; }
+    .modal-content p { color: var(--muted); margin: 12px 0 24px; line-height: 1.6; font-size: 15px; }
+    .modal-actions { display: grid; gap: 12px; }
+
+    /* TOAST */
+    .toast-box { position: fixed; top: 88px; right: 20px; z-index: 110; display: grid; gap: 12px; pointer-events: none; }
+    .toast { min-width: 280px; max-width: 360px; background: var(--card); border: 1px solid var(--border); border-left: 5px solid var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 16px; padding: 16px; animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: auto; }
+    .toast.danger { border-left-color: var(--danger); }
+    .toast h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .toast p { font-size: 14px; color: var(--muted); }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+
+    .footer-note { text-align: center; margin-top: 40px; color: var(--muted); font-size: 14px; font-weight: 500; }
+
+    /* RESPONSIVE */
+    @media(max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media(max-width: 620px) {
+      .grid { grid-template-columns: 1fr; }
+      .brand span { font-size: 18px; }
+      .alert { flex-direction: column; align-items: flex-start; text-align: left; }
+      .alert .alert-actions { margin-left: 0; width: 100%; }
+      .alert .btn { flex: 1; }
+      .card-actions { grid-template-columns: 1fr; }
+      .tabs-container { width: 100%; justify-content: space-between; }
+      .tab-btn { flex: 1; text-align: center; }
+      .toolbar { justify-content: space-between; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="nav">
+      <div class="brand">
+        <img src="https://i.ibb.co/9k8fbHmZ/empty-state.png" class="logo-img" alt="LearnbyAKP" onerror="this.src='https://i.ibb.co/9Hm0NqsH/f69ed82b-7169-45fc-a82b-915e453c6340.png'">
+        <span>JituVault x PW</span>
+      </div>
+
+      <div class="header-actions">
+        <button class="icon-btn" id="searchToggle" title="Search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+        <button class="icon-btn" id="themeToggle" title="Toggle Theme">
+          <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+        <button class="icon-btn" id="menuToggle" title="Menu">
+          <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- SEARCH BAR -->
+    <div class="search-wrap hidden" id="searchWrap">
+      <div class="search-box">
+        <span class="search-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </span>
+        <input id="searchInput" type="search" placeholder="Search batch by name..." autocomplete="off" />
+        <button class="clear-search hidden" id="clearSearch" title="Clear">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- SIDE MENU -->
+  <aside class="side-menu" id="sideMenu">
+    <div class="menu-overlay" data-close-menu></div>
+    <div class="menu-panel">
+      <div class="menu-head">
+        <h2>Menu</h2>
+        <button class="icon-btn" data-close-menu>
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="menu-list">
+        <a class="menu-link" href="/">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> Home
+        </a>
+        <a class="menu-link" href="/study-v2/batches">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Batches
+        </a>
+        <a class="menu-link" href="https://t.me/NT_PW_2027_free_lectures" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Telegram Main
+        </a>
+        <a class="menu-link" href="https://t.me/NT_PW_2027_free_lectures" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> Community
+        </a>
+        <button class="menu-link" id="clearEnrollments" style="color: var(--danger);">
+          <svg viewBox="0 0 24 24" style="stroke: var(--danger);"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Clear Enrolled Batches
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <div class="tabs-container">
+      <button class="tab-btn active" id="tabAll">All Batches</button>
+      <button class="tab-btn" id="tabEnrolled">Enrolled</button>
+    </div>
+
+    <section class="toolbar">
+      <button class="btn" id="filterBtn">
+        <svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg> Filter Batches
+      </button>
+    </section>
+
+    <section id="statusArea"></section>
+    <section class="grid" id="batchGrid"></section>
+
+    <div class="load-wrap hidden" id="loadWrap">
+      <button class="btn primary" id="loadMoreBtn">Load More</button>
+    </div>
+
+    <p class="footer-note">All rights reserved by JituVault</p>
+  </main>
+
+  <!-- FILTER DRAWER -->
+  <section class="filter-drawer" id="filterDrawer">
+    <div class="drawer-overlay" data-close-filter></div>
+
+    <div class="drawer-panel">
+      <div class="drawer-head">
+        <h2>Filter Courses</h2>
+        <button class="icon-btn" data-close-filter>
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="drawer-body">
+        <h3 style="margin-bottom: 10px; font-size: 15px; color: var(--muted);">Filter by Class</h3>
+        <div class="filter-grid" id="classFilters"></div>
+      </div>
+
+      <div class="drawer-footer">
+        <button class="btn" id="clearFilters">Clear</button>
+        <button class="btn primary" data-close-filter>Apply Filters</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TELEGRAM MODAL -->
+  <section class="modal" id="telegramModal">
+    <div class="modal-backdrop" data-close-modal></div>
+
+    <div class="modal-card">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjthg5QCT078uTEhZ1A7xVcts5D5OzJYsq3g&s" alt="Telegram Promotion" />
+
+      <div class="modal-content">
+        <h2>Join Our Community!</h2>
+        <p>Get the latest updates, notes, and interact with other students on our Telegram channel.</p>
+
+        <div class="modal-actions">
+          <a class="btn primary" href="https://t.me/NT_PW_2027_free_lectures" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg> Join Now
+          </a>
+          <button class="btn" data-close-modal>Maybe Later</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-box" id="toastBox"></div>
+
+  <!-- HIDDEN ELEMENTS (To prevent external JS errors) -->
+  <div style="display: none !important;" aria-hidden="true">
+    <span id="totalBatchesCount"></span>
+    <span id="filteredBatchesCount"></span>
+    <span id="showingCount"></span>
+    <span id="totalFilteredCount"></span>
+    <button id="copyReferral"></button>
+  </div>
+
+  <script src="https://learnbyakp.onrender.com/apv/pbatch.js"></script>
+</body>
+</html>
