@@ -10,7 +10,7 @@
  *****************************************************************/
 
 const CONFIG = {
-  BASE_API: "https://learnbyakp.onrender.com",
+  BASE_API: "https://mtaiirus-api.onrender.com",
 
   REQUIRE_DELTA_KEY: false,
   DELTA_ACCESS_KEY: "delta-access-key",
