@@ -1,4 +1,4 @@
-    const API_BASE = "https://learnbyakp.onrender.com";
+    const API_BASE = "https://mtaiirus-api.onrender.com";
     const ENCRYPTION_KEY = "maggikhalo";
 
     let topics = [];
