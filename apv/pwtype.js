@@ -1,7 +1,7 @@
 
 
     // 1. Core Config
-    const BASE_URL = "https://apiserver.deltastudy.site/";
+    const BASE_URL = "https://learnbyakp.onrender.com/";
 
     // 2. URL Parsing
     const searchParams = new URLSearchParams(window.location.search);
