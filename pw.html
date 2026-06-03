@@ -4,119 +4,106 @@
   <meta charset="utf-8">
   <meta name="robots" content="noindex, follow">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Get Access Key</title>
-  <meta name="description" content="Generate a temporary access key for Learnbyakp.">
+  <title>Learnbyakp</title>
+  <meta name="description" content="Learnbyakp educational platform landing page converted to simple HTML, CSS and JavaScript.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./html-js/next-static.css">
-  <script defer src="./apv/delta-auth.js"></script>
-
-  <style>
-    /* Transparent Background */
-    body, html, .page, .page-muted, .center-shell {
-      background: transparent !important;
-      height: 100vh;
-      margin: 0;
-      padding: 0;
-    }
-    
-    /* Faltu elements hide kiye (Topbar, p tags) */
-    .topbar, .panel p, .hint {
-      display: none !important;
-    }
-
-    .panel {
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      text-align: center;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-
-    /* JituVault - White color taki black layout pe dikhe */
-    .panel h2 {
-      font-size: 3rem !important;
-      font-weight: 900 !important;
-      color: #000000 !important; 
-      margin-bottom: 25px !important;
-      letter-spacing: -1px !important;
-    }
-
-    /* Open Now Button - White background, black text */
-    #openGenerateDialog {
-      background-color: #ffffff !important;
-      color: #ffffff !important;
-      border: none !important;
-      padding: 14px 28px !important;
-      font-size: 1.1rem !important;
-      font-weight: 800 !important;
-      border-radius: 12px !important;
-      cursor: pointer !important;
-      box-shadow: 0 4px 15px rgba(255,255,255,0.2) !important;
-      animation: pulse-anim 1.5s infinite ease-in-out !important;
-      width: auto !important;
-      display: inline-block !important;
-    }
-
-    @keyframes pulse-anim {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.06); }
-      100% { transform: scale(1); }
-    }
-
-    /* Modal ko completely screen se hide kar diya */
-    #generateDialog {
-      opacity: 0 !important;
-      visibility: hidden !important;
-      position: absolute !important;
-      pointer-events: none !important;
-      z-index: -9999 !important;
-    }
-  </style>
+  <script defer src="./html-js/pw.js"></script>
 </head>
 <body>
-  <div class="page page-muted">
-    <header class="topbar topbar-dark">
-      <a class="icon-button" href="./pw.html" aria-label="Back">
-        <span aria-hidden="true">&#000000;</span>
+  <div class="page">
+    <header class="pw-header">
+      <a class="brand-mark" href="./pw.html" aria-label="Learnbyakp home">
+        <img src="./lo.png" alt="Learnbyakp logo">
+        <span>Learnbyakp</span>
       </a>
-      <h1>Get Access Key</h1>
-      <span class="topbar-spacer"></span>
+      <button class="btn btn-primary" id="loginAction" type="button">Login/Register</button>
     </header>
 
-    <main class="center-shell">
-      <section class="panel access-panel">
-        <h2>JituVault</h2>
-        <p>To access all batches and content, you need to generate a temporary access key.</p>
-        <button class="btn btn-primary btn-block" id="openGenerateDialog" type="button">🔥 Open Now 🔥</button>
-        <p class="hint">Your key will be valid for 24 hours. After that, you'll need to generate a new one.</p>
+    <section class="carousel" aria-label="Banners">
+      <div class="carousel-track" id="bannerTrack">
+        <div class="carousel-slide"><img src="https://i.ibb.co/C531QWJ/cd54735c-4e5d-4ac7-8a06-e8d1f9e855b6.jpg" alt="Banner 1"></div>
+        <div class="carousel-slide"><img src="https://i.ibb.co/JRBkhbrz/8d9b4a0e-04d4-4dd3-b7b6-c722eb977a5f.webp" alt="Banner 2"></div>
+        <div class="carousel-slide"><img src="https://i.ibb.co/gZdPN60X/e29a3bb8-a705-4996-b116-d863ab25d5fc.webp" alt="Banner 3"></div>
+        <div class="carousel-slide"><img src="https://i.ibb.co/CKPPS9Yk/07bd4a87-1b0b-4e04-b24c-a1d5b4ed526a.webp" alt="Banner 4"></div>
+        <div class="carousel-slide"><img src="https://i.ibb.co/fYpHvpd2/b8427054-c3f4-4abe-9018-187452e29f9a.webp" alt="Banner 5"></div>
+        <div class="carousel-slide"><img src="https://i.ibb.co/HTxj8RDB/eeb786e2-dec3-4de1-8059-4d986cd9c839.webp" alt="Banner 6"></div>
+      </div>
+      <button class="carousel-button prev" id="bannerPrev" type="button" aria-label="Previous banner">&#8592;</button>
+      <button class="carousel-button next" id="bannerNext" type="button" aria-label="Next banner">&#8594;</button>
+    </section>
+
+    <main>
+      <section class="hero-section">
+        <div class="section-inner hero-grid">
+          <div class="hero-copy">
+            <h1>Bharat's <span class="accent">Trusted & Affordable</span> Educational Platform</h1>
+            <p>Unlock your potential by signing up with Learnbyakp - The most affordable learning solution.</p>
+            <button class="btn btn-primary" id="startAction" type="button">Get Started</button>
+          </div>
+          <div class="hero-art" aria-label="Learnbyakp learning illustration">
+            <img src="https://static.pw.live/ua/images/hero-student-w.webp" alt="Student learning">
+            <div class="bubble light">Alakh Sir, What is PW?</div>
+            <div class="bubble dark">PW is where students learn with love and can grow with guidance</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="feature-section">
+        <div class="section-inner feature-grid">
+          <article class="feature-item">
+            <div class="feature-icon" aria-hidden="true">&#9654;</div>
+            <h3>Daily Live</h3>
+            <p>Interactive classes</p>
+          </article>
+          <article class="feature-item">
+            <div class="feature-icon" aria-hidden="true">&#128196;</div>
+            <h3>10 Million +</h3>
+            <p>Tests, sample papers & notes</p>
+          </article>
+          <article class="feature-item">
+            <div class="feature-icon" aria-hidden="true">&#128172;</div>
+            <h3>24 x 7</h3>
+            <p>Doubt solving sessions</p>
+          </article>
+          <article class="feature-item">
+            <div class="feature-icon" aria-hidden="true">&#127979;</div>
+            <h3>100 +</h3>
+            <p>Offline centres</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="trust-section">
+        <div class="section-inner">
+          <div class="section-title">
+            <h2>A Platform Trusted by Students</h2>
+            <p>Learnbyakp aims to transform not just through words, but provide results with numbers!</p>
+          </div>
+          <div class="trust-grid">
+            <article class="trust-card"><strong>15 Million+</strong><span>Happy Students</span></article>
+            <article class="trust-card"><strong>24000+</strong><span>Mock Tests</span></article>
+            <article class="trust-card"><strong>14000+</strong><span>Video Lectures</span></article>
+            <article class="trust-card"><strong>80000+</strong><span>Practice Papers</span></article>
+          </div>
+          <div class="mt-center">
+            <button class="btn btn-primary" id="trustStartAction" type="button">Get Started</button>
+          </div>
+        </div>
       </section>
     </main>
-  </div>
 
-  <div class="modal" id="generateDialog" hidden>
-    <div class="modal-backdrop" data-close-dialog></div>
-    <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="generateTitle">
-      <h2 id="generateTitle">Generate Your Key</h2>
-      <p>Click the button below to proceed.</p>
-      <div class="modal-actions">
-        <button class="btn btn-outline" type="button" data-close-dialog>Cancel</button>
-        <button class="btn btn-primary" id="generateKey" type="button">Generate Key</button>
+    <footer class="pw-footer">
+      <div class="section-inner">
+        <div class="brand-mark">
+          <img src="./lo.png" alt="Learnbyakp logo">
+          <span>Learnbyakp</span>
+        </div>
+        <p>We understand that every student has unique needs and abilities, that's why our curriculum is designed to adapt to your needs and help you grow!</p>
       </div>
-    </section>
+    </footer>
   </div>
-
-  <script>
-    document.getElementById('openGenerateDialog').addEventListener('click', function() {
-      setTimeout(function() {
-        var hiddenGenBtn = document.getElementById('generateKey');
-        if(hiddenGenBtn) {
-          hiddenGenBtn.click();
-        }
-      }, 50);
-    });
-  </script>
 </body>
 </html>
