@@ -7,7 +7,7 @@
     devtoolLibraryUrl: "https://cdn.jsdelivr.net/npm/disable-devtool@latest/disable-devtool.min.js",
 
     redirectOnDevTools: true,
-    redirectUrl: "kehamhai.html",
+    redirectUrl: "../kehamhai.html",
 
     blurPageOnDevTools: true,
     clearConsoleLoop: true,
@@ -18,7 +18,7 @@
     rightClickBlockerEnabled: true,
     fallbackDevToolsDetectionEnabled: true,
 
-    iframeRedirectUrl: "kehamhai.html",
+    iframeRedirectUrl: "../kehamhai.html",
 
     // ✅ Origin / domain protection
     originProtectionEnabled: true,
@@ -34,7 +34,7 @@
     ],
 
     // ✅ Redirect for blocked origins
-    blockedOriginRedirectUrl: "kehamhai.html"
+    blockedOriginRedirectUrl: "../kehamhai.html"
   };
 
   // Agar master switch OFF hai to pura code yahi ruk jayega
