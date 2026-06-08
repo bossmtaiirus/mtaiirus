@@ -1,50 +1,67 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Topic Content Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Mtaiirus — Topic Content</title>
+  <link rel="icon" type="image/x-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --bg: #f3f7ff;
-      --bg2: #ffffff;
-      --card: rgba(255,255,255,0.82);
-      --text: #132033;
-      --muted: #6b7a90;
-      --border: rgba(19,32,51,0.12);
-      --primary: #5b4bdb;
-      --primary2: #7a5cff;
-      --success: #16a34a;
-      --danger: #dc2626;
+      --bg: #F5F2EB;
+      --bg2: #FFFDFB;
+      --card: rgba(255,253,251,0.82);
+      --text: #1A1814;
+      --muted: #6B6760;
+      --border: rgba(26,24,20,.12);
+      --primary: #D4540E;
+      --primary2: #F0A87A;
+      --accent: #D4540E;
+      --accentb: rgba(212,84,14,.08);
+      --success: #2D6A3F;
+      --danger: #D4540E;
       --warning: #f59e0b;
-      --shadow: 0 18px 50px rgba(15,23,42,0.10);
+      --shadow: 0 18px 50px rgba(26,24,20,.10);
+      --font-heading: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
     }
 
     body.dark {
-      --bg: #08111f;
-      --bg2: #101a2c;
-      --card: rgba(16,26,44,0.82);
-      --text: #edf3ff;
-      --muted: #9fb0cb;
-      --border: rgba(255,255,255,0.10);
-      --primary: #7b83ff;
-      --primary2: #9e67ff;
-      --success: #22c55e;
-      --danger: #ef4444;
+      --bg: #1A1814;
+      --bg2: #25221E;
+      --card: rgba(37,34,30,0.82);
+      --text: #F5F2EB;
+      --muted: #B0ADA7;
+      --border: rgba(245,242,235,.10);
+      --primary: #F0A87A;
+      --primary2: #D4540E;
+      --success: #4ade80;
+      --danger: #f87171;
       --warning: #fbbf24;
-      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: Inter, Arial, sans-serif;
+      font-family: var(--font-body);
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(91,75,219,0.14), transparent 28%),
-        radial-gradient(circle at top right, rgba(122,92,255,0.12), transparent 25%),
+        radial-gradient(circle at top left, rgba(212,84,14,.1), transparent 28%),
+        radial-gradient(circle at top right, rgba(240,168,122,.08), transparent 25%),
         var(--bg);
       min-height: 100vh;
       transition: .25s ease;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
 
     .wrap {
@@ -69,21 +86,19 @@
     }
 
     .brand-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-size: 24px;
+      width: 52px; height: 52px; border-radius: 16px;
+      background: var(--text);
+      display: grid; place-items: center;
+      color: var(--bg); font-family: var(--font-heading);
+      font-size: 22px; font-weight: 800;
       box-shadow: var(--shadow);
-      font-weight: 800;
+      border: 1px solid var(--border);
     }
 
     .brand h1 {
       margin: 0;
-      font-size: 24px;
+      font-family: var(--font-heading);
+      font-size: 24px; font-weight: 800; letter-spacing: -.3px;
     }
 
     .brand p {
@@ -99,11 +114,12 @@
       border-radius: 14px;
       padding: 11px 16px;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 600;
       transition: .2s ease;
       box-shadow: none;
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      font-family: var(--font-body);
     }
 
     .btn:hover, .tab-btn:hover, .icon-btn:hover {
@@ -112,10 +128,11 @@
     }
 
     .btn.primary {
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
-      color: #fff;
+      background: var(--text);
+      color: var(--bg);
       border: none;
     }
+    .btn.primary:hover { background: var(--accent); color: #fff; }
 
     .btn.secondary {
       background: var(--bg2);
@@ -130,7 +147,7 @@
     .panel {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 24px;
+      border-radius: 22px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
@@ -149,7 +166,8 @@
 
     .panel-head h2 {
       margin: 0;
-      font-size: 22px;
+      font-family: var(--font-heading);
+      font-size: 22px; font-weight: 800; letter-spacing: -.3px;
     }
 
     .panel-head p {
@@ -174,8 +192,8 @@
     }
 
     .tab-btn.active {
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
-      color: #fff;
+      background: var(--text);
+      color: var(--bg);
       border-color: transparent;
     }
 
@@ -194,7 +212,8 @@
 
     .section-title h3 {
       margin: 0;
-      font-size: 20px;
+      font-family: var(--font-heading);
+      font-size: 20px; font-weight: 800; letter-spacing: -.2px;
     }
 
     .section-title span {
@@ -218,7 +237,7 @@
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 22px;
+      border-radius: 20px;
       overflow: hidden;
       box-shadow: var(--shadow);
       backdrop-filter: blur(14px);
@@ -229,11 +248,11 @@
       position: relative;
       aspect-ratio: 16 / 9;
       overflow: hidden;
-      background: #d9e2f5;
+      background: var(--bg);
     }
 
     body.dark .lecture-thumb {
-      background: #18243c;
+      background: #25221E;
     }
 
     .lecture-thumb img {
@@ -245,14 +264,12 @@
 
     .badge {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      padding: 8px 11px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
+      top: 12px; left: 12px;
+      padding: 8px 11px; border-radius: 999px;
+      font-size: 11px; font-weight: 700;
       color: #fff;
-      background: rgba(0,0,0,0.72);
+      background: rgba(26,24,20,.72);
+      letter-spacing: .3px;
     }
 
     .card-body {
@@ -266,10 +283,9 @@
     }
 
     .title {
-      font-size: 17px;
-      font-weight: 800;
-      line-height: 1.4;
-      margin-bottom: 10px;
+      font-family: var(--font-heading);
+      font-size: 17px; font-weight: 700; line-height: 1.4;
+      margin-bottom: 10px; letter-spacing: -.2px;
     }
 
     .info-row {
@@ -309,19 +325,15 @@
     }
 
     .doc-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
-      color: white;
+      width: 44px; height: 44px; border-radius: 14px;
+      display: grid; place-items: center;
+      background: var(--text); color: var(--bg);
       font-size: 20px;
       flex: 0 0 44px;
     }
 
     .doc-title {
-      font-weight: 700;
+      font-weight: 600;
       word-break: break-word;
     }
 
@@ -334,7 +346,7 @@
     .empty, .loading, .error {
       text-align: center;
       padding: 42px 18px;
-      border-radius: 24px;
+      border-radius: 20px;
       background: var(--card);
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
@@ -342,6 +354,7 @@
 
     .empty h3, .loading h3, .error h3 {
       margin: 0 0 10px;
+      font-family: var(--font-heading);
       font-size: 22px;
     }
 
@@ -350,11 +363,10 @@
       color: var(--muted);
     }
 
-    /* Modal Styles */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.42);
+      background: rgba(26,24,20,.42);
       display: none;
       align-items: flex-end;
       justify-content: center;
@@ -371,7 +383,7 @@
       max-width: 520px;
       background: var(--bg2);
       border: 1px solid var(--border);
-      border-radius: 26px 26px 0 0;
+      border-radius: 24px 24px 0 0;
       box-shadow: var(--shadow);
       padding: 18px;
       animation: slideUp .22s ease;
@@ -384,7 +396,8 @@
 
     .sheet h4 {
       margin: 0 0 6px;
-      font-size: 20px;
+      font-family: var(--font-heading);
+      font-size: 20px; font-weight: 700;
     }
 
     .sheet p {
@@ -398,7 +411,6 @@
       gap: 10px;
     }
 
-    /* Multi-Notes List Styles */
     .note-list-item {
       display: flex;
       align-items: center;
@@ -411,17 +423,15 @@
     }
 
     .note-list-icon {
-      width: 40px;
-      height: 40px;
+      width: 40px; height: 40px;
       border-radius: 10px;
-      background: #e0e7ff;
-      color: var(--primary);
+      background: var(--accentb);
+      color: var(--accent);
       display: grid;
       place-items: center;
       font-size: 20px;
       flex-shrink: 0;
     }
-    body.dark .note-list-icon { background: rgba(91,75,219,0.2); }
 
     .note-list-info {
       flex: 1;
@@ -430,7 +440,7 @@
 
     .note-list-title {
       font-size: 13px;
-      font-weight: 100;
+      font-weight: 500;
       width: 100%;
       white-space: nowrap;
       overflow: hidden;
@@ -444,18 +454,17 @@
     }
 
     .note-list-btn {
-      width: 36px;
-      height: 36px;
+      width: 36px; height: 36px;
       border-radius: 10px;
       border: 1px solid var(--border);
       background: var(--bg2);
       display: grid;
       place-items: center;
       cursor: pointer;
-      color: var(--primary);
+      color: var(--accent);
       transition: .2s ease;
     }
-    .note-list-btn:hover { background: var(--bg); transform: translateY(-1px); }
+    .note-list-btn:hover { background: var(--accentb); transform: translateY(-1px); }
 
     @media (max-width: 768px) {
       .tabs { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); }
@@ -470,10 +479,10 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <div class="brand-icon">📚</div>
+        <div class="brand-icon">M</div>
         <div>
           <h1 id="pageTitle">Topic Content</h1>
-          <p>PW by learnbyakp</p>
+          <p>Mtaiirus Course Viewer</p>
         </div>
       </div>
       <button id="themeBtn" class="icon-btn">🌙 Night Mode</button>
@@ -523,12 +532,11 @@
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
         <div style="flex:1; padding-right:10px;">
           <p style="margin:0 0 4px; font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase;">Notes & Attachments</p>
-          <h4 id="notesListSheetTitle" style="margin:0; font-size:16px; line-height:1.4;">Loading...</h4>
+          <h4 id="notesListSheetTitle" style="margin:0; font-family:var(--font-heading); font-size:16px; line-height:1.4;">Loading...</h4>
         </div>
         <button class="icon-btn" id="notesListCloseBtn" style="padding: 6px 12px; border-radius:10px;">✕</button>
       </div>
-      <div id="notesListContent" style="overflow-y: auto; flex: 1; display: grid; gap: 10px; padding-bottom: 10px;">
-        </div>
+      <div id="notesListContent" style="overflow-y: auto; flex: 1; display: grid; gap: 10px; padding-bottom: 10px;"></div>
     </div>
   </div>
 
@@ -543,6 +551,29 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // ══════════════════ SECURITY LAYER ══════════════════
+    (function() {
+      'use strict';
+      var REDIRECT = 'kehamhai.html';
+      var _dtFired = false;
+      var _threshold = 160;
+      function _redirect() { if (_dtFired) return; _dtFired = true; window.location.replace(REDIRECT); }
+      function _checkSize() { var w = window.outerWidth - window.innerWidth; var h = window.outerHeight - window.innerHeight; if (w > _threshold || h > _threshold) _redirect(); }
+      setInterval(_checkSize, 600);
+      setInterval(function() { (function() { var t = new Date(); debugger; if (new Date() - t > 100) _redirect(); })(); }, 3000);
+      document.addEventListener('contextmenu', function(e) { e.preventDefault(); e.stopPropagation(); return false; }, true);
+      ['selectstart','dragstart','copy','cut'].forEach(function(ev) { document.addEventListener(ev, function(e) { e.preventDefault(); return false; }); });
+      document.addEventListener('keydown', function(e) { var k = e.key || ''; if (e.keyCode === 123 || k === 'F12') { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I','J','C','i','j','c'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && ['u','U','s','S','p','P','a','A'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } }, true);
+      window.addEventListener('beforeprint', function(e) { e.stopImmediatePropagation(); window.print = function() { return false; }; }, true);
+      try { var _n = function() {}; ['log','warn','error','info','debug','table','dir','dirxml','trace','group','groupCollapsed','groupEnd','time','timeEnd','profile','profileEnd','count','clear'].forEach(function(m) { if (console[m]) console[m] = _n; }); } catch(_) {}
+      document.documentElement.style.setProperty('-webkit-user-select','none');
+      document.documentElement.style.setProperty('-moz-user-select','none');
+      document.documentElement.style.setProperty('-ms-user-select','none');
+      document.documentElement.style.setProperty('user-select','none');
+    })();
+  </script>
 
   <script src="/apv/pwtype.js"></script>
 </body>
