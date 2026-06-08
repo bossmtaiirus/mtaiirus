@@ -216,7 +216,7 @@ function loadEnrolledIds(){
 // Fetch JSON Local
 async function fetchLocalJSONBatches(){
   try{
-    const res = await fetch("https://raw.githubusercontent.com/reenachoudhary21999-cmyk/mtaiirus/refs/heads/main/apv/batches.json");    
+    const res = await fetch("https://raw.githubusercontent.com/akp-la/Learnbyakp/refs/heads/main/apv/batches.json");    
     if(!res.ok) throw new Error("HTTP error! status: " + res.status);
     
     const json = await res.json();
