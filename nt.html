@@ -1,0 +1,97 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Mtaiirus — Learning Hub</title>
+    <meta name="description" content="Stream your enrolled batches in crisp HLS. A focused, distraction-free learning hub built for serious students.">
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#D4540E" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Mtaiirus" />
+    <link rel="apple-touch-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" />
+    <link rel="icon" type="image/x-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9TJ7EHXQQZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-9TJ7EHXQQZ');
+    </script>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Mtaiirus — Learning Hub" />
+    <meta property="og:description" content="Stream your enrolled batches in crisp HLS. A focused, distraction-free learning hub built for serious students." />
+    <meta property="og:image" content="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" />
+    <meta property="og:site_name" content="Mtaiirus" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mtaiirus — Learning Hub" />
+    <meta name="twitter:description" content="Stream your enrolled batches in crisp HLS. A focused, distraction-free learning hub built for serious students." />
+    <meta name="twitter:image" content="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" />
+
+    <!-- React App -->
+    <script type="module" crossorigin src="/assets/index-Bpez-YEg.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D--DH0VY.css" />
+
+    <!-- Custom Mtaiirus Overrides -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+      /* Mtaiirus global overrides for the React app */
+      :root {
+        --mtaiirus-bg: #F5F2EB;
+        --mtaiirus-ink: #1A1814;
+        --mtaiirus-accent: #D4540E;
+        --mtaiirus-accentl: #F0A87A;
+        --mtaiirus-card: #FFFDFB;
+        --mtaiirus-border: rgba(26,24,20,.1);
+        --mtaiirus-font-heading: 'Syne', sans-serif;
+        --mtaiirus-font-body: 'DM Sans', sans-serif;
+      }
+
+      body {
+        font-family: var(--mtaiirus-font-body);
+        background: var(--mtaiirus-bg);
+        color: var(--mtaiirus-ink);
+        -webkit-tap-highlight-color: transparent;
+        -webkit-text-size-adjust: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    
+    <script>
+      // ══════════════════ SECURITY LAYER ══════════════════
+      (function() {
+        'use strict';
+        var REDIRECT = 'kehamhai.html';
+        var _dtFired = false;
+        var _threshold = 160;
+        function _redirect() { if (_dtFired) return; _dtFired = true; window.location.replace(REDIRECT); }
+        function _checkSize() { var w = window.outerWidth - window.innerWidth; var h = window.outerHeight - window.innerHeight; if (w > _threshold || h > _threshold) _redirect(); }
+        setInterval(_checkSize, 600);
+        setInterval(function() { (function() { var t = new Date(); debugger; if (new Date() - t > 100) _redirect(); })(); }, 3000);
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); e.stopPropagation(); return false; }, true);
+        ['selectstart','dragstart','copy','cut'].forEach(function(ev) { document.addEventListener(ev, function(e) { e.preventDefault(); return false; }); });
+        document.addEventListener('keydown', function(e) { var k = e.key || ''; if (e.keyCode === 123 || k === 'F12') { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I','J','C','i','j','c'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && ['u','U','s','S','p','P','a','A'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } }, true);
+        window.addEventListener('beforeprint', function(e) { e.stopImmediatePropagation(); window.print = function() { return false; }; }, true);
+        try { var _n = function() {}; ['log','warn','error','info','debug','table','dir','dirxml','trace','group','groupCollapsed','groupEnd','time','timeEnd','profile','profileEnd','count','clear'].forEach(function(m) { if (console[m]) console[m] = _n; }); } catch(_) {}
+        document.documentElement.style.setProperty('-webkit-user-select','none');
+        document.documentElement.style.setProperty('-moz-user-select','none');
+        document.documentElement.style.setProperty('-ms-user-select','none');
+        document.documentElement.style.setProperty('user-select','none');
+      })();
+    </script>
+  </body>
+</html>
