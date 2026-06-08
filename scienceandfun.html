@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Mtaiirus — Science & Fun Batches</title>
+    <link rel="icon" type="image/x-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mtaiirus: {
+                            bg: '#F5F2EB',
+                            bg2: '#ECEAE2',
+                            ink: '#1A1814',
+                            ink2: '#6B6760',
+                            ink3: '#B0ADA7',
+                            accent: '#D4540E',
+                            accentl: '#F0A87A',
+                            accentb: 'rgba(212,84,14,.08)',
+                            green: '#2D6A3F',
+                            greenl: '#E4F0E8',
+                            card: '#FFFDFB',
+                            border: 'rgba(26,24,20,.1)',
+                            borderh: 'rgba(26,24,20,.2)',
+                        }
+                    },
+                    fontFamily: {
+                        heading: ['Syne', 'sans-serif'],
+                        body: ['DM Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: #F5F2EB;
+            color: #1A1814;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #ECEAE2; }
+        ::-webkit-scrollbar-thumb { background: #B0ADA7; border-radius: 3px; }
+
+        /* Card hover effect */
+        .course-card {
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+        }
+        .course-card:hover {
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+<body class="bg-[#F5F2EB] min-h-screen">
+
+    <header class="bg-[#FFFDFB]/90 backdrop-blur-lg shadow-sm sticky top-0 z-50 border-b border-[rgba(26,24,20,.1)]">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="/" class="flex-shrink-0 flex items-center gap-3 no-underline">
+                        <img 
+                            src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" 
+                            alt="Mtaiirus Logo" 
+                            width="38" 
+                            height="38" 
+                            class="rounded-lg border border-[rgba(26,24,20,.1)]"
+                            onerror="this.style.display='none'"
+                        >
+                        <span style="font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#1A1814;letter-spacing:1.2px;">
+                            MTAI<span style="color:#D4540E;">IRUS</span>
+                        </span>
+                    </a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span style="font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;color:#6B6760;letter-spacing:.3px;">
+                        Science & Fun Batches
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="py-10 px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="max-w-7xl mx-auto mb-8">
+            <div class="flex items-center gap-3 mb-2">
+                <div style="width:8px;height:8px;border-radius:50%;background:#D4540E;"></div>
+                <span style="font-family:'Syne',sans-serif;font-size:0.7rem;font-weight:700;color:#D4540E;text-transform:uppercase;letter-spacing:2px;">
+                    Available Batches
+                </span>
+            </div>
+            <h1 style="font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1;letter-spacing:-1px;color:#1A1814;margin-bottom:8px;">
+                Science & <span style="color:#D4540E;">Fun</span>
+            </h1>
+            <p style="font-size:14px;color:#6B6760;max-width:480px;line-height:1.6;">
+                Explore all available batches from Science And Fun. Click on any course to start learning for free.
+            </p>
+        </div>
+
+        <!-- Course Grid -->
+        <div id="course-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            <!-- Cards loaded dynamically -->
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-12 pt-8 border-t border-[rgba(26,24,20,.1)]">
+            <p style="font-size:12px;color:#B0ADA7;">
+                © 2025 Mtaiirus · Made with <span style="color:#D4540E;">♥</span> for Students of India
+            </p>
+        </div>
+    </main>
+
+    <script>
+        // ══════════════════ SECURITY LAYER ══════════════════
+        (function() {
+            'use strict';
+            var REDIRECT = 'kehamhai.html';
+            var _dtFired = false;
+            var _threshold = 160;
+            function _redirect() { if (_dtFired) return; _dtFired = true; window.location.replace(REDIRECT); }
+            function _checkSize() { var w = window.outerWidth - window.innerWidth; var h = window.outerHeight - window.innerHeight; if (w > _threshold || h > _threshold) _redirect(); }
+            setInterval(_checkSize, 600);
+            setInterval(function() { (function() { var t = new Date(); debugger; if (new Date() - t > 100) _redirect(); })(); }, 3000);
+            document.addEventListener('contextmenu', function(e) { e.preventDefault(); e.stopPropagation(); return false; }, true);
+            ['selectstart','dragstart','copy','cut'].forEach(function(ev) { document.addEventListener(ev, function(e) { e.preventDefault(); return false; }); });
+            document.addEventListener('keydown', function(e) { var k = e.key || ''; if (e.keyCode === 123 || k === 'F12') { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I','J','C','i','j','c'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && ['u','U','s','S','p','P','a','A'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } }, true);
+            window.addEventListener('beforeprint', function(e) { e.stopImmediatePropagation(); window.print = function() { return false; }; }, true);
+            try { var _n = function() {}; ['log','warn','error','info','debug','table','dir','dirxml','trace','group','groupCollapsed','groupEnd','time','timeEnd','profile','profileEnd','count','clear'].forEach(function(m) { if (console[m]) console[m] = _n; }); } catch(_) {}
+            document.documentElement.style.setProperty('-webkit-user-select','none');
+            document.documentElement.style.setProperty('-moz-user-select','none');
+            document.documentElement.style.setProperty('-ms-user-select','none');
+            document.documentElement.style.setProperty('user-select','none');
+        })();
+    </script>
+
+    <script src="./x/sbatch.js"></script>
+
+</body>
+</html>
