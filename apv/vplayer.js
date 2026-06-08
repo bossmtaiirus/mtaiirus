@@ -44,7 +44,7 @@ injectLoaderUI();
 addFixedControlsCSS();
 
 document.getElementById('video-title').textContent = videoTitle;
-document.title = 'LearnByAKP | ' + videoTitle;
+document.title = 'MTAIIRUS | ' + videoTitle;
 
 // Flow decide: videourl vs API
 if (directVideoUrl) {
