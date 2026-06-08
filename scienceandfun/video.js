@@ -669,5 +669,5 @@ vpProgressBar.addEventListener('touchstart', (e) => {
 
 checkKeyValidity();
 if (isKeyValid) { fetchVideoDetails(); } 
-else { window.location.replace("/delta-auth"); }
+else { window.location.replace("/pw"); }
   
