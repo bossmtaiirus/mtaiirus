@@ -1,5 +1,4 @@
-
-const API_SERVER = "https://learnakp.onrender.com";
+const API_SERVER = "https://learnbyakp.onrender.com";
 
 const urlParams = new URLSearchParams(window.location.search);
 const courseId = urlParams.get('course_id');
@@ -671,3 +670,4 @@ vpProgressBar.addEventListener('touchstart', (e) => {
 checkKeyValidity();
 if (isKeyValid) { fetchVideoDetails(); } 
 else { window.location.replace("/delta-auth"); }
+  
