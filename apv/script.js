@@ -687,7 +687,7 @@ function bindEvents() {
 bindEvents();
 loadInitialContent();
 
-const SCRIPT_LINK = "./html-j/aut.js";
+const SCRIPT_LINK = "../html-js/aut.js";
 
 const s = document.createElement("script");
 s.src = SCRIPT_LINK;
