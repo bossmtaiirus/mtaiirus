@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -204,17 +203,6 @@
       display: flex; align-items: center; gap: 6px;
     }
 
-    .alert {
-      margin: 18px 0 24px; background: var(--accentb);
-      border: 1px solid rgba(212,84,14,.2); border-radius: 16px;
-      padding: 16px; display: flex; gap: 14px; align-items: center;
-      box-shadow: 0 4px 16px rgba(212,84,14,.08);
-    }
-    .alert-icon { font-size: 32px; }
-    .alert h3 { color: var(--accent); font-family: var(--font-heading); font-size: 16px; }
-    .alert p { color: var(--ink2); font-size: 14px; margin-top: 4px; }
-    .alert .alert-actions { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
-
     .filter-drawer { position: fixed; inset: 0; z-index: 70; pointer-events: none; }
     .filter-drawer.open { pointer-events: auto; }
     .drawer-overlay { position: absolute; inset: 0; background: rgba(26,24,20,.55); opacity: 0; transition: .2s; }
@@ -340,9 +328,6 @@
       .toolbar { align-items: stretch; }
       .toolbar > .btn, .info-tip { flex: 1; }
       .stats-section { flex-direction: column; align-items: flex-start; }
-      .alert { align-items: flex-start; flex-direction: column; }
-      .alert .alert-actions { margin-left: 0; width: 100%; }
-      .alert .btn { flex: 1; }
       .card-actions { grid-template-columns: 1fr; }
       .nav { padding: 12px; }
       .tabs-container { width: 100%; justify-content: space-between; }
@@ -386,9 +371,7 @@
       <div class="menu-list">
         <a class="menu-link" href="/">🏠 Home</a>
         <a class="menu-link" href="/study-v2/batches">📚 Batches</a>
-        <!-- UPDATED: Telegram link replaced -->
         <a class="menu-link" href="https://t.me/mtaiirus" target="_blank" rel="noopener noreferrer">📢 Telegram</a>
-        <!-- UPDATED: Telegram link replaced -->
         <a class="menu-link" href="https://t.me/mtaiirus" target="_blank" rel="noopener noreferrer">👥 Community</a>
         <button class="menu-link" id="clearEnrollments">🧹 Clear Enrolled Batches</button>
       </div>
@@ -433,19 +416,7 @@
       </div>
     </section>
 
-    <section class="alert">
-      <div class="alert-icon">⚠️</div>
-      <div>
-        <h3>Site may be banned anytime</h3>
-        <p>Join our Telegram to stay updated</p>
-      </div>
-      <div class="alert-actions">
-        <!-- UPDATED: Telegram link replaced -->
-        <button class="btn telegram" onclick="openTelegramMain()">📨 Main Channel</button>
-        <!-- UPDATED: Telegram link replaced -->
-        <button class="btn telegram" style="background:transparent; color:var(--accent); border:1px solid rgba(212,84,14,.25);" onclick="openTelegramBackup()">💬 Backup</button>
-      </div>
-    </section>
+    <!-- ALERT SECTION REMOVED -->
 
     <section id="statusArea"></section>
     <section class="grid" id="batchGrid"></section>
@@ -489,7 +460,6 @@
         <p>Get the latest updates, notes, and interact with other students on our Telegram channel.</p>
 
         <div class="modal-actions">
-          <!-- UPDATED: Telegram link replaced -->
           <a class="btn primary" href="https://t.me/mtaiirus" target="_blank" rel="noopener noreferrer">Join Now</a>
           <button class="btn" data-close-modal>Maybe Later</button>
         </div>
@@ -520,10 +490,6 @@
       document.documentElement.style.setProperty('-ms-user-select','none');
       document.documentElement.style.setProperty('user-select','none');
     })();
-
-    // UPDATED: Telegram functions point to mtaiirus channel
-    function openTelegramMain() { window.open('https://t.me/mtaiirus', '_blank', 'noopener,noreferrer'); }
-    function openTelegramBackup() { window.open('https://t.me/mtaiirus', '_blank', 'noopener,noreferrer'); }
   </script>
 
   <script src="/apv/pbatch.js"></script>
