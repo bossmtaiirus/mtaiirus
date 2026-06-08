@@ -1,30 +1,60 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head><meta name="robots" content="noindex, follow">
+<head>
+  <meta name="robots" content="noindex, follow">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vibrant Batches</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Mtaiirus — Batches</title>
+  <link rel="icon" type="image/x-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root {
+      --bg: #F5F2EB;
+      --bg2: #ECEAE2;
+      --ink: #1A1814;
+      --ink2: #6B6760;
+      --ink3: #B0ADA7;
+      --accent: #D4540E;
+      --accentl: #F0A87A;
+      --accentb: rgba(212,84,14,.08);
+      --green: #2D6A3F;
+      --greenl: #E4F0E8;
+      --card: #FFFDFB;
+      --border: rgba(26,24,20,.1);
+      --borderh: rgba(26,24,20,.2);
+      --shadow: 0 4px 20px rgba(26,24,20,.08);
+      --shadow-lg: 0 10px 40px rgba(26,24,20,.12);
+      --font-heading: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
     }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #2563eb;
+      font-family: var(--font-body);
+      background: var(--bg);
       min-height: 100vh;
-      color: #111827;
+      color: var(--ink);
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
 
     .header {
       position: sticky;
       top: 0;
       z-index: 50;
-      background: #ffffff;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      background: rgba(245,242,235,.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
     }
 
     .header-inner {
@@ -40,18 +70,33 @@
     .logo-link {
       display: inline-flex;
       align-items: center;
+      gap: 10px;
       text-decoration: none;
     }
 
     .logo {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       object-fit: contain;
       display: block;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .brand-name {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: 1.2px;
+    }
+
+    .brand-name span {
+      color: var(--accent);
     }
 
     .main {
-      padding: 48px 16px;
+      padding: 40px 16px 60px;
     }
 
     .grid {
@@ -59,39 +104,37 @@
       margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(1, minmax(0, 1fr));
-      gap: 32px;
+      gap: 24px;
     }
 
     @media (min-width: 640px) {
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (min-width: 1024px) {
-      .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
     .card {
-      background: #ffffff;
-      border: 2px solid #e5e7eb;
-      border-radius: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      transition: transform 0.3s ease;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
 
     .card:hover {
-      transform: scale(1.03);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--borderh);
     }
 
     .card-image-wrap {
       position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
-      background: #f3f4f6;
+      background: var(--bg2);
     }
 
     .card-image {
@@ -109,11 +152,13 @@
     }
 
     .card-title {
+      font-family: var(--font-heading);
       font-size: 16px;
       font-weight: 700;
-      color: #1f2937;
+      color: var(--ink);
       min-height: 40px;
       line-height: 1.4;
+      letter-spacing: -.2px;
     }
 
     .price-row {
@@ -124,9 +169,10 @@
     }
 
     .free-text {
-      font-size: 32px;
-      font-weight: 700;
-      color: #16a34a;
+      font-family: var(--font-heading);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--green);
     }
 
     .price-box {
@@ -136,54 +182,59 @@
     }
 
     .price {
+      font-family: var(--font-heading);
       font-size: 28px;
-      font-weight: 700;
-      color: #111827;
+      font-weight: 800;
+      color: var(--ink);
     }
 
     .original-price {
       font-size: 14px;
-      color: #6b7280;
+      color: var(--ink3);
       text-decoration: line-through;
     }
 
     .discount-badge {
-      background: #dcfce7;
-      color: #15803d;
+      background: var(--greenl);
+      color: var(--green);
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       border-radius: 999px;
       padding: 4px 10px;
-      border: 1px solid #bbf7d0;
+      border: 1px solid rgba(45,106,63,.2);
     }
 
     .view-btn {
       width: 100%;
       margin-top: 16px;
-      background: #2563eb;
-      color: #ffffff;
+      background: var(--ink);
+      color: var(--bg);
       border: none;
       border-radius: 10px;
       padding: 14px 16px;
-      font-size: 16px;
+      font-family: var(--font-body);
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
       transition: background 0.25s ease;
+      letter-spacing: .2px;
     }
 
     .view-btn:hover {
-      background: #1d4ed8;
+      background: var(--accent);
+      color: #fff;
     }
 
     .fallback {
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #6b7280;
+      color: var(--ink3);
       font-size: 14px;
+      font-weight: 500;
       width: 100%;
       height: 100%;
-      background: #e5e7eb;
+      background: var(--bg2);
     }
   </style>
 </head>
@@ -193,9 +244,11 @@
       <a class="logo-link" href="/vibrant">
         <img
           class="logo"
-          src="https://nocache-appxdb-v2.classx.co.in/subject/2026-02-24-0.8461171343418096.png"
-          alt="Vibrant Academy Logo"
+          src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg"
+          alt="Mtaiirus Logo"
+          onerror="this.style.display='none'"
         />
+        <span class="brand-name">MTAI<span>IRUS</span></span>
       </a>
     </div>
   </header>
@@ -204,7 +257,28 @@
     <div class="grid" id="batchGrid"></div>
   </main>
 
-  <script >
+  <script>
+    // ══════════════════ SECURITY LAYER ══════════════════
+    (function() {
+      'use strict';
+      var REDIRECT = 'kehamhai.html';
+      var _dtFired = false;
+      var _threshold = 160;
+      function _redirect() { if (_dtFired) return; _dtFired = true; window.location.replace(REDIRECT); }
+      function _checkSize() { var w = window.outerWidth - window.innerWidth; var h = window.outerHeight - window.innerHeight; if (w > _threshold || h > _threshold) _redirect(); }
+      setInterval(_checkSize, 600);
+      setInterval(function() { (function() { var t = new Date(); debugger; if (new Date() - t > 100) _redirect(); })(); }, 3000);
+      document.addEventListener('contextmenu', function(e) { e.preventDefault(); e.stopPropagation(); return false; }, true);
+      ['selectstart','dragstart','copy','cut'].forEach(function(ev) { document.addEventListener(ev, function(e) { e.preventDefault(); return false; }); });
+      document.addEventListener('keydown', function(e) { var k = e.key || ''; if (e.keyCode === 123 || k === 'F12') { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I','J','C','i','j','c'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && ['u','U','s','S','p','P','a','A'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } }, true);
+      window.addEventListener('beforeprint', function(e) { e.stopImmediatePropagation(); window.print = function() { return false; }; }, true);
+      try { var _n = function() {}; ['log','warn','error','info','debug','table','dir','dirxml','trace','group','groupCollapsed','groupEnd','time','timeEnd','profile','profileEnd','count','clear'].forEach(function(m) { if (console[m]) console[m] = _n; }); } catch(_) {}
+      document.documentElement.style.setProperty('-webkit-user-select','none');
+      document.documentElement.style.setProperty('-moz-user-select','none');
+      document.documentElement.style.setProperty('-ms-user-select','none');
+      document.documentElement.style.setProperty('user-select','none');
+    })();
+
     const batches = [
       {
         id: 8,
@@ -336,6 +410,6 @@
     batches.forEach(batch => {
       batchGrid.appendChild(createCard(batch));
     });
-</script>
+  </script>
 </body>
 </html>
