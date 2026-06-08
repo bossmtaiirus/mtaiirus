@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mtaiirus — Free Premium Courses</title>
+<link rel="icon" type="image/x-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F2EB;
+  --bg2: #ECEAE2;
+  --ink: #1A1814;
+  --ink2: #6B6760;
+  --ink3: #B0ADA7;
+  --accent: #D4540E;
+  --accentl: #F0A87A;
+  --accentb: rgba(212,84,14,.08);
+  --green: #2D6A3F;
+  --greenl: #E4F0E8;
+  --blue: #1A4B8C;
+  --bluel: #E4EBF7;
+  --card: #FFFDFB;
+  --border: rgba(26,24,20,.1);
+  --borderh: rgba(26,24,20,.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* FLOATING WORDS BACKGROUND */
+.floating-words {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.04;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: var(--ink);
+  white-space: nowrap;
+  user-select: none;
+}
+.float-word {
+  position: absolute;
+  animation: floatAround 26s infinite alternate ease-in-out;
+  letter-spacing: -2px;
+}
+.float-word:nth-child(1) { top: 8%; left: 3%; animation-duration: 22s; }
+.float-word:nth-child(2) { top: 22%; right: 5%; animation-duration: 30s; animation-delay: -5s; }
+.float-word:nth-child(3) { bottom: 18%; left: 8%; animation-duration: 24s; animation-delay: -8s; }
+.float-word:nth-child(4) { bottom: 32%; right: 4%; animation-duration: 28s; animation-delay: -13s; }
+.float-word:nth-child(5) { top: 48%; left: 28%; animation-duration: 32s; animation-delay: -4s; }
+.float-word:nth-child(6) { top: 68%; right: 18%; animation-duration: 20s; animation-delay: -10s; }
+.float-word:nth-child(7) { top: 14%; left: 58%; animation-duration: 27s; animation-delay: -16s; }
+.float-word:nth-child(8) { bottom: 8%; left: 42%; animation-duration: 34s; animation-delay: -7s; }
+
+@keyframes floatAround {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(30px, -20px) rotate(1deg); }
+  50% { transform: translate(-20px, 25px) rotate(-1deg); }
+  75% { transform: translate(15px, 12px) rotate(0.5deg); }
+  100% { transform: translate(-10px, -15px) rotate(-0.5deg); }
+}
+
+/* TEXTURE OVERLAY */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+
+/* MAIN CARD */
+.main-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+}
+
+.main-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 24px;
+  padding: 40px 32px;
+  text-align: center;
+  box-shadow: 0 2px 0 var(--border), 0 20px 60px rgba(26,24,20,.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.main-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accentl), var(--accent));
+}
+
+/* LOGO */
+.logo-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+.logo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* BRAND NAME */
+.brand-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
+}
+.brand-name span {
+  color: var(--accent);
+}
+
+/* TAGLINE */
+.tagline {
+  font-size: 13px;
+  color: var(--ink3);
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+/* COMING SOON BADGE */
+.coming-soon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFF8F0;
+  color: var(--accent);
+  border: 1.5px solid rgba(212,84,14,.2);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 100px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  animation: pulseBadge 2.5s infinite;
+}
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.5); opacity: 0.4; }
+}
+@keyframes pulseBadge {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212,84,14,.2); }
+  50% { box-shadow: 0 0 0 14px rgba(212,84,14,0); }
+}
+
+/* DESCRIPTION */
+.description {
+  font-size: 15px;
+  color: var(--ink2);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* PLATFORM LIST */
+.platform-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.platform-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  opacity: 1;
+  transition: all 0.25s;
+}
+.platform-item:hover {
+  opacity: 1;
+  border-color: var(--accent);
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.platform-item:active {
+  transform: scale(0.98);
+}
+.platform-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.platform-icon.nt {
+  background: #E8F0FF;
+}
+.platform-icon.mj {
+  background: #EAFBF0;
+}
+.platform-info {
+  flex: 1;
+  text-align: left;
+}
+.platform-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.platform-meta {
+  font-size: 11px;
+  color: var(--ink3);
+}
+.working-tag {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--green);
+  background: var(--greenl);
+  padding: 5px 10px;
+  border-radius: 100px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.external-icon {
+  font-size: 12px;
+  margin-left: 4px;
+  opacity: 0.6;
+}
+
+/* TELEGRAM BUTTON */
+.telegram-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--ink);
+  color: var(--bg);
+  text-decoration: none;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+  width: 100%;
+}
+.telegram-btn:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+.telegram-icon {
+  font-size: 18px;
+}
+
+/* FOOTER TEXT */
+.footer-text {
+  font-size: 11px;
+  color: var(--ink3);
+  margin-top: 20px;
+  letter-spacing: 0.5px;
+}
+.footer-text .heart {
+  color: var(--accent);
+}
+
+/* RESPONSIVE */
+@media (max-width: 420px) {
+  .main-card {
+    padding: 32px 20px;
+    border-radius: 20px;
+  }
+  .brand-name {
+    font-size: 24px;
+  }
+  .description {
+    font-size: 14px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- FLOATING WORDS BACKGROUND -->
+<div class="floating-words">
+  <div class="float-word">COMING SOON</div>
+  <div class="float-word">JEE · NEET</div>
+  <div class="float-word">NEXT TOPPERS</div>
+  <div class="float-word">MISSION JEET</div>
+  <div class="float-word">PREMIUM BATCHES</div>
+  <div class="float-word">STAY TUNED</div>
+  <div class="float-word">FREE ACCESS</div>
+  <div class="float-word">MTAIIRUS</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-container">
+  <div class="main-card">
+
+    <!-- LOGO -->
+    <div class="logo-wrap">
+      <img src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" alt="Mtaiirus Logo" onerror="this.innerHTML='<span style=\'font-family:Syne,sans-serif;font-size:24px;font-weight:800;color:var(--accent)\'>M</span>'">
+    </div>
+
+    <!-- BRAND -->
+    <div class="brand-name">MTAI<span>IRUS</span></div>
+    <div class="tagline">Free Premium Courses</div>
+
+    <!-- COMING SOON BADGE -->
+    <div class="coming-soon-badge">
+      <span class="pulse-dot"></span>
+      Coming Soon...
+    </div>
+
+    <!-- DESCRIPTION -->
+    <p class="description">
+      We're getting ready to unlock premium batches from India's top ed-tech platforms. <strong>All free. No sign-up.</strong> Stay tuned.
+    </p>
+
+    <!-- PLATFORM LIST -->
+    <div class="platform-list">
+
+      <!-- Next Toppers -->
+      <a href="https://wayzrytvdmskcglluliu.supabase.co/storage/v1/object/public/apk/Next%20Toppers.apk" target="_blank" class="platform-item">        
+        <div class="platform-icon nt">🎯</div>
+        <div class="platform-info">
+          <div class="platform-name">Next Toppers <span class="external-icon">↗</span></div>
+          <div class="platform-meta">Premium Batches · Click to Download</div>
+        </div>
+        <span class="working-tag">Working</span>
+      </a>
+
+      <!-- Mission JEET -->
+      <a href="https://wayzrytvdmskcglluliu.supabase.co/storage/v1/object/public/apk/Mission%20Jeet.apk" target="_blank" class="platform-item">        
+        <div class="platform-icon mj">🏆</div>
+        <div class="platform-info">
+          <div class="platform-name">Mission JEET <span class="external-icon">↗</span></div>
+          <div class="platform-meta">Full Syllabus · Click to Download</div>
+        </div>
+        <span class="working-tag">Working</span>
+      </a>
+
+    </div>
+
+    <!-- TELEGRAM BUTTON -->
+    <a href="https://t.me/mtaiirus" class="telegram-btn" target="_blank">
+      <span class="telegram-icon">📢</span>
+      Join Telegram for Launch Updates
+    </a>
+
+    <!-- FOOTER -->
+    <p class="footer-text">
+      © 2025 Mtaiirus · Made with <span class="heart">♥</span> in India
+    </p>
+
+  </div>
+</div>
+
+<script>
+/* Content protection */
+(function(){
+  ["contextmenu","selectstart","dragstart","copy"].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault()));
+  document.addEventListener("keydown",(e)=>{
+    const blocked=e.key==="F12"||(e.ctrlKey&&e.shiftKey&&["I","J","C"].includes(e.key))||(e.ctrlKey&&["U","S"].includes(e.key));
+    if(blocked){e.preventDefault();return false}
+  });
+})();
+</script>
+
+</body>
+</html>

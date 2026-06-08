@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Announcements — Mtaiirus</title>
+  <link rel="icon" type="image/x-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F5F2EB;
+      --bg2: #ECEAE2;
+      --ink: #1A1814;
+      --ink2: #6B6760;
+      --ink3: #B0ADA7;
+      --accent: #D4540E;
+      --accentl: #F0A87A;
+      --accentb: rgba(212,84,14,.08);
+      --green: #2D6A3F;
+      --greenl: #E4F0E8;
+      --blue: #1A4B8C;
+      --bluel: #E4EBF7;
+      --card: #FFFDFB;
+      --border: rgba(26,24,20,.1);
+      --borderh: rgba(26,24,20,.2);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%;min-height:100vh}
+
+    /* ── HEADER ── */
+    .hdr{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(245,242,235,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,60px);z-index:1000}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+    .blogo{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;background:#fff;border:1px solid var(--border)}
+    .blogo img{width:36px;height:36px;object-fit:contain;display:block}
+    .bname{font-family:'Syne',sans-serif;font-size:clamp(16px,4vw,20px);font-weight:800;color:var(--ink);letter-spacing:1.5px}
+    .bname span{color:var(--accent)}
+    .nav{display:flex;align-items:center;gap:2px}
+    .nav a{text-decoration:none;color:var(--ink2);font-size:13px;font-weight:500;padding:6px 14px;border-radius:6px;transition:all .2s}
+    .nav a:hover{color:var(--ink);background:rgba(26,24,20,.06)}
+    .nav .back-btn{background:var(--ink);color:var(--bg);border-radius:6px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+    .nav .back-btn:hover{background:var(--accent);color:#fff}
+    .ham{display:none;border:1px solid var(--border);background:none;border-radius:6px;padding:7px 10px;cursor:pointer;color:var(--ink2);font-size:18px;min-width:40px;min-height:40px;align-items:center;justify-content:center}
+    .drawer{display:none;flex-direction:column;position:fixed;top:60px;left:0;right:0;background:rgba(245,242,235,.98);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 16px 16px;gap:2px;z-index:999;max-height:calc(100vh - 60px);overflow-y:auto}
+    .drawer.open{display:flex}
+    .drawer a{text-decoration:none;color:var(--ink2);font-size:15px;font-weight:500;padding:13px 14px;border-radius:8px;transition:all .2s;min-height:48px;display:flex;align-items:center;gap:10px}
+    .drawer a:hover,.drawer a:active{color:var(--ink);background:rgba(26,24,20,.06)}
+
+    /* ── MAIN CONTENT ── */
+    .main-content{padding-top:80px;padding-bottom:clamp(40px,6vw,80px);max-width:900px;margin:0 auto;padding-left:clamp(16px,5vw,60px);padding-right:clamp(16px,5vw,60px)}
+    
+    .page-header{text-align:center;margin-bottom:clamp(32px,6vw,56px)}
+    .page-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accentb);color:var(--accent);font-size:11px;font-weight:700;padding:6px 16px;border-radius:100px;letter-spacing:1px;margin-bottom:16px;text-transform:uppercase}
+    .page-badge i{animation:pulseDot 1.2s ease-in-out infinite;font-size:8px}
+    @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.4}}
+    .page-title{font-family:'Syne',sans-serif;font-size:clamp(32px,6vw,56px);font-weight:800;line-height:1;letter-spacing:-1.5px;margin-bottom:12px;color:var(--ink)}
+    .page-title em{font-style:normal;color:var(--accent)}
+    .page-desc{font-size:14px;color:var(--ink2);line-height:1.8;max-width:500px;margin:0 auto}
+
+    /* ── ANNOUNCEMENT CARDS ── */
+    .ann-list{display:flex;flex-direction:column;gap:16px}
+    .ann-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:clamp(20px,3vw,28px);transition:all .25s;position:relative;overflow:hidden}
+    .ann-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(26,24,20,.08);border-color:var(--borderh)}
+    .ann-card.pinned{border-left:4px solid var(--accent)}
+    .ann-card.pinned::before{content:"📌 Pinned";position:absolute;top:14px;right:18px;font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.8px;background:var(--accentb);padding:3px 10px;border-radius:20px}
+    .ann-card-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px}
+    .ann-icon-wrap{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .ann-icon-wrap.news{background:#E8F0FF;color:var(--blue)}
+    .ann-icon-wrap.batch{background:#FFF0E6;color:var(--accent)}
+    .ann-icon-wrap.update{background:var(--greenl);color:var(--green)}
+    .ann-icon-wrap.alert{background:#FFF5E0;color:#A06000}
+    .ann-info{flex:1;min-width:0}
+    .ann-card-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.3}
+    .ann-card-date{font-size:11px;color:var(--ink3);display:flex;align-items:center;gap:6px;font-weight:500}
+    .ann-card-date .new-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block}
+    .ann-card-body{font-size:13.5px;color:var(--ink2);line-height:1.8;margin-bottom:16px}
+    .ann-card-body a{color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px dashed var(--accentl);transition:border-color .2s}
+    .ann-card-body a:hover{border-bottom-color:var(--accent)}
+    .ann-card-tags{display:flex;gap:8px;flex-wrap:wrap}
+    .ann-tag{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.3px}
+    .ann-tag.green{background:var(--greenl);color:var(--green)}
+    .ann-tag.orange{background:var(--accentb);color:var(--accent)}
+    .ann-tag.blue{background:var(--bluel);color:var(--blue)}
+
+    /* ── SUBSCRIBE CARD ── */
+    .subscribe-card{background:var(--ink);border-radius:16px;padding:clamp(24px,4vw,36px);margin-top:32px;text-align:center;position:relative;overflow:hidden}
+    .subscribe-card::before{content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(212,84,14,.2),transparent 70%);pointer-events:none}
+    .subscribe-title{font-family:'Syne',sans-serif;font-size:clamp(20px,3vw,28px);font-weight:800;color:var(--bg);margin-bottom:8px;letter-spacing:-.5px}
+    .subscribe-desc{font-size:13px;color:rgba(245,242,235,.5);margin-bottom:20px;line-height:1.6}
+    .subscribe-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .btn-sub{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:13px 24px;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .2s;min-height:48px;white-space:nowrap}
+    .btn-sub:hover{background:#bf4a0c;transform:translateY(-2px)}
+    .btn-sub-outline{background:transparent;color:var(--accentl);border:1.5px solid rgba(240,168,122,.3);border-radius:8px;padding:13px 20px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .2s;min-height:48px}
+    .btn-sub-outline:hover{border-color:var(--accentl);color:var(--bg)}
+
+    /* ── FOOTER ── */
+    .footer{background:var(--bg2);border-top:1px solid var(--border);padding:clamp(24px,4vw,40px) clamp(16px,5vw,60px) 20px;text-align:center}
+    .footer p{font-size:12px;color:var(--ink3)}
+    .footer .heart{color:var(--accent)}
+    .footer a{color:var(--ink2);text-decoration:none;font-weight:500;transition:color .2s}
+    .footer a:hover{color:var(--ink)}
+
+    .rv{opacity:0;transform:translateY(24px);transition:opacity .5s ease,transform .5s ease}
+    .rv.on{opacity:1;transform:translateY(0)}
+
+    @media(max-width:700px){
+      .nav{display:none}
+      .ham{display:flex}
+      .ann-card.pinned::before{position:static;display:inline-block;margin-bottom:8px}
+      .ann-card-header{flex-direction:column;gap:10px}
+      .subscribe-btns{flex-direction:column}
+      .btn-sub,.btn-sub-outline{width:100%;justify-content:center}
+    }
+    @media(max-width:360px){
+      .hdr{padding:0 12px}
+      .main-content{padding-left:12px;padding-right:12px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <a href="/" class="brand">
+    <div class="blogo"><img src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" alt="Mtaiirus" onerror="this.parentElement.innerHTML='<span style=\'font-family:Syne,sans-serif;font-size:19px;font-weight:800;color:var(--accent)\'>M</span>'"></div>
+    <span class="bname">MTAI<span>IRUS</span></span>
+  </a>
+  <nav class="nav" id="desknav">
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+  </nav>
+  <button class="ham" id="ham" aria-label="Menu">☰</button>
+</header>
+
+<div class="drawer" id="drawer" role="navigation">
+  <a href="index.html" onclick="cd()"><i class="fas fa-home"></i> Back to Home</a>
+  <a href="index.html#platforms" onclick="cd()"><i class="fas fa-mobile-alt"></i> Platforms</a>
+  <a href="index.html#subjects" onclick="cd()"><i class="fas fa-book"></i> Subjects</a>
+  <a href="https://t.me/mtaiirus" onclick="cd()"><i class="fas fa-paper-plane"></i> Telegram</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+  
+  <!-- PAGE HEADER -->
+  <div class="page-header rv">
+    <div class="page-badge"><i class="fas fa-circle"></i> Stay Updated</div>
+    <h1 class="page-title">Latest <em>Announcements</em></h1>
+    <p class="page-desc">Stay in the loop with new batch launches, updates, and important notifications from Mtaiirus.</p>
+  </div>
+
+  <!-- ANNOUNCEMENT LIST -->
+  <div class="ann-list">
+
+    <!-- PINNED ANNOUNCEMENT -->
+    <div class="ann-card pinned rv">
+      <div class="ann-card-header">
+        <div class="ann-icon-wrap batch">🚀</div>
+        <div class="ann-info">
+          <div class="ann-card-title">NIRBHAY OLD Batch — Enrollment Open!</div>
+          <div class="ann-card-date"><span class="new-dot"></span> May 26, 2026 · Pinned</div>
+        </div>
+      </div>
+      <div class="ann-card-body">
+        Premium batches for Class 11 & 12 across Science (PCMB), Commerce, and Humanities are now live. <a href="https://mtaiirus.pages.dev/web" target="_blank">Enroll now at Mtaiirus</a> — completely free. Limited seats available.
+      </div>
+      <div class="ann-card-tags">
+        <span class="ann-tag orange">Enrollment</span>
+        <span class="ann-tag green">New Batch</span>
+        <span class="ann-tag blue">Class 11-12</span>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENT 2 -->
+    <div class="ann-card rv">
+      <div class="ann-card-header">
+        <div class="ann-icon-wrap news">📢</div>
+        <div class="ann-info">
+          <div class="ann-card-title">Abhay OLD Batch for Class 10 Now Available</div>
+          <div class="ann-card-date">May 28, 2026</div>
+        </div>
+      </div>
+      <div class="ann-card-body">
+        Abhay old batch for Class 10 CBSE, UP Board, and Bihar Board students is now live. Access all subjects with premium content at zero cost. <a href="https://mtaiirus.pages.dev/web" target="_blank">Grab your seat today</a>.        
+      </div>
+      <div class="ann-card-tags">
+        <span class="ann-tag green">Class 10</span>
+        <span class="ann-tag orange">New Launch</span>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENT 3 -->
+    <div class="ann-card rv">
+      <div class="ann-card-header">
+        <div class="ann-icon-wrap update">🔄</div>
+        <div class="ann-info">
+          <div class="ann-card-title">Platform Update — Faster Streaming & New UI</div>
+          <div class="ann-card-date">May 28, 2026</div>
+        </div>
+      </div>
+      <div class="ann-card-body">
+        We've rolled out a major update to improve streaming speed and navigation. Browse batches faster, search smarter, and enjoy a smoother experience across all devices.
+      </div>
+      <div class="ann-card-tags">
+        <span class="ann-tag blue">Update</span>
+        <span class="ann-tag green">Improvement</span>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENT 4 -->
+    <div class="ann-card rv">
+      <div class="ann-card-header">
+        <div class="ann-icon-wrap alert">⚡</div>
+        <div class="ann-info">
+          <div class="ann-card-title">Prarambh Series — All Streams Batch Added</div>
+          <div class="ann-card-date">May 28, 2026</div>
+        </div>
+      </div>
+      <div class="ann-card-body">
+        Science, Commerce, and Humanities batches under the Prarambh series for Class 11 & 12 are now fully available. Start your preparation with India's top educators — all for free.
+      </div>
+      <div class="ann-card-tags">
+        <span class="ann-tag orange">Prarambh</span>
+        <span class="ann-tag green">All Streams</span>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENT 5 -->
+    <div class="ann-card rv">
+      <div class="ann-card-header">
+        <div class="ann-icon-wrap news">📱</div>
+        <div class="ann-info">
+          <div class="ann-card-title">Join Our Telegram Channel for Instant Updates</div>
+          <div class="ann-card-date">May 25, 2026</div>
+        </div>
+      </div>
+      <div class="ann-card-body">
+        Get notified the moment a new batch drops. Join <a href="https://t.me/mtaiirus" target="_blank">Mtaiirus</a> and never miss an update. We post all new batches, tips, and resources there first.
+      </div>
+      <div class="ann-card-tags">
+        <span class="ann-tag blue">Community</span>
+        <span class="ann-tag orange">Telegram</span>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENT 6 -->
+    <div class="ann-card rv">
+      <div class="ann-card-header">
+        <div class="ann-icon-wrap update">📚</div>
+        <div class="ann-info">
+          <div class="ann-card-title">E-Book Library — 99 Pages Combo Now Free</div>
+          <div class="ann-card-date">May 20, 2026</div>
+        </div>
+      </div>
+      <div class="ann-card-body">
+        Our Class 10th 99 Pages Combo E-Book is now available for free access. Covers all major subjects with concise notes, formulas, and practice questions. <a href="https://rcxebook.netlify.app/" target="_blank">Download now</a>.
+      </div>
+      <div class="ann-card-tags">
+        <span class="ann-tag green">E-Book</span>
+        <span class="ann-tag blue">Class 10</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SUBSCRIBE CARD -->
+  <div class="subscribe-card rv">
+    <div class="subscribe-title">Never Miss an Update</div>
+    <p class="subscribe-desc">Join our Telegram channel to get instant notifications about new batches, features, and exclusive resources.</p>
+    <div class="subscribe-btns">
+      <a href="https://t.me/mtaiirus" target="_blank" class="btn-sub"><i class="fas fa-paper-plane"></i> Join Telegram Channel</a>
+      <a href="index.html" class="btn-sub-outline"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>© 2025 <a href="index.html">Mtaiirus</a> · Made with <span class="heart">♥</span> for Students of India</p>
+</footer>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ── REDIRECT TARGET ── */
+  var REDIRECT = 'kehamhai.html';
+
+  /* ── DEVTOOLS REDIRECT ── */
+  var _dtFired = false;
+  var _threshold = 160;
+
+  function _redirect() {
+    if (_dtFired) return;
+    _dtFired = true;
+    window.location.replace(REDIRECT);
+  }
+
+  function _checkSize() {
+    var w = window.outerWidth  - window.innerWidth;
+    var h = window.outerHeight - window.innerHeight;
+    if (w > _threshold || h > _threshold) _redirect();
+  }
+  setInterval(_checkSize, 600);
+
+  setInterval(function() {
+    (function() {
+      var t = new Date();
+      debugger;
+      if (new Date() - t > 100) _redirect();
+    })();
+  }, 3000);
+
+  document.addEventListener('contextmenu', function(e) { e.preventDefault(); e.stopPropagation(); return false; }, true);
+  ['selectstart','dragstart','copy','cut'].forEach(function(ev) {
+    document.addEventListener(ev, function(e) { e.preventDefault(); return false; });
+  });
+  document.addEventListener('keydown', function(e) {
+    var k = e.key || '';
+    if (e.keyCode === 123 || k === 'F12') { e.preventDefault(); e.stopPropagation(); return false; }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I','J','C','i','j','c'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; }
+    if ((e.ctrlKey || e.metaKey) && ['u','U','s','S','p','P','a','A'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; }
+  }, true);
+  window.addEventListener('beforeprint', function(e) { e.stopImmediatePropagation(); window.print = function() { return false; }; }, true);
+
+  try {
+    var _n = function() {};
+    ['log','warn','error','info','debug','table','dir','dirxml','trace','group','groupCollapsed','groupEnd','time','timeEnd','profile','profileEnd','count','clear'].forEach(function(m) {
+      if (console[m]) console[m] = _n;
+    });
+  } catch(_) {}
+
+  document.documentElement.style.setProperty('-webkit-user-select','none');
+  document.documentElement.style.setProperty('-moz-user-select','none');
+  document.documentElement.style.setProperty('-ms-user-select','none');
+  document.documentElement.style.setProperty('user-select','none');
+
+})();
+
+/* ── SCROLL REVEAL ── */
+(function() {
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e, i) {
+      if (e.isIntersecting) { setTimeout(function() { e.target.classList.add('on'); }, i * 60); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -24px 0px' });
+  document.querySelectorAll('.rv').forEach(function(el) { obs.observe(el); });
+})();
+
+/* ── HAMBURGER ── */
+(function() {
+  var ham = document.getElementById('ham');
+  var drawer = document.getElementById('drawer');
+  if (!ham || !drawer) return;
+  ham.addEventListener('click', function(e) {
+    e.stopPropagation();
+    drawer.classList.toggle('open');
+    ham.textContent = drawer.classList.contains('open') ? '✕' : '☰';
+  });
+  function cd() { drawer.classList.remove('open'); ham.textContent = '☰'; }
+  document.addEventListener('click', function(e) { if (!ham.contains(e.target) && !drawer.contains(e.target)) cd(); });
+  document.addEventListener('touchstart', function(e) { if (!ham.contains(e.target) && !drawer.contains(e.target)) cd(); }, { passive: true });
+  window.cd = cd;
+})();
+</script>
+</body>
+</html>
