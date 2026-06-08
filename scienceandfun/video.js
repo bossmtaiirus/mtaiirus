@@ -1,5 +1,5 @@
 
-const API_SERVER = "https://learnbyakp.onrender.com";
+const API_SERVER = "https://mtaiirus-api.onrender.com";
 
 const urlParams = new URLSearchParams(window.location.search);
 const courseId = urlParams.get('course_id');
