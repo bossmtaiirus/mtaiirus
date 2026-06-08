@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚠ Security Warning — Mtaiirus</title>
+<link rel="icon" type="image/x-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F2EB;
+  --bg2: #ECEAE2;
+  --ink: #1A1814;
+  --ink2: #6B6760;
+  --ink3: #B0ADA7;
+  --accent: #D4540E;
+  --accentl: #F0A87A;
+  --accentb: rgba(212,84,14,.08);
+  --green: #2D6A3F;
+  --greenl: #E4F0E8;
+  --warning: #D4540E;
+  --warning-bg: #FFF5F0;
+  --warning-border: rgba(212,84,14,.2);
+  --card: #FFFDFB;
+  --border: rgba(26,24,20,.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+}
+
+/* FLOATING WORDS BACKGROUND */
+.floating-words {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.03;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: var(--warning);
+  white-space: nowrap;
+  user-select: none;
+}
+.float-word {
+  position: absolute;
+  animation: floatAround 26s infinite alternate ease-in-out;
+  letter-spacing: -2px;
+}
+.float-word:nth-child(1) { top: 8%; left: 3%; animation-duration: 22s; }
+.float-word:nth-child(2) { top: 22%; right: 5%; animation-duration: 30s; animation-delay: -5s; }
+.float-word:nth-child(3) { bottom: 18%; left: 8%; animation-duration: 24s; animation-delay: -8s; }
+.float-word:nth-child(4) { bottom: 32%; right: 4%; animation-duration: 28s; animation-delay: -13s; }
+.float-word:nth-child(5) { top: 48%; left: 28%; animation-duration: 32s; animation-delay: -4s; }
+.float-word:nth-child(6) { top: 68%; right: 18%; animation-duration: 20s; animation-delay: -10s; }
+.float-word:nth-child(7) { top: 14%; left: 58%; animation-duration: 27s; animation-delay: -16s; }
+.float-word:nth-child(8) { bottom: 8%; left: 42%; animation-duration: 34s; animation-delay: -7s; }
+
+@keyframes floatAround {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(30px, -20px) rotate(1deg); }
+  50% { transform: translate(-20px, 25px) rotate(-1deg); }
+  75% { transform: translate(15px, 12px) rotate(0.5deg); }
+  100% { transform: translate(-10px, -15px) rotate(-0.5deg); }
+}
+
+/* TEXTURE OVERLAY */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+
+/* MAIN CONTAINER */
+.warning-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 460px;
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* WARNING CARD */
+.warning-card {
+  background: var(--card);
+  border: 1.5px solid var(--warning-border);
+  border-radius: 24px;
+  padding: 40px 32px;
+  text-align: center;
+  box-shadow: 0 2px 0 var(--warning-border), 0 20px 60px rgba(212,84,14,.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.warning-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--warning), #f08050, var(--warning));
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* LOGO */
+.logo-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+.logo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.logo-wrap .logo-fallback {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+/* WARNING ICON */
+.warning-icon-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--warning-bg);
+  border: 2px solid var(--warning-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 40px;
+  animation: pulseWarning 2s infinite;
+  position: relative;
+}
+
+.warning-icon-wrap::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(212,84,14,.1);
+  animation: pulseRing 2s infinite;
+}
+
+@keyframes pulseWarning {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(212,84,14,.3);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 0 24px rgba(212,84,14,0);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes pulseRing {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* BRAND NAME */
+.brand-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
+}
+.brand-name span {
+  color: var(--warning);
+}
+
+/* WARNING TITLE */
+.warning-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 20px 0 8px;
+  letter-spacing: -0.5px;
+}
+.warning-title .highlight {
+  color: var(--warning);
+}
+
+/* SUBTITLE */
+.warning-subtitle {
+  font-size: 12px;
+  color: var(--warning);
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.warning-subtitle .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--warning);
+  animation: dotPulse 1s infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* MESSAGE */
+.warning-message {
+  font-size: 15px;
+  color: var(--ink2);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  font-weight: 400;
+}
+
+.warning-message strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* DETAILS CARD */
+.warning-details {
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  font-size: 13px;
+  color: var(--ink2);
+  transition: all 0.2s;
+}
+
+.detail-item:not(:last-child) {
+  border-bottom: 1px solid rgba(212,84,14,.08);
+}
+
+.detail-item:hover {
+  color: var(--ink);
+}
+
+.detail-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  background: #fff;
+  border: 1px solid var(--warning-border);
+}
+
+.detail-text {
+  flex: 1;
+}
+
+.detail-label {
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.detail-desc {
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+/* ACTION BUTTONS */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--warning);
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.25s;
+  letter-spacing: 0.3px;
+  width: 100%;
+}
+
+.btn-primary:hover {
+  background: #c0480a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212,84,14,.25);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--ink2);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.25s;
+  letter-spacing: 0.3px;
+  width: 100%;
+}
+
+.btn-secondary:hover {
+  background: var(--bg);
+  border-color: var(--warning-border);
+  color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+
+/* STATUS BADGE */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid var(--warning-border);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 100px;
+  margin-top: 20px;
+  letter-spacing: 0.5px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--warning);
+  animation: statusPulse 1.5s infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.status-badge.safe {
+  color: var(--green);
+  border-color: rgba(45,106,63,.2);
+  background: var(--greenl);
+}
+
+.status-badge.safe .status-dot {
+  background: var(--green);
+  animation: none;
+}
+
+/* FOOTER */
+.footer-text {
+  font-size: 11px;
+  color: var(--ink3);
+  margin-top: 20px;
+  letter-spacing: 0.5px;
+}
+
+.footer-text .heart {
+  color: var(--warning);
+}
+
+/* COUNTDOWN */
+.countdown {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink2);
+  margin-top: 12px;
+  letter-spacing: 0.5px;
+}
+
+.countdown span {
+  color: var(--warning);
+  font-weight: 700;
+}
+
+/* RESPONSIVE */
+@media (max-width: 420px) {
+  .warning-card {
+    padding: 32px 20px;
+    border-radius: 20px;
+  }
+  .warning-title {
+    font-size: 22px;
+  }
+  .warning-message {
+    font-size: 14px;
+  }
+  .warning-icon-wrap {
+    width: 64px;
+    height: 64px;
+    font-size: 32px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- FLOATING WORDS BACKGROUND -->
+<div class="floating-words">
+  <div class="float-word">WARNING</div>
+  <div class="float-word">SECURITY</div>
+  <div class="float-word">DEBUG DETECTED</div>
+  <div class="float-word">PROTECTED</div>
+  <div class="float-word">CLOSE DEVTOOLS</div>
+  <div class="float-word">RESTRICTED</div>
+  <div class="float-word">MTAIIRUS</div>
+  <div class="float-word">ALERT</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="warning-container">
+  <div class="warning-card">
+
+    <!-- LOGO -->
+    <div class="logo-wrap">
+      <img src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" alt="Mtaiirus Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <span class="logo-fallback" style="display:none;">M</span>
+    </div>
+
+    <!-- WARNING ICON -->
+    <div class="warning-icon-wrap">⚠️</div>
+
+    <!-- BRAND -->
+    <div class="brand-name">MTAI<span>IRUS</span></div>
+
+    <!-- TITLE -->
+    <div class="warning-title"><span class="highlight">⚠</span> Debugging Detected!</div>
+    
+    <!-- SUBTITLE -->
+    <div class="warning-subtitle">
+      <span class="dot"></span>
+      Security Alert
+      <span class="dot"></span>
+    </div>
+
+    <!-- MESSAGE -->
+    <p class="warning-message">
+      <strong>Developer Tools or debugging software</strong> has been detected on this page. For security and content protection, please close all debugging tools to continue.
+    </p>
+
+    <!-- DETAILS -->
+    <div class="warning-details">
+      <div class="detail-item">
+        <div class="detail-icon">🔒</div>
+        <div class="detail-text">
+          <div class="detail-label">Content Protection</div>
+          <div class="detail-desc">Premium course content is protected</div>
+        </div>
+      </div>
+      
+      <div class="detail-item">
+        <div class="detail-icon">🚫</div>
+        <div class="detail-text">
+          <div class="detail-label">Debugging Restricted</div>
+          <div class="detail-desc">DevTools may cause functionality issues</div>
+        </div>
+      </div>
+      
+      <div class="detail-item">
+        <div class="detail-icon">✅</div>
+        <div class="detail-text">
+          <div class="detail-label">Safe Browsing</div>
+          <div class="detail-desc">Close DevTools to access resources</div>
+        </div>
+      </div>
+      
+      <div class="detail-item">
+        <div class="detail-icon">⚡</div>
+        <div class="detail-text">
+          <div class="detail-label">Auto-Redirect</div>
+          <div class="detail-desc">You'll be redirected when DevTools closes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-buttons">
+      <button class="btn-primary" id="understoodBtn">
+        <span>✓</span> I Understand, Close Warning
+      </button>
+      
+      <button class="btn-secondary" id="goBackBtn">
+        <span>←</span> Go Back to Home
+      </button>
+    </div>
+
+    <!-- STATUS BADGE -->
+    <div class="status-badge" id="statusBadge">
+      <span class="status-dot"></span>
+      DevTools Status: Monitoring...
+    </div>
+
+    <!-- COUNTDOWN -->
+    <div class="countdown" id="countdown" style="display:none;">
+      Redirecting in <span id="timer">5</span> seconds...
+    </div>
+
+    <!-- FOOTER -->
+    <p class="footer-text">
+      © 2025 Mtaiirus · Made with <span class="heart">♥</span> in India
+    </p>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  // Prevent right-click, F12, etc.
+  ["contextmenu","selectstart","dragstart","copy"].forEach(ev => 
+    document.addEventListener(ev, e => e.preventDefault())
+  );
+  
+  document.addEventListener("keydown", (e) => {
+    const blocked = e.key === "F12" || 
+                   (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) || 
+                   (e.ctrlKey && ["U","S"].includes(e.key));
+    if (blocked) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // Elements
+  const statusBadge = document.getElementById('statusBadge');
+  const countdown = document.getElementById('countdown');
+  const timerSpan = document.getElementById('timer');
+  const understoodBtn = document.getElementById('understoodBtn');
+  const goBackBtn = document.getElementById('goBackBtn');
+  
+  let devtoolsOpen = false;
+  let countdownInterval = null;
+  let redirectTimeout = null;
+  let secondsLeft = 5;
+
+  // Detect DevTools
+  function detectDevTools() {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    
+    // Performance timing check
+    const start = performance.now();
+    debugger;
+    const end = performance.now();
+    const timeDiff = end - start;
+    
+    return widthDiff || heightDiff || timeDiff > 100;
+  }
+
+  // Update status badge
+  function updateStatus(open) {
+    if (open) {
+      statusBadge.className = 'status-badge';
+      statusBadge.innerHTML = '<span class="status-dot"></span> DevTools Status: Detected';
+      stopCountdown();
+    } else {
+      statusBadge.className = 'status-badge safe';
+      statusBadge.innerHTML = '<span class="status-dot"></span> DevTools Status: Clear';
+      startCountdown();
+    }
+  }
+
+  // Start countdown for redirect
+  function startCountdown() {
+    if (countdownInterval) return;
+    
+    secondsLeft = 5;
+    countdown.style.display = 'block';
+    timerSpan.textContent = secondsLeft;
+    
+    countdownInterval = setInterval(() => {
+      secondsLeft--;
+      timerSpan.textContent = secondsLeft;
+      
+      if (secondsLeft <= 0) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        window.location.href = 'kehamhai.html';
+      }
+    }, 1000);
+    
+    // Fallback redirect after 6 seconds
+    redirectTimeout = setTimeout(() => {
+      window.location.href = 'kehamhai.html';
+    }, 6000);
+  }
+
+  // Stop countdown
+  function stopCountdown() {
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+    if (redirectTimeout) {
+      clearTimeout(redirectTimeout);
+      redirectTimeout = null;
+    }
+    countdown.style.display = 'none';
+  }
+
+  // Button handlers
+  understoodBtn.addEventListener('click', () => {
+    if (!detectDevTools()) {
+      window.location.href = 'kehamhai.html';
+    } else {
+      // Shake the card if DevTools is still open
+      const card = document.querySelector('.warning-card');
+      card.style.animation = 'none';
+      card.offsetHeight;
+      card.style.animation = 'shake 0.5s ease';
+      
+      statusBadge.style.animation = 'none';
+      statusBadge.offsetHeight;
+      statusBadge.style.animation = 'pulseWarning 0.5s ease';
+    }
+  });
+
+  goBackBtn.addEventListener('click', () => {
+    window.location.href = 'index.html'; // or your main page
+  });
+
+  // Add shake animation
+  const shakeStyle = document.createElement('style');
+  shakeStyle.textContent = `
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+  `;
+  document.head.appendChild(shakeStyle);
+
+  // Continuous monitoring
+  setInterval(() => {
+    const isOpen = detectDevTools();
+    if (isOpen !== devtoolsOpen) {
+      devtoolsOpen = isOpen;
+      updateStatus(devtoolsOpen);
+    }
+  }, 1000);
+
+  // Initial check
+  devtoolsOpen = detectDevTools();
+  updateStatus(devtoolsOpen);
+
+  // If DevTools is already closed, start countdown immediately
+  if (!devtoolsOpen) {
+    startCountdown();
+  }
+
+  // Warn before leaving
+  window.addEventListener('beforeunload', (e) => {
+    if (devtoolsOpen) {
+      e.preventDefault();
+      e.returnValue = 'DevTools is still open. Are you sure you want to leave?';
+      return e.returnValue;
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>
