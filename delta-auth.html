@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Get Access Key — Mtaiirus</title>
+  <meta name="description" content="Generate a temporary access key for Mtaiirus.">
+  <link rel="icon" type="image/x-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./html-js/next-static.css">
+  <script defer src="html-js/delta-auth.js"></script>
+
+  <style>
+    :root {
+      --bg: #F5F2EB;
+      --bg2: #ECEAE2;
+      --ink: #1A1814;
+      --ink2: #6B6760;
+      --ink3: #B0ADA7;
+      --accent: #D4540E;
+      --accentl: #F0A87A;
+      --accentb: rgba(212,84,14,.08);
+      --green: #2D6A3F;
+      --greenl: #E4F0E8;
+      --card: #FFFDFB;
+      --border: rgba(26,24,20,.1);
+      --borderh: rgba(26,24,20,.2);
+      --font-heading: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .page, .page-muted {
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      padding: 0 16px;
+      background: rgba(245,242,235,.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .topbar-dark {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .topbar-dark h1 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      color: var(--bg);
+    }
+
+    .icon-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(245,242,235,.1);
+      color: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 700;
+      transition: .2s;
+      border: 1px solid rgba(245,242,235,.15);
+    }
+
+    .icon-button:hover {
+      background: rgba(245,242,235,.2);
+    }
+
+    .topbar-spacer { width: 36px; }
+
+    .center-shell {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: clamp(24px, 5vw, 40px);
+      box-shadow: 0 4px 24px rgba(26,24,20,.08);
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .panel h2 {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 12px;
+      letter-spacing: -.5px;
+    }
+
+    .panel p {
+      font-size: 0.95rem;
+      color: var(--ink2);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(212,84,14,.25);
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--ink3);
+      margin-top: 16px;
+    }
+
+    /* Brand display */
+    .brand-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      object-fit: contain;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .brand-name {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: 1.2px;
+    }
+
+    .brand-name span { color: var(--accent); }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal[open], .modal.show {
+      display: flex;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(26,24,20,.6);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-card {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(26,24,20,.2);
+      text-align: center;
+    }
+
+    .modal-card h2 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .modal-card p {
+      color: var(--ink2);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-actions .btn {
+      flex: 1;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--ink2);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accentb);
+    }
+
+    /* Floating background */
+    .floating-words {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      opacity: .03;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: clamp(1.5rem, 4vw, 4rem);
+      color: var(--ink);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .float-word {
+      position: absolute;
+      animation: floatAround 26s infinite alternate ease-in-out;
+      letter-spacing: -2px;
+    }
+
+    .float-word:nth-child(1) { top: 10%; left: 5%; animation-duration: 22s; }
+    .float-word:nth-child(2) { top: 25%; right: 8%; animation-duration: 30s; animation-delay: -5s; }
+    .float-word:nth-child(3) { bottom: 20%; left: 10%; animation-duration: 24s; animation-delay: -8s; }
+    .float-word:nth-child(4) { bottom: 35%; right: 6%; animation-duration: 28s; animation-delay: -13s; }
+    .float-word:nth-child(5) { top: 50%; left: 30%; animation-duration: 32s; animation-delay: -4s; }
+
+    @keyframes floatAround {
+      0% { transform: translate(0,0) rotate(0deg); }
+      25% { transform: translate(35px,-25px) rotate(1.5deg); }
+      50% { transform: translate(-25px,30px) rotate(-1.5deg); }
+      75% { transform: translate(20px,15px) rotate(.8deg); }
+      100% { transform: translate(-15px,-20px) rotate(-.8deg); }
+    }
+
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Background -->
+  <div class="floating-words">
+    <div class="float-word">FREE COURSES</div>
+    <div class="float-word">PREMIUM ACCESS</div>
+    <div class="float-word">MTAIIRUS</div>
+    <div class="float-word">STUDY FREE</div>
+    <div class="float-word">NO SIGNUP</div>
+  </div>
+
+  <div class="page page-muted">
+    <header class="topbar topbar-dark">
+      <a class="icon-button" href="./pw.html" aria-label="Back">
+        <span aria-hidden="true">←</span>
+      </a>
+      <h1>Get Access Key</h1>
+      <span class="topbar-spacer"></span>
+    </header>
+
+    <main class="center-shell">
+      <section class="panel access-panel">
+        <!-- Brand -->
+        <div class="brand-display">
+          <img class="brand-logo" src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" alt="Mtaiirus" onerror="this.style.display='none'">
+          <span class="brand-name">MTAI<span>IRUS</span></span>
+        </div>
+
+        <h2>Generate Your Access Key</h2>
+        <p>To access all batches and content, you need to generate a temporary access key.</p>
+        <button class="btn btn-primary btn-block" id="openGenerateDialog" type="button">Generate Key</button>
+        <p class="hint">Your key will be valid for 24 hours. After that, you'll need to generate a new one.</p>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal" id="generateDialog" hidden>
+    <div class="modal-backdrop" data-close-dialog></div>
+    <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="generateTitle">
+      <h2 id="generateTitle">Generate Your Key</h2>
+      <p>Click the button below to proceed.</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" data-close-dialog>Cancel</button>
+        <button class="btn btn-primary" id="generateKey" type="button">Generate Key</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ══════════════════ SECURITY LAYER ══════════════════
+    (function() {
+      'use strict';
+      var REDIRECT = 'kehamhai.html';
+      var _dtFired = false;
+      var _threshold = 160;
+      function _redirect() { if (_dtFired) return; _dtFired = true; window.location.replace(REDIRECT); }
+      function _checkSize() { var w = window.outerWidth - window.innerWidth; var h = window.outerHeight - window.innerHeight; if (w > _threshold || h > _threshold) _redirect(); }
+      setInterval(_checkSize, 600);
+      setInterval(function() { (function() { var t = new Date(); debugger; if (new Date() - t > 100) _redirect(); })(); }, 3000);
+      document.addEventListener('contextmenu', function(e) { e.preventDefault(); e.stopPropagation(); return false; }, true);
+      ['selectstart','dragstart','copy','cut'].forEach(function(ev) { document.addEventListener(ev, function(e) { e.preventDefault(); return false; }); });
+      document.addEventListener('keydown', function(e) { var k = e.key || ''; if (e.keyCode === 123 || k === 'F12') { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I','J','C','i','j','c'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && ['u','U','s','S','p','P','a','A'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } }, true);
+      window.addEventListener('beforeprint', function(e) { e.stopImmediatePropagation(); window.print = function() { return false; }; }, true);
+      try { var _n = function() {}; ['log','warn','error','info','debug','table','dir','dirxml','trace','group','groupCollapsed','groupEnd','time','timeEnd','profile','profileEnd','count','clear'].forEach(function(m) { if (console[m]) console[m] = _n; }); } catch(_) {}
+      document.documentElement.style.setProperty('-webkit-user-select','none');
+      document.documentElement.style.setProperty('-moz-user-select','none');
+      document.documentElement.style.setProperty('-ms-user-select','none');
+      document.documentElement.style.setProperty('user-select','none');
+    })();
+  </script>
+</body>
+</html>
