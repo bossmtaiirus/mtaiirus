@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XIT NOKIYA - Key Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Rajdhani', sans-serif;
+    color: #fff;
+    padding: 30px 16px 40px;
+    overflow-x: hidden;
+  }
+
+  /* Ambient glow bg */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,0,128,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 80% 80%, rgba(0,255,255,0.07) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  /* Logo circle */
+  .logo-wrap {
+    position: relative;
+    width: 155px;
+    height: 155px;
+  }
+
+  .logo-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 3px;
+    background: conic-gradient(from 0deg, #ff007a, #00e5ff, #ff007a);
+    animation: spin 6s linear infinite;
+  }
+
+  .logo-ring-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #0a0a0f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .logo-bg {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #7c2d8e, #1a0a2e 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* silhouette */
+  .logo-bg::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 80px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 80'%3E%3Cellipse cx='30' cy='18' rx='10' ry='11' fill='%23111'/%3E%3Crect x='17' y='28' width='26' height='36' rx='5' fill='%23111'/%3E%3Crect x='5' y='28' width='14' height='28' rx='4' fill='%23111'/%3E%3Crect x='41' y='28' width='14' height='28' rx='4' fill='%23111'/%3E%3Crect x='20' y='62' width='9' height='18' rx='3' fill='%23111'/%3E%3Crect x='31' y='62' width='9' height='18' rx='3' fill='%23111'/%3E%3C/svg%3E") center/contain no-repeat;
+    opacity: 0.9;
+  }
+
+  /* Cross */
+  .logo-bg::before {
+    content: '✝';
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .logo-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.3;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255,80,180,0.8);
+    position: relative;
+    z-index: 2;
+    letter-spacing: 1px;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Title */
+  .title {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    color: #ff2d8a;
+    text-shadow: 0 0 18px rgba(255,45,138,0.7), 0 0 40px rgba(255,45,138,0.3);
+    letter-spacing: 3px;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #00e0ff;
+    letter-spacing: 4px;
+    text-shadow: 0 0 12px rgba(0,224,255,0.6);
+    text-align: center;
+    margin-top: -8px;
+  }
+
+  /* Key display box */
+  .key-display {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 13px 16px;
+    text-align: center;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 1px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    word-break: break-all;
+    transition: color 0.3s, border-color 0.3s;
+  }
+
+  .key-display.has-key {
+    color: #00ffcc;
+    border-color: rgba(0,255,200,0.3);
+    text-shadow: 0 0 8px rgba(0,255,200,0.4);
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Buttons */
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 6px;
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s, box-shadow 0.2s;
+    background: transparent;
+  }
+
+  .btn:active { transform: scale(0.97); }
+
+  .btn-generate {
+    border: 2px solid #00e5ff;
+    color: #00e5ff;
+    text-shadow: 0 0 10px rgba(0,229,255,0.7);
+    box-shadow: 0 0 14px rgba(0,229,255,0.2), inset 0 0 20px rgba(0,229,255,0.04);
+  }
+
+  .btn-generate:hover {
+    box-shadow: 0 0 28px rgba(0,229,255,0.4), inset 0 0 30px rgba(0,229,255,0.08);
+  }
+
+  .btn-generate.loading {
+    color: rgba(0,229,255,0.5);
+    border-color: rgba(0,229,255,0.4);
+    cursor: not-allowed;
+  }
+
+  .btn-copy {
+    border: 2px solid #00e5ff;
+    color: #00e5ff;
+    text-shadow: 0 0 10px rgba(0,229,255,0.7);
+    box-shadow: 0 0 14px rgba(0,229,255,0.2), inset 0 0 20px rgba(0,229,255,0.04);
+  }
+
+  .btn-copy:hover {
+    box-shadow: 0 0 28px rgba(0,229,255,0.4), inset 0 0 30px rgba(0,229,255,0.08);
+  }
+
+  .btn-copy.copied {
+    border-color: #00ffaa;
+    color: #00ffaa;
+    text-shadow: 0 0 10px rgba(0,255,170,0.7);
+  }
+
+  /* Ripple */
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.05);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .btn:hover::after { opacity: 1; }
+
+  /* Telegram banner */
+  .tg-banner {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .tg-text {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tg-text span { color: #ff5c8a; font-size: 14px; }
+
+  .tg-btn {
+    background: linear-gradient(135deg, #ff007a, #7b00ff);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 14px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .tg-btn:hover { opacity: 0.85; }
+
+  /* Spinner */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .loading-dots::after {
+    content: '...';
+    animation: pulse 1s infinite;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <div class="logo-ring">
+      <div class="logo-ring-inner">
+        <div class="logo-bg">
+          <div class="logo-text">HARSHIT<br>✕<br>MODZ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="title">XIT NOKIYA</div>
+  <div class="subtitle">V2-AIMKILL</div>
+
+  <!-- Key display -->
+  <div class="key-display" id="keyDisplay">- Press Generate -</div>
+
+  <!-- Buttons -->
+  <button class="btn btn-generate" id="generateBtn" onclick="generateKey()">GENERATE KEY</button>
+  <button class="btn btn-copy" id="copyBtn" onclick="copyKey()">COPY KEY</button>
+
+  <!-- Telegram -->
+  <div class="tg-banner">
+    <div class="tg-text">
+      <span>❤</span> Any Problem? Join Telegram
+    </div>
+    <a class="tg-btn" href="https://t.me/" target="_blank">Join Now</a>
+  </div>
+
+</div>
+
+<script>
+  let currentKey = '';
+  let isGenerating = false;
+
+  function randomChar(chars) {
+    return chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  function generateKeyString() {
+    const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lower = 'abcdefghijklmnopqrstuvwxyz';
+    const nums = '0123456789';
+    const all = upper + lower + nums;
+
+    const seg = () => {
+      let s = '';
+      for (let i = 0; i < 5; i++) s += randomChar(all);
+      return s;
+    };
+
+    return `XIMK-${seg()}-${seg()}-${seg()}-${seg()}`;
+  }
+
+  async function generateKey() {
+    if (isGenerating) return;
+    isGenerating = true;
+
+    const btn = document.getElementById('generateBtn');
+    const display = document.getElementById('keyDisplay');
+
+    btn.classList.add('loading');
+    btn.innerHTML = '<span class="loading-dots">GENERATING</span>';
+    display.classList.remove('has-key');
+    display.textContent = '- Generating -';
+
+    // Scramble animation
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let count = 0;
+    const interval = setInterval(() => {
+      let fake = 'XIMK-';
+      for (let i = 0; i < 20; i++) {
+        if (i === 5 || i === 11 || i === 17) fake += '-';
+        else fake += randomChar(chars);
+      }
+      display.textContent = fake;
+      count++;
+    }, 60);
+
+    await new Promise(r => setTimeout(r, 1600));
+    clearInterval(interval);
+
+    currentKey = generateKeyString();
+    display.textContent = currentKey;
+    display.classList.add('has-key');
+
+    btn.classList.remove('loading');
+    btn.textContent = 'GENERATE KEY';
+    isGenerating = false;
+  }
+
+  function copyKey() {
+    if (!currentKey) return;
+    navigator.clipboard.writeText(currentKey).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.classList.add('copied');
+      btn.textContent = 'COPIED ✓';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.textContent = 'COPY KEY';
+      }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>
