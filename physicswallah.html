@@ -1,24 +1,437 @@
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="robots" content="noindex, follow">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Learnbyakp</title>
-  <meta name="description" content="Learnbyakp educational platform landing page converted to simple HTML, CSS and JavaScript.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Mtaiirus — Free Premium Courses</title>
+  <meta name="description" content="Mtaiirus provides free premium courses from India's best educators. No sign-up. No subscription. Just study.">
+  <link rel="icon" type="image/x-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./html-js/next-static.css">
   <script defer src="./html-js/pw.js"></script>
+  
+  <style>
+    :root {
+      --bg: #F5F2EB;
+      --bg2: #ECEAE2;
+      --ink: #1A1814;
+      --ink2: #6B6760;
+      --ink3: #B0ADA7;
+      --accent: #D4540E;
+      --accentl: #F0A87A;
+      --accentb: rgba(212,84,14,.08);
+      --green: #2D6A3F;
+      --greenl: #E4F0E8;
+      --card: #FFFDFB;
+      --border: rgba(26,24,20,.1);
+      --borderh: rgba(26,24,20,.2);
+      --font-heading: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .page {
+      background: var(--bg);
+    }
+
+    /* ── Header ── */
+    .pw-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px clamp(16px, 4vw, 40px);
+      background: rgba(245,242,235,.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .brand-mark img {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      object-fit: contain;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .brand-mark span {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: 1.2px;
+    }
+
+    .brand-mark span .accent-text {
+      color: var(--accent);
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(212,84,14,.25);
+    }
+
+    /* ── Carousel ── */
+    .carousel {
+      position: relative;
+      overflow: hidden;
+      background: var(--ink);
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: auto;
+      max-height: 420px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .carousel-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(245,242,235,.2);
+      background: rgba(26,24,20,.6);
+      color: var(--bg);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+
+    .carousel-button:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .carousel-button.prev { left: 16px; }
+    .carousel-button.next { right: 16px; }
+
+    /* ── Hero ── */
+    .hero-section {
+      padding: clamp(40px, 6vw, 80px) clamp(16px, 4vw, 40px);
+      background:
+        radial-gradient(circle at top left, rgba(212,84,14,.08), transparent 40%),
+        radial-gradient(circle at bottom right, rgba(240,168,122,.06), transparent 40%),
+        var(--bg);
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .hero-copy h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .hero-copy .accent {
+      color: var(--accent);
+    }
+
+    .hero-copy p {
+      font-size: 15px;
+      color: var(--ink2);
+      line-height: 1.7;
+      margin-bottom: 24px;
+      max-width: 480px;
+    }
+
+    .hero-art {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-art img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 16px;
+    }
+
+    .bubble {
+      position: absolute;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      max-width: 220px;
+      box-shadow: 0 4px 16px rgba(26,24,20,.1);
+    }
+
+    .bubble.light {
+      background: var(--card);
+      color: var(--ink);
+      top: 10%;
+      right: -8%;
+      border: 1px solid var(--border);
+    }
+
+    .bubble.dark {
+      background: var(--ink);
+      color: var(--bg);
+      bottom: 15%;
+      left: -5%;
+    }
+
+    /* ── Features ── */
+    .feature-section {
+      padding: clamp(32px, 5vw, 64px) clamp(16px, 4vw, 40px);
+      background: var(--bg2);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .feature-item {
+      text-align: center;
+      padding: 24px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      transition: transform 0.2s;
+    }
+
+    .feature-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(26,24,20,.08);
+    }
+
+    .feature-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+
+    .feature-item h3 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .feature-item p {
+      font-size: 13px;
+      color: var(--ink2);
+    }
+
+    /* ── Trust Section ── */
+    .trust-section {
+      padding: clamp(40px, 6vw, 72px) clamp(16px, 4vw, 40px);
+      background: var(--bg);
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .section-title h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 800;
+      letter-spacing: -.5px;
+      margin-bottom: 8px;
+    }
+
+    .section-title p {
+      color: var(--ink2);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .trust-card {
+      text-align: center;
+      padding: 28px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .trust-card strong {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .trust-card span {
+      font-size: 13px;
+      color: var(--ink2);
+    }
+
+    .mt-center {
+      text-align: center;
+    }
+
+    /* ── Footer ── */
+    .pw-footer {
+      background: var(--ink);
+      padding: clamp(32px, 5vw, 56px) clamp(16px, 4vw, 40px);
+      color: var(--bg);
+    }
+
+    .pw-footer .section-inner {
+      text-align: center;
+    }
+
+    .pw-footer .brand-mark {
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .pw-footer .brand-mark span {
+      color: var(--bg);
+    }
+
+    .pw-footer p {
+      color: rgba(245,242,235,.55);
+      max-width: 520px;
+      margin: 0 auto;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .hero-art {
+        order: -1;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .trust-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bubble.light {
+        right: 0;
+      }
+
+      .bubble.dark {
+        left: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .trust-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .carousel-slide img {
+        max-height: 240px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="page">
     <header class="pw-header">
-      <a class="brand-mark" href="./pw.html" aria-label="Learnbyakp home">
-        <img src="./pw.png" alt="Learnbyakp logo">
-        <span>Learnbyakp</span>
+      <a class="brand-mark" href="./pw.html" aria-label="Mtaiirus home">
+        <img src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" alt="Mtaiirus logo" onerror="this.style.display='none'">
+        <span>MTAI<span class="accent-text">IRUS</span></span>
       </a>
       <button class="btn btn-primary" id="loginAction" type="button">Login/Register</button>
     </header>
@@ -32,22 +445,22 @@
         <div class="carousel-slide"><img src="https://static.pw.live/5eb393ee95fab7468a79d189/GLOBAL_CMS/14dd17a5-5ed0-4ee2-bea9-50d069beeb3e.webp" alt="Banner 5"></div>       
         <div class="carousel-slide"><img src="https://static.pw.live/5eb393ee95fab7468a79d189/GLOBAL_CMS/d440e4fe-ac5a-42cb-bd5e-daef1dbda40e.webp" alt="Banner 6"></div>        
       </div>
-      <button class="carousel-button prev" id="bannerPrev" type="button" aria-label="Previous banner">&#8592;</button>
-      <button class="carousel-button next" id="bannerNext" type="button" aria-label="Next banner">&#8594;</button>
+      <button class="carousel-button prev" id="bannerPrev" type="button" aria-label="Previous banner">←</button>
+      <button class="carousel-button next" id="bannerNext" type="button" aria-label="Next banner">→</button>
     </section>
 
     <main>
       <section class="hero-section">
         <div class="section-inner hero-grid">
           <div class="hero-copy">
-            <h1>Bharat's <span class="accent">Trusted & Affordable</span> Educational Platform</h1>
-            <p>Unlock your potential by signing up with Learnbyakp - The most affordable learning solution.</p>
+            <h1>India's <span class="accent">Free Premium</span> Educational Platform</h1>
+            <p>Unlock your potential with Mtaiirus — premium courses from India's best educators. No sign-up. No subscription. Just study.</p>
             <button class="btn btn-primary" id="startAction" type="button">Get Started</button>
           </div>
-          <div class="hero-art" aria-label="Learnbyakp learning illustration">
+          <div class="hero-art" aria-label="Mtaiirus learning illustration">
             <img src="https://static.pw.live/ua/images/hero-student-w.webp" alt="Student learning">
-            <div class="bubble light">Alakh Sir, What is PW?</div>
-            <div class="bubble dark">PW is where students learn with love and can grow with guidance</div>
+            <div class="bubble light">What is Mtaiirus?</div>
+            <div class="bubble dark">Mtaiirus is where students learn for free with premium quality content</div>
           </div>
         </div>
       </section>
@@ -55,24 +468,24 @@
       <section class="feature-section">
         <div class="section-inner feature-grid">
           <article class="feature-item">
-            <div class="feature-icon" aria-hidden="true">&#9654;</div>
+            <div class="feature-icon" aria-hidden="true">▶</div>
             <h3>Daily Live</h3>
             <p>Interactive classes</p>
           </article>
           <article class="feature-item">
-            <div class="feature-icon" aria-hidden="true">&#128196;</div>
+            <div class="feature-icon" aria-hidden="true">📄</div>
             <h3>10 Million +</h3>
             <p>Tests, sample papers & notes</p>
           </article>
           <article class="feature-item">
-            <div class="feature-icon" aria-hidden="true">&#128172;</div>
+            <div class="feature-icon" aria-hidden="true">💬</div>
             <h3>24 x 7</h3>
             <p>Doubt solving sessions</p>
           </article>
           <article class="feature-item">
-            <div class="feature-icon" aria-hidden="true">&#127979;</div>
-            <h3>100 +</h3>
-            <p>Offline centres</p>
+            <div class="feature-icon" aria-hidden="true">🏫</div>
+            <h3>1000 +</h3>
+            <p>Premium batches</p>
           </article>
         </div>
       </section>
@@ -81,13 +494,13 @@
         <div class="section-inner">
           <div class="section-title">
             <h2>A Platform Trusted by Students</h2>
-            <p>Learnbyakp aims to transform not just through words, but provide results with numbers!</p>
+            <p>Mtaiirus aims to provide premium education completely free, with results that speak for themselves!</p>
           </div>
           <div class="trust-grid">
-            <article class="trust-card"><strong>15 Million+</strong><span>Happy Students</span></article>
-            <article class="trust-card"><strong>24000+</strong><span>Mock Tests</span></article>
-            <article class="trust-card"><strong>14000+</strong><span>Video Lectures</span></article>
-            <article class="trust-card"><strong>80000+</strong><span>Practice Papers</span></article>
+            <article class="trust-card"><strong>50K+</strong><span>Happy Students</span></article>
+            <article class="trust-card"><strong>1000+</strong><span>Premium Batches</span></article>
+            <article class="trust-card"><strong>₹0</strong><span>Cost Forever</span></article>
+            <article class="trust-card"><strong>24/7</strong><span>Free Access</span></article>
           </div>
           <div class="mt-center">
             <button class="btn btn-primary" id="trustStartAction" type="button">Get Started</button>
@@ -99,12 +512,35 @@
     <footer class="pw-footer">
       <div class="section-inner">
         <div class="brand-mark">
-          <img src="./pw.png" alt="Learnbyakp logo">
-          <span>Learnbyakp</span>
+          <img src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" alt="Mtaiirus logo" onerror="this.style.display='none'">
+          <span>MTAI<span class="accent-text">IRUS</span></span>
         </div>
-        <p>We understand that every student has unique needs and abilities, that's why our curriculum is designed to adapt to your needs and help you grow!</p>
+        <p>We understand that every student deserves quality education. That's why Mtaiirus provides premium courses completely free — no barriers, no fees, just learning.</p>
       </div>
     </footer>
   </div>
+
+  <script>
+    // ══════════════════ SECURITY LAYER ══════════════════
+    (function() {
+      'use strict';
+      var REDIRECT = 'kehamhai.html';
+      var _dtFired = false;
+      var _threshold = 160;
+      function _redirect() { if (_dtFired) return; _dtFired = true; window.location.replace(REDIRECT); }
+      function _checkSize() { var w = window.outerWidth - window.innerWidth; var h = window.outerHeight - window.innerHeight; if (w > _threshold || h > _threshold) _redirect(); }
+      setInterval(_checkSize, 600);
+      setInterval(function() { (function() { var t = new Date(); debugger; if (new Date() - t > 100) _redirect(); })(); }, 3000);
+      document.addEventListener('contextmenu', function(e) { e.preventDefault(); e.stopPropagation(); return false; }, true);
+      ['selectstart','dragstart','copy','cut'].forEach(function(ev) { document.addEventListener(ev, function(e) { e.preventDefault(); return false; }); });
+      document.addEventListener('keydown', function(e) { var k = e.key || ''; if (e.keyCode === 123 || k === 'F12') { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I','J','C','i','j','c'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && ['u','U','s','S','p','P','a','A'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } }, true);
+      window.addEventListener('beforeprint', function(e) { e.stopImmediatePropagation(); window.print = function() { return false; }; }, true);
+      try { var _n = function() {}; ['log','warn','error','info','debug','table','dir','dirxml','trace','group','groupCollapsed','groupEnd','time','timeEnd','profile','profileEnd','count','clear'].forEach(function(m) { if (console[m]) console[m] = _n; }); } catch(_) {}
+      document.documentElement.style.setProperty('-webkit-user-select','none');
+      document.documentElement.style.setProperty('-moz-user-select','none');
+      document.documentElement.style.setProperty('-ms-user-select','none');
+      document.documentElement.style.setProperty('user-select','none');
+    })();
+  </script>
 </body>
 </html>
