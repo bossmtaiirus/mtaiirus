@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head><meta name="robots" content="noindex, follow">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Next Toppers Home</title>
+  <link rel="icon" type="image/png" href="../lo.png">
+  <style>
+    :root {
+      --bg: #07111c;
+      --bg-soft: #0e1726;
+      --panel: #101a2c;
+      --panel-2: #162238;
+      --card: #121d31;
+      --text: #edf4ff;
+      --muted: #8da3c5;
+      --line: rgba(255,255,255,.08);
+      --accent: #5b8cff;
+      --accent-2: #7c3aed;
+      --success: #14b8a6;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --shadow: 0 18px 48px rgba(0,0,0,.28);
+      --chip: rgba(255,255,255,.07);
+    }
+
+    body.light {
+      --bg: #eef4fb;
+      --bg-soft: #f7faff;
+      --panel: #ffffff;
+      --panel-2: #f8fbff;
+      --card: #ffffff;
+      --text: #15233d;
+      --muted: #66758e;
+      --line: rgba(21,35,61,.10);
+      --accent: #2563eb;
+      --accent-2: #7c3aed;
+      --success: #0f766e;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --shadow: 0 16px 40px rgba(36,56,99,.12);
+      --chip: rgba(37,99,235,.06);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(91,140,255,.15), transparent 25%),
+        radial-gradient(circle at top right, rgba(124,58,237,.12), transparent 22%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background .25s ease, color .25s ease;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    img { display: block; max-width: 100%; }
+
+    .container {
+      width: min(1240px, calc(100% - 28px));
+      margin: 0 auto;
+    }
+    .price-box {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .price {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .mrp {
+      font-size: 14px;
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(14px);
+      background: color-mix(in srgb, var(--panel) 82%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 16px 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand img {
+      height: 38px;
+      object-fit: contain;
+      cursor: pointer;
+    }
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+    .search-wrap {
+      position: relative;
+      width: min(360px, 100%);
+    }
+    .search {
+      width: 100%;
+      height: 46px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--text);
+      padding: 0 16px 0 44px;
+      outline: none;
+    }
+    .search:focus {
+      border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent);
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 15px;
+      pointer-events: none;
+    }
+    .theme-btn {
+      height: 46px;
+      padding: 0 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .search-results {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      right: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: none;
+    }
+    .search-results.show { display: block; }
+    .result-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--line);
+      transition: background .2s ease;
+    }
+    .result-item:last-child { border-bottom: 0; }
+    .result-item:hover { background: var(--chip); }
+    .result-item img {
+      width: 58px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .result-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .page { padding: 24px 0 40px; }
+    .stack { display: grid; gap: 22px; }
+
+    .slider {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .slides {
+      display: flex;
+      transition: transform .5s ease;
+    }
+    .slide {
+      min-width: 100%;
+      background: var(--panel);
+    }
+    .slide img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      display: block;
+    }
+    .dots {
+      position: absolute;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      background: rgba(0,0,0,.24);
+      padding: 8px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+    }
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.45);
+      cursor: pointer;
+    }
+    .dot.active { background: white; }
+
+    .info-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 20px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      background: var(--panel);
+    }
+    .info-box.teal {
+      background: linear-gradient(135deg, color-mix(in srgb, var(--success) 10%, var(--panel)), var(--panel));
+    }
+    .info-box.red {
+      background: linear-gradient(135deg, color-mix(in srgb, var(--danger) 10%, var(--panel)), var(--panel));
+    }
+    .info-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+    .info-left img, .info-icon {
+      width: 62px;
+      height: 62px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .info-text h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+    .info-text p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 14px;
+      font-weight: 700;
+      transition: transform .2s ease, filter .2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      padding: 12px 16px;
+      box-shadow: 0 12px 24px color-mix(in srgb, var(--accent) 24%, transparent);
+    }
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      padding: 12px 16px;
+    }
+    .btn-ghost {
+      background: var(--chip);
+      color: var(--text);
+      border: 1px solid var(--line);
+      padding: 12px 16px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      font-weight: 800;
+      margin: 0 0 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--card), var(--panel));
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform .22s ease, box-shadow .22s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(0,0,0,.18);
+    }
+    .card-media {
+      position: relative;
+      padding: 14px 14px 0;
+    }
+    .card-media img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+    .badge {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      color: white;
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      box-shadow: 0 10px 20px rgba(0,0,0,.18);
+    }
+    .card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.45;
+      margin-bottom: 12px;
+      min-height: 44px;
+      text-transform: uppercase;
+    }
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+    .card-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+    }
+    .card-actions .btn { flex: 1; }
+
+    footer {
+      margin-top: 42px;
+      padding: 28px 0;
+      border-top: 1px solid var(--line);
+      background: color-mix(in srgb, var(--panel) 85%, transparent);
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .footer-inner img { height: 48px; cursor: pointer; }
+
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 860px) {
+      .topbar-inner, .actions { flex-direction: column; align-items: stretch; }
+      .search-wrap { width: 100%; }
+      .info-box { flex-direction: column; align-items: stretch; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 560px) {
+      .grid { grid-template-columns: 1fr; }
+      .card-actions { flex-direction: column; }
+      .info-left { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <img id="logo" src="https://decicqog4ulhy.cloudfront.net/0/admin_v2/uploads/courses/thumbnail/2671188_1_logo.jpg" alt="Next Toppers" onclick="goHome()">
+      </div>
+
+      <div class="actions">
+        <div class="search-wrap" id="searchWrap">
+          <span class="search-icon">⌕</span>
+          <input id="searchInput" class="search" type="search" placeholder="What are you looking for...">
+          <div id="searchResults" class="search-results"></div>
+        </div>
+        <button class="theme-btn" id="themeBtn">Toggle Theme</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="container stack">
+      <section class="slider" id="slider">
+        <div class="slides" id="slides"></div>
+        <div class="dots" id="dots"></div>
+      </section>
+
+      <section class="info-box teal">
+        <div class="info-left">
+          <img src="https://missionjeet.in/images/struggle.png" alt="Struggling in studies">
+          <div class="info-text">
+            <h3>Struggling in Studies?</h3>
+            <p>Aaiye apki Samasya ka , Samadan krte hai ✨</p>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="location.href='/nexttoppers/strugglers-studies'">See How We Help</button>
+      </section>
+
+
+      <section>
+        <h2 class="section-title">🎓 Our Courses</h2>
+        <div class="grid" id="coursesGrid"></div>
+      </section>
+
+      <section>
+        <h2 class="section-title">⭐ Featured Courses</h2>
+        <div class="grid" id="featuredGrid"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <img src="https://decicqog4ulhy.cloudfront.net/0/admin_v2/uploads/courses/thumbnail/2671188_1_logo.jpg" alt="Next Toppers" onclick="goHome()">
+    </div>
+  </footer>
+
+  <script src="html-js/nexttoppers.js"></script>
+</body>
+</html>
