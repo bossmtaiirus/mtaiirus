@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="robots" content="noindex, follow">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Mtaiirus — Batches</title>
+  <link rel="icon" type="image/x-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #F5F2EB;
+      --bg2: #ECEAE2;
+      --ink: #1A1814;
+      --ink2: #6B6760;
+      --ink3: #B0ADA7;
+      --accent: #D4540E;
+      --accentl: #F0A87A;
+      --accentb: rgba(212,84,14,.08);
+      --green: #2D6A3F;
+      --greenl: #E4F0E8;
+      --card: #FFFDFB;
+      --border: rgba(26,24,20,.1);
+      --borderh: rgba(26,24,20,.2);
+      --shadow: 0 4px 20px rgba(26,24,20,.08);
+      --shadow-lg: 0 10px 40px rgba(26,24,20,.12);
+      --font-heading: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--ink);
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(245,242,235,.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .brand-name {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: 1.2px;
+    }
+
+    .brand-name span { color: var(--accent); }
+
+    /* Logout Button */
+    .logout-btn {
+      background: var(--accentb);
+      color: var(--accent);
+      border: 1px solid rgba(212,84,14,.2);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .main {
+      padding: 40px 16px 60px;
+    }
+
+    .grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    @media (min-width: 640px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 1024px) {
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--borderh);
+    }
+
+    .card-image-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--bg2);
+    }
+
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      min-height: 180px;
+    }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      min-height: 40px;
+      line-height: 1.4;
+      letter-spacing: -.2px;
+    }
+
+    .price-row {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .free-text {
+      font-family: var(--font-heading);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    .price-box {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .price {
+      font-family: var(--font-heading);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .original-price {
+      font-size: 14px;
+      color: var(--ink3);
+      text-decoration: line-through;
+    }
+
+    .discount-badge {
+      background: var(--greenl);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid rgba(45,106,63,.2);
+    }
+
+    .view-btn {
+      width: 100%;
+      margin-top: 16px;
+      background: var(--ink);
+      color: var(--bg);
+      border: none;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.25s ease;
+      letter-spacing: .2px;
+    }
+
+    .view-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .fallback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink3);
+      font-size: 14px;
+      font-weight: 500;
+      width: 100%;
+      height: 100%;
+      background: var(--bg2);
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      gap: 16px;
+    }
+
+    .loading-spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid var(--bg2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      color: var(--ink2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading Overlay (shown while checking auth) -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Checking authentication...</p>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a class="logo-link" href="/">
+        <img
+          class="logo"
+          src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg"
+          alt="Mtaiirus Logo"
+          onerror="this.style.display='none'"
+        />
+        <span class="brand-name">MTAI<span>IRUS</span></span>
+      </a>
+      <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="grid" id="batchGrid"></div>
+  </main>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    // ═══════════ CONFIGURATION ═══════════
+    const SUPABASE_URL = "https://meatemqrhqthgpxwstrl.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYXRlbXFyaHF0aGdweHdzdHJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5OTc5NjEsImV4cCI6MjA5NjU3Mzk2MX0.Qnx5wU6o0OvBFrWlq3jjt3kN2sa20nhEv4zGZbQu_pw";
+    const LOGIN_PAGE = 'login.html';
+    
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ═══════════ AUTH CHECK ═══════════
+    async function checkAuth() {
+      try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        
+        if (!session?.user) {
+          // Save current page to redirect back after login
+          sessionStorage.setItem('mtaiirus_redirect', window.location.href);
+          window.location.href = LOGIN_PAGE;
+          return false;
+        }
+        
+        // Hide loading overlay
+        document.getElementById('loadingOverlay').style.display = 'none';
+        return true;
+      } catch(e) {
+        window.location.href = LOGIN_PAGE;
+        return false;
+      }
+    }
+
+    // ═══════════ LOGOUT ═══════════
+    async function handleLogout() {
+      await supabaseClient.auth.signOut();
+      localStorage.removeItem('mtaiirus_session');
+      sessionStorage.removeItem('mtaiirus_redirect');
+      window.location.href = LOGIN_PAGE;
+    }
+
+    // ═══════════ SECURITY LAYER ═══════════
+    (function() {
+      'use strict';
+      var REDIRECT = 'kehamhai.html';
+      var _dtFired = false;
+      var _threshold = 160;
+      function _redirect() { if (_dtFired) return; _dtFired = true; window.location.replace(REDIRECT); }
+      function _checkSize() { var w = window.outerWidth - window.innerWidth; var h = window.outerHeight - window.innerHeight; if (w > _threshold || h > _threshold) _redirect(); }
+      setInterval(_checkSize, 600);
+      setInterval(function() { (function() { var t = new Date(); debugger; if (new Date() - t > 100) _redirect(); })(); }, 3000);
+      document.addEventListener('contextmenu', function(e) { e.preventDefault(); e.stopPropagation(); return false; }, true);
+      ['selectstart','dragstart','copy','cut'].forEach(function(ev) { document.addEventListener(ev, function(e) { e.preventDefault(); return false; }); });
+      document.addEventListener('keydown', function(e) { var k = e.key || ''; if (e.keyCode === 123 || k === 'F12') { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I','J','C','i','j','c'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } if ((e.ctrlKey || e.metaKey) && ['u','U','s','S','p','P','a','A'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; } }, true);
+      window.addEventListener('beforeprint', function(e) { e.stopImmediatePropagation(); window.print = function() { return false; }; }, true);
+      try { var _n = function() {}; ['log','warn','error','info','debug','table','dir','dirxml','trace','group','groupCollapsed','groupEnd','time','timeEnd','profile','profileEnd','count','clear'].forEach(function(m) { if (console[m]) console[m] = _n; }); } catch(_) {}
+      document.documentElement.style.setProperty('-webkit-user-select','none');
+      document.documentElement.style.setProperty('-moz-user-select','none');
+      document.documentElement.style.setProperty('-ms-user-select','none');
+      document.documentElement.style.setProperty('user-select','none');
+    })();
+
+    // ═══════════ BATCH DATA ═══════════
+    const batches = [
+      {
+        id: 8,
+        title: "JEE 2028: 11th Class OG KOTA BATCH",
+        imageUrl: "https://appx-content-v2.classx.co.in/paid_course3/2026-03-20-0_7755858005992874.jpeg",
+        price: "Free",
+        originalPrice: "",
+        discount: ""
+      },
+      {
+        id: 10,
+        title: "JEE 2027: 12th Class OG KOTA Batch",
+        imageUrl: "https://appx-content-v2.classx.co.in/paid_course3/2026-03-20-0_1711192735086824.jpeg",
+        price: "Free",
+        originalPrice: "",
+        discount: ""
+      },
+      {
+        id: 35,
+        title: "JEE 2028: 11th Class P1 Batch",
+        imageUrl: "https://appx-content-v2.classx.co.in/paid_course3/2026-03-15-0_9931362198126962.jpeg",
+        price: "Free",
+        originalPrice: "",
+        discount: ""
+      },
+      {
+        id: 36,
+        title: "JEE 2027: 12th Class A1 Batch",
+        imageUrl: "https://appx-content-v2.classx.co.in/paid_course3/2026-03-15-0_9931362198126962.jpeg",
+        price: "Free",
+        originalPrice: "",
+        discount: ""
+      },
+      {
+        id: 7,
+        title: "Free Resources",
+        imageUrl: "https://appx-content-v2.classx.co.in/paid_course3/2026-03-15-0_9931362198126962.jpeg",
+        price: "Free",
+        originalPrice: "",
+        discount: ""
+      }
+    ];
+
+    function renderBatches() {
+      const batchGrid = document.getElementById("batchGrid");
+
+      function createCard(batch) {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const imageWrap = document.createElement("div");
+        imageWrap.className = "card-image-wrap";
+
+        const img = document.createElement("img");
+        img.className = "card-image";
+        img.src = batch.imageUrl;
+        img.alt = batch.title;
+
+        img.onerror = function () {
+          this.style.display = "none";
+          const fallback = document.createElement("div");
+          fallback.className = "fallback";
+          fallback.textContent = "Image not available";
+          imageWrap.appendChild(fallback);
+        };
+
+        imageWrap.appendChild(img);
+
+        const content = document.createElement("div");
+        content.className = "card-content";
+
+        const title = document.createElement("h3");
+        title.className = "card-title";
+        title.textContent = batch.title;
+
+        const priceRow = document.createElement("div");
+        priceRow.className = "price-row";
+
+        if (batch.price !== "Free") {
+          const left = document.createElement("div");
+          left.className = "price-box";
+          const price = document.createElement("p");
+          price.className = "price";
+          price.textContent = "₹" + batch.price;
+          left.appendChild(price);
+          if (batch.originalPrice) {
+            const original = document.createElement("p");
+            original.className = "original-price";
+            original.textContent = "₹" + batch.originalPrice;
+            left.appendChild(original);
+          }
+          priceRow.appendChild(left);
+          if (batch.discount) {
+            const badge = document.createElement("span");
+            badge.className = "discount-badge";
+            badge.textContent = batch.discount;
+            priceRow.appendChild(badge);
+          }
+        } else {
+          const free = document.createElement("p");
+          free.className = "free-text";
+          free.textContent = "Free";
+          priceRow.appendChild(free);
+        }
+
+        const button = document.createElement("button");
+        button.className = "view-btn";
+        button.textContent = "View Content";
+        button.addEventListener("click", function () {
+          const url = "vibrant/batch?course_id=" + encodeURIComponent(batch.id) +
+                      "&title=" + encodeURIComponent(batch.title);
+          window.location.href = url;
+        });
+
+        content.appendChild(title);
+        content.appendChild(priceRow);
+        content.appendChild(button);
+        card.appendChild(imageWrap);
+        card.appendChild(content);
+
+        return card;
+      }
+
+      batches.forEach(batch => {
+        batchGrid.appendChild(createCard(batch));
+      });
+    }
+
+    // ═══════════ INIT ═══════════
+    (async function init() {
+      const isAuthenticated = await checkAuth();
+      if (isAuthenticated) {
+        renderBatches();
+      }
+    })();
+  </script>
+</body>
+</html>
