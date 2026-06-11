@@ -4,7 +4,7 @@
 // ============================================
 
 
-const BASE_URL = "https://learnbyakp.onrender.com";
+const BASE_URL = "https://mtaiirus-api.onrender.com";
 const FALLBACK_IMAGE = "https://decicqog4ulhy.cloudfront.net/0/admin_v2/uploads/courses/thumbnail/7524245_1_WhatsApp%20Image%202026-03-02%20at%204.19.45%20PM.jpeg";
 
 
@@ -325,7 +325,7 @@ function closePermissionModal() {
 async function registerServiceWorker() {
   if (!("serviceWorker" in navigator)) return null;
   try {
-    const registration = await navigator.serviceWorker.register("https://learnbyakp.online/sw.js", { scope: "/" });
+    const registration = await navigator.serviceWorker.register("../sw.js", { scope: "/" });
     console.log("SW registered:", registration);
     return registration;
   } catch (err) {
@@ -415,7 +415,7 @@ async function sendPushNotification(title, body, icon, data = {}) {
       body: JSON.stringify({
         title: brandTitle,
         body: brandBody,
-        icon: icon || "https://learnbyakp.online/lo.png",
+        icon: icon || "../lo.png",
         data
       })
     });
@@ -537,7 +537,7 @@ if (live_from && String(live_from).trim()) {
   if (String(finalVideoId).trim()) {
     try {
       const drmRes = await fetch(
-        `https://learnbyakp.onrender.com/api/nexttoppers/drm?videoid=${encodeURIComponent(String(finalVideoId).trim())}`
+        `https://mtaiirus-api.onrender.com/api/nexttoppers/drm?videoid=${encodeURIComponent(String(finalVideoId).trim())}`
       );
       const drmJson = await drmRes.json();
 
@@ -766,7 +766,7 @@ function processNotifications() {
           item.title || "Upcoming Class",
           `Upcoming • ${startText}`,
           item.thumbnail,
-          { itemId: item.id, entityId: item.entity_id, url: watchUrl || "https://learnbyakp.online/" }
+          { itemId: item.id, entityId: item.entity_id, url: watchUrl || "https://mtaiirus.pages.dev/" }
         );
         notifyState.sent[upcomingKey] = true;
       }
@@ -1094,7 +1094,7 @@ async function init() {
   await fetchLiveClasses();
   startPolling();
 
-  const SCRIPT_LINK = "https://learnbyakp.online/html-js/aut.js";
+  const SCRIPT_LINK = "../html-js/aut.js";
   const s = document.createElement("script");
   s.src = SCRIPT_LINK;
   s.async = true;
