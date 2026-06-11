@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Mtaiirus — Free Premium Courses</title>
+<link rel="icon" type="image/x-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #F5F2EB; --bg2: #ECEAE2; --ink: #1A1814; --ink2: #6B6760; --ink3: #B0ADA7;
+    --accent: #D4540E; --accentl: #F0A87A; --accentb: rgba(212,84,14,.08);
+    --green: #2D6A3F; --greenl: #E4F0E8; --blue: #1A4B8C; --bluel: #E4EBF7;
+    --card: #FFFDFB; --border: rgba(26,24,20,.1); --borderh: rgba(26,24,20,.2);
+    --red: #D4540E; --yellow: #f59e0b;
+    --shadow: 0 1px 4px rgba(26,24,20,.08), 0 4px 16px rgba(26,24,20,.06);
+    --shadow-lg: 0 4px 24px rgba(26,24,20,.12);
+  }
+  body {
+    font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink);
+    min-height: 100vh; -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+  }
+  a { text-decoration: none; color: inherit; }
+  button { cursor: pointer; border: none; outline: none; font-family: inherit; }
+  img { display: block; }
+  input { font-family: inherit; outline: none; border: none; }
+
+  /* ... ALL YOUR EXISTING CSS STYLES REMAIN EXACTLY THE SAME ... */
+  /* Keep everything from the style tag you provided unchanged */
+
+  .loading-overlay {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; z-index: 9999; gap: 16px;
+  }
+  .loading-spinner {
+    width: 44px; height: 44px; border: 4px solid var(--bg2);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-family: 'Syne', sans-serif; font-size: 14px; color: var(--ink2); font-weight: 600; }
+  
+  .logout-btn {
+    position: fixed; top: 16px; right: 16px; z-index: 100;
+    background: var(--ink); color: var(--bg); border: none;
+    padding: 8px 16px; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px;
+    font-weight: 600; cursor: pointer; transition: all 0.2s;
+  }
+  .logout-btn:hover { background: var(--accent); color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <p class="loading-text">Verifying access...</p>
+</div>
+
+<!-- Logout Button -->
+<button class="logout-btn" onclick="handleLogout()" style="display:none;" id="logoutBtn">Logout</button>
+
+<!-- ALL YOUR EXISTING HTML REMAINS EXACTLY THE SAME -->
+<!-- Keep every div, section, header, footer unchanged -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+// ═══════════ AUTH CHECK ═══════════
+const LOGIN_PAGE = 'login.html';
+const supabaseClient = supabase.createClient(
+  "https://meatemqrhqthgpxwstrl.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYXRlbXFyaHF0aGdweHdzdHJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5OTc5NjEsImV4cCI6MjA5NjU3Mzk2MX0.Qnx5wU6o0OvBFrWlq3jjt3kN2sa20nhEv4zGZbQu_pw"
+);
+
+async function checkAuth() {
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session?.user) {
+      sessionStorage.setItem('mtaiirus_redirect', window.location.href);
+      window.location.href = LOGIN_PAGE;
+      return false;
+    }
+    document.getElementById('loadingOverlay').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'block';
+    return true;
+  } catch(e) {
+    window.location.href = LOGIN_PAGE;
+    return false;
+  }
+}
+
+async function handleLogout() {
+  await supabaseClient.auth.signOut();
+  localStorage.removeItem('mtaiirus_logged_in');
+  window.location.href = LOGIN_PAGE;
+}
+
+// ═══════════ SECURITY ═══════════
+(function() {
+  var R='kehamhai.html',f=false,t=160;
+  function rd(){if(f)return;f=true;location.replace(R)}
+  setInterval(function(){var w=outerWidth-innerWidth,h=outerHeight-innerHeight;if(w>t||h>t)rd()},600);
+  setInterval(function(){(function(){var d=new Date();debugger;if(new Date()-d>100)rd()})()},3000);
+  document.addEventListener('contextmenu',function(e){e.preventDefault();e.stopPropagation();return false},true);
+  ['selectstart','dragstart','copy','cut'].forEach(function(e){document.addEventListener(e,function(ev){ev.preventDefault();return false})});
+  document.addEventListener('keydown',function(e){var k=e.key||'';if(e.keyCode===123||k==='F12'){e.preventDefault();e.stopPropagation();return false}if((e.ctrlKey||e.metaKey)&&e.shiftKey&&['I','J','C'].includes(k.toUpperCase())){e.preventDefault();e.stopPropagation();return false}if((e.ctrlKey||e.metaKey)&&['u','s','p','a'].includes(k.toLowerCase())){e.preventDefault();e.stopPropagation();return false}},true);
+  try{var n=function(){};['log','warn','error','info','debug'].forEach(function(m){if(console[m])console[m]=n})}catch(_){}
+  document.documentElement.style.setProperty('-webkit-user-select','none');
+})();
+
+// ═══════════ INIT ═══════════
+(async function init() {
+  const ok = await checkAuth();
+  if (!ok) return;
+  
+  // ✅ NOW run all the batch loading code
+  // KEEP ALL YOUR EXISTING JAVASCRIPT HERE (PDF viewer, state, courses, etc.)
+  // Everything from your original script tag
+  
+  const SW_KEY = 'swEnrolledCourses';
+  let allCourses = [];
+  let currentFilter = 'all';
+  let currentBatchId = null;
+  let batchData = null;
+  let videoTopicSelected = null;
+  let notesTopicSelected = null;
+  let playerWindow = null;
+  const PLAYER_URL = 'player.html';
+
+  // ... ALL YOUR EXISTING JAVASCRIPT FUNCTIONS ...
+  // initHome(), filterCourses(), loadBatch(), etc.
+
+  // Start loading courses
+  initHome();
+  handleRoute();
+})();
+</script>
+</body>
+</html>
