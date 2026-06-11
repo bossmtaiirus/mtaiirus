@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnByAKP Test</title>
+  <style>
+    :root {
+      --primary: #1693FA;
+      --primary-dark: #0874cc;
+      --bg: #f4f8ff;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #dbeafe;
+      --soft: #eaf5ff;
+      --danger: #ef4444;
+      --shadow: 0 18px 55px rgba(22, 147, 250, 0.18);
+      --footer-bg: #ffffff;
+    }
+
+    body.dark {
+      --bg: #07111f;
+      --card: #0f1b2d;
+      --text: #f9fafb;
+      --muted: #cbd5e1;
+      --border: #1e3a5f;
+      --soft: #10263f;
+      --shadow: 0 18px 55px rgba(0, 0, 0, 0.38);
+      --footer-bg: #0b1525;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(22,147,250,.18), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(68,192,83,.10), transparent 35%),
+        var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      transition: background .35s ease, color .35s ease;
+    }
+
+    button {
+      font-family: inherit;
+      border: 0;
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 64px;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(0,0,0,.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      transition: background .35s ease, border-color .35s ease;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 6px 16px rgba(22,147,250,.22);
+      background: white;
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .test-name {
+      display: block;
+      font-size: 16px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .test-id {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .theme-btn {
+      min-width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--soft);
+      color: var(--primary);
+      font-size: 19px;
+      font-weight: 800;
+      box-shadow: inset 0 0 0 1px var(--border);
+      transition: transform .2s ease, background .35s ease;
+    }
+
+    .theme-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .warning {
+      width: min(980px, calc(100% - 26px));
+      margin: 18px auto 0;
+      padding: 13px 16px;
+      border-radius: 16px;
+      background: linear-gradient(90deg, rgba(239,68,68,.13), rgba(255,193,7,.13));
+      border: 1px solid rgba(239,68,68,.28);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 900;
+      text-align: center;
+      animation: slideDown .55s ease both;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 26px 14px 28px;
+    }
+
+    .hero-card {
+      width: min(720px, 100%);
+      background: color-mix(in srgb, var(--card) 94%, transparent);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: popIn .55s cubic-bezier(.2,.9,.25,1.2) both;
+      transition: background .35s ease, border-color .35s ease, box-shadow .35s ease;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -90px -60px auto auto;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      background: rgba(22,147,250,.14);
+      filter: blur(1px);
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      left: -80px;
+      bottom: -90px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(68,192,83,.10);
+    }
+
+    .content-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: var(--soft);
+      border: 1px solid var(--border);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.05;
+      font-weight: 900;
+      letter-spacing: -.7px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      max-width: 560px;
+      margin: 0 auto 24px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .login-question {
+      padding: 18px;
+      border: 1px dashed var(--border);
+      border-radius: 20px;
+      background: color-mix(in srgb, var(--soft) 65%, transparent);
+      margin: 12px 0 18px;
+    }
+
+    .login-question h2 {
+      font-size: 17px;
+      margin-bottom: 14px;
+      font-weight: 900;
+    }
+
+    .choice-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 12px 20px;
+      border-radius: 15px;
+      font-size: 14px;
+      font-weight: 900;
+      transition: transform .22s ease, box-shadow .22s ease, opacity .22s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .btn:active {
+      transform: scale(.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      box-shadow: 0 13px 26px rgba(22,147,250,.24);
+    }
+
+    .btn-soft {
+      background: var(--soft);
+      color: var(--primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      box-shadow: 0 13px 26px rgba(239,68,68,.20);
+    }
+
+    .actions-panel {
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+      animation: riseUp .45s ease both;
+    }
+
+    .actions-panel.show {
+      display: grid;
+    }
+
+    .login-panel {
+      display: none;
+      margin-top: 18px;
+      animation: riseUp .45s ease both;
+    }
+
+    .login-panel.show {
+      display: block;
+    }
+
+    .small-note {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .footer {
+      padding: 14px 22px;
+      border-top: 1px solid var(--border);
+      background: var(--footer-bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      transition: background .35s ease, border-color .35s ease;
+    }
+
+    .footer strong {
+      color: var(--primary);
+    }
+
+    .footer-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .footer-link {
+      padding: 8px 11px;
+      border-radius: 10px;
+      background: var(--soft);
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(18px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes riseUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        height: auto;
+        padding: 12px;
+      }
+
+      .logo {
+        width: 38px;
+        height: 38px;
+      }
+
+      .test-name {
+        font-size: 14px;
+      }
+
+      .warning {
+        font-size: 12.5px;
+        line-height: 1.45;
+        margin-top: 12px;
+      }
+
+      .main {
+        align-items: flex-start;
+        padding-top: 20px;
+      }
+
+      .hero-card {
+        padding: 22px 16px;
+        border-radius: 24px;
+      }
+
+      .actions-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .footer {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <img class="logo" src="https://decicqog4ulhy.cloudfront.net/0/admin_v2/uploads/courses/thumbnail/2671188_1_logo.jpg" alt="Logo">
+        <div class="brand-text">
+          <span class="test-name">LearnByAKP Test</span>
+          <span class="test-id" id="testIdText">Test ID: Loading...</span>
+        </div>
+      </div>
+      <button class="theme-btn" type="button" onclick="toggleTheme()" id="themeBtn" title="Toggle day/night">🌙</button>
+    </header>
+
+    <div class="warning">
+      ⚠️ <b>bina nexttoppers ke official website par login kiye koi process sahi nahi hoga</b>
+    </div>
+
+    <main class="main">
+      <section class="hero-card">
+        <div class="content-inner">
+          <div class="pill">✅ Official login check</div>
+          <h1>LearnByAKP Test</h1>
+          <p class="subtitle">
+            Pehle confirm karo ki tum NextToppers official website par login ho. Uske baad Attempt Test, View Solution ya View Result open karo.
+          </p>
+
+          <div class="login-question">
+            <h2>Are you have already login in the NextToppers official website?</h2>
+            <div class="choice-row">
+              <button class="btn btn-primary" type="button" onclick="showActions()">Yes</button>
+              <button class="btn btn-soft" type="button" onclick="showLoginFirst()">No</button>
+            </div>
+          </div>
+
+          <div class="actions-panel" id="actionsPanel">
+            <button class="btn btn-primary" type="button" onclick="goToTest('instruction')">📝 Attempt Test</button>
+            <button class="btn btn-soft" type="button" onclick="goToTest('solution')">📘 View Solution</button>
+            <button class="btn btn-soft" type="button" onclick="goToTest('result')">📊 View Result</button>
+          </div>
+
+          <div class="login-panel" id="loginPanel">
+            <button class="btn btn-danger" type="button" onclick="loginFirst()">🔐 Login first on NextToppers website</button>
+          </div>
+
+          <p class="small-note" id="noteText">
+            Agar button open nahi ho raha, URL me <b>?testId=76</b> ya <b>?testid=76</b> add karo.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Powered by <strong>LearnByAKP</strong></span>
+      <div class="footer-actions">
+        <a class="footer-link" href="https://nexttoppers.com/" target="_blank" rel="noopener">NextToppers</a>
+        <a class="footer-link" href="https://mtaiirus.pages.dev/" target="_blank" rel="noopener">LearnByAKP</a>        
+      </div>
+    </footer>
+  </div>
+
+   <script src="../x/nttest.js"></script>
+</body>
+</html>
