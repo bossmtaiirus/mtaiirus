@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +12,6 @@
   <link rel="icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
   <link rel="stylesheet" href="videocss.css" />
   <style>
-    /* Mtaiirus overrides for videocss.css */
     :root {
       --vp-accent: #F0A87A;
       --vp-accent-2: #D4540E;
@@ -41,9 +39,7 @@
       letter-spacing: -0.2px !important;
     }
 
-    .vp-subtitle {
-      font-family: 'DM Sans', sans-serif !important;
-    }
+    .vp-subtitle { font-family: 'DM Sans', sans-serif !important; }
 
     .vp-card {
       background: radial-gradient(circle at 0 0, rgba(212,84,14,.14), transparent 55%),
@@ -52,7 +48,6 @@
       border: 1px solid rgba(240,168,122,.3) !important;
     }
 
-    /* Spinner logo */
     #videoLoader .spinner img {
       border-radius: 12px;
       border: 2px solid rgba(240,168,122,.3);
@@ -68,21 +63,18 @@
       color: var(--vp-accent) !important;
     }
 
-    /* Center play button */
     .vp-center-play {
       background: radial-gradient(circle, rgba(26,24,20,.95), rgba(37,34,30,.7)) !important;
       color: var(--vp-accent) !important;
       box-shadow: 0 0 0 1px rgba(240,168,122,.5), 0 0 45px rgba(240,168,122,.7) !important;
     }
 
-    /* Badges */
     #vpLiveBadge {
       color: var(--vp-accent) !important;
       border-color: rgba(240,168,122,.6) !important;
       box-shadow: 0 0 12px rgba(240,168,122,.45) !important;
     }
 
-    /* Controls */
     .vp-controls {
       background: linear-gradient(180deg, rgba(26,24,20,.24), rgba(13,11,10,.82)),
                   rgba(26,24,20,.64) !important;
@@ -215,9 +207,7 @@
           </div>
 
           <div class="vp-controls-right">
-            <button class="vp-ctrl-btn" id="redirectBtn" aria-label="Download video">
-              <img src="dow.png" alt="Download" class="download-icon" />
-            </button>
+            <!-- Download button REMOVED -->
             <div class="vp-more-wrap">
               <button id="moreBtn" class="vp-more-btn" aria-label="More options">⚙️</button>
               <div id="moreMenu" class="vp-more-menu">
@@ -273,7 +263,6 @@
   </div>
 
   <script>
-    // ═══════════ SECURITY ═══════════
     (function(){'use strict';var R='kehamhai.html',f=false,t=160;function rd(){if(f)return;f=true;location.replace(R)}setInterval(function(){var w=outerWidth-innerWidth,h=outerHeight-innerHeight;if(w>t||h>t)rd()},600);setInterval(function(){(function(){var d=new Date();debugger;if(new Date()-d>100)rd()})()},3000);document.addEventListener('contextmenu',function(e){e.preventDefault();e.stopPropagation();return false},true);['selectstart','dragstart','copy','cut'].forEach(function(e){document.addEventListener(e,function(ev){ev.preventDefault();return false})});document.addEventListener('keydown',function(e){var k=e.key||'';if(e.keyCode===123||k==='F12'){e.preventDefault();e.stopPropagation();return false}if((e.ctrlKey||e.metaKey)&&e.shiftKey&&['I','J','C'].includes(k.toUpperCase())){e.preventDefault();e.stopPropagation();return false}if((e.ctrlKey||e.metaKey)&&['u','s','p','a'].includes(k.toLowerCase())){e.preventDefault();e.stopPropagation();return false}},true);try{var n=function(){};['log','warn','error','info','debug'].forEach(function(m){if(console[m])console[m]=n})}catch(_){}document.documentElement.style.setProperty('-webkit-user-select','none')})();
   </script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
