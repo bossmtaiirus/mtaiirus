@@ -1,0 +1,358 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Rohit — Mtaiirus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --fg: #0d0d0d;
+    --bg: #f5f2ec;
+    --accent: #ff4d00;
+    --accent2: #6c2eff;
+    --card: #ffffff;
+    --border: #e0dbd3;
+    --muted: #888;
+  }
+  body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; }
+  nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 2rem; border-bottom: 1.5px solid var(--border);
+    background: var(--bg); position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; }
+  .logo span { color: var(--accent); }
+  nav ul { list-style: none; display: flex; gap: 2rem; }
+  nav ul li a { text-decoration: none; font-size: 0.85rem; color: var(--muted); font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase; transition: color 0.2s; }
+  nav ul li a:hover { color: var(--accent); }
+
+  .hero { min-height: 88vh; display: flex; flex-direction: column; justify-content: center; padding: 4rem 2rem 3rem; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; max-width: 1100px; margin: 0 auto; width: 100%; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.2rem; }
+  h1 { font-size: clamp(2.4rem, 5.5vw, 4.5rem); line-height: 1.0; font-weight: 700; letter-spacing: -2px; margin-bottom: 1.5rem; }
+  h1 em { font-style: normal; color: var(--accent2); }
+  .hero-desc { font-size: 1.05rem; line-height: 1.7; color: #444; max-width: 420px; margin-bottom: 2.5rem; }
+  .cta-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 600; padding: 0.75rem 1.75rem; border-radius: 2px; cursor: pointer; text-decoration: none; display: inline-block; transition: transform 0.15s, box-shadow 0.15s; letter-spacing: 0.02em; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { background: var(--accent); color: #fff; border: none; box-shadow: 4px 4px 0 #b53000; }
+  .btn-primary:hover { box-shadow: 6px 6px 0 #b53000; }
+  .btn-outline { background: transparent; color: var(--fg); border: 1.5px solid var(--fg); box-shadow: 4px 4px 0 var(--fg); }
+  .btn-outline:hover { box-shadow: 6px 6px 0 var(--fg); }
+
+  .hero-visual { display: flex; justify-content: center; align-items: center; }
+  .code-block { font-family: 'Space Mono', monospace; background: #0d0d0d; color: #f5f2ec; border-radius: 4px; padding: 1.75rem 2rem; font-size: 0.82rem; line-height: 1.8; width: 100%; max-width: 380px; border: 1.5px solid #333; box-shadow: 8px 8px 0 var(--accent2); position: relative; }
+  .code-bar { position: absolute; top: 0; left: 0; right: 0; background: #1a1a1a; padding: 0.6rem 1rem; border-radius: 4px 4px 0 0; display: flex; gap: 6px; align-items: center; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; } .dot-y { background: #ffbd2e; } .dot-g { background: #28c840; }
+  .code-content { padding-top: 1.5rem; }
+  .c-orange { color: #ff9a3c; } .c-blue2 { color: #79c0ff; } .c-green2 { color: #7ee787; } .c-purple2 { color: #c084fc; } .c-gray2 { color: #8b949e; }
+
+  section { padding: 5rem 2rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+  h2 { font-size: clamp(1.8rem, 4vw, 3rem); letter-spacing: -1.5px; font-weight: 700; line-height: 1.1; margin-bottom: 2.5rem; }
+  h2 span { color: var(--accent); }
+
+  .about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 4rem; align-items: start; }
+  .about-text p { font-size: 1.05rem; line-height: 1.8; color: #333; margin-bottom: 1.2rem; }
+  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+  .stat-card { border: 1.5px solid var(--border); border-radius: 2px; padding: 1.2rem; background: var(--card); box-shadow: 3px 3px 0 var(--border); }
+  .stat-num { font-size: 2rem; font-weight: 700; letter-spacing: -2px; color: var(--accent); font-family: 'Space Mono', monospace; }
+  .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+  .crew-card { background: #0d0d0d; border-radius: 4px; padding: 1.5rem; border: 1.5px solid #222; box-shadow: 6px 6px 0 var(--accent); }
+  .crew-title { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; color: #666; text-transform: uppercase; margin-bottom: 1rem; }
+  .crew-member { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid #1a1a1a; }
+  .crew-member:last-child { border-bottom: none; }
+  .avatar { width: 40px; height: 40px; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-weight: 700; font-size: 0.85rem; }
+  .crew-info { flex: 1; }
+  .crew-name { color: #f5f2ec; font-weight: 600; font-size: 0.9rem; }
+  .crew-role { color: #666; font-size: 0.78rem; margin-top: 2px; }
+  .badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; }
+
+  #skills { background: #0d0d0d; }
+  #skills h2 { color: #f5f2ec; }
+  #skills h2 span { color: var(--accent); }
+  #skills .section-label { color: #666; }
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+  .skill-pill { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 2px; padding: 1rem 1.25rem; transition: border-color 0.2s, transform 0.2s; }
+  .skill-pill:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .skill-name { font-weight: 600; color: #f5f2ec; font-size: 0.9rem; margin-bottom: 6px; }
+  .skill-bar-bg { height: 3px; background: #2a2a2a; border-radius: 2px; overflow: hidden; }
+  .skill-bar-fill { height: 100%; border-radius: 2px; transition: width 1.2s ease; }
+
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .project-card { border: 1.5px solid var(--border); border-radius: 2px; background: var(--card); overflow: hidden; box-shadow: 4px 4px 0 var(--border); transition: transform 0.2s, box-shadow 0.2s; }
+  .project-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--border); }
+  .project-thumb { height: 130px; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 2rem; font-weight: 700; letter-spacing: -2px; }
+  .project-body { padding: 1.25rem 1.5rem; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.75rem; }
+  .tag { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; background: #ffe8de; color: #b53000; padding: 3px 8px; border-radius: 2px; }
+  .tag-purple { background: #ede8fe; color: #4c2eff; }
+  .project-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .project-desc { font-size: 0.88rem; color: #555; line-height: 1.6; }
+  .project-links { display: flex; gap: 1rem; margin-top: 1rem; }
+  .project-links a { font-size: 0.82rem; font-weight: 600; color: var(--accent2); text-decoration: none; border-bottom: 1.5px solid var(--accent2); padding-bottom: 1px; }
+
+  #contact { background: var(--accent); }
+  #contact .section-label { color: rgba(255,255,255,0.6); }
+  #contact h2 { color: #fff; }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .contact-text p { font-size: 1.05rem; color: rgba(255,255,255,0.85); line-height: 1.8; margin-bottom: 1.5rem; }
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-link { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; color: rgba(255,255,255,0.85); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+  .contact-link:hover { color: #fff; }
+  .contact-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; font-family: 'Space Mono', monospace; }
+  .social-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+  .social-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.15); color: #fff; font-size: 0.85rem; font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 2px; text-decoration: none; border: 1px solid rgba(255,255,255,0.3); transition: background 0.2s; }
+  .social-btn:hover { background: rgba(255,255,255,0.25); }
+
+  footer { background: #0d0d0d; padding: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  footer span { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: #555; }
+  footer span b { color: var(--accent); }
+
+  @media (max-width: 700px) {
+    .hero-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">mtaiirus<span>.</span>dev</div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-grid">
+    <div>
+      <p class="eyebrow">// Batch Pirate from India 🏴‍☠️</p>
+      <h1>Rohit aka <em>Anubhav</em> Chaudhary</h1>
+      <p class="hero-desc">Founder & Developer of Mtaiirus — building free study resources and entertainment for everyone. No paywalls. No gatekeeping. Just vibes.</p>
+      <div class="cta-row">
+        <a href="#projects" class="btn btn-primary">See my work</a>
+        <a href="https://mtaiirus.pages.dev/" class="btn btn-outline">Visit Mtaiirus →</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="code-block">
+        <div class="code-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+        </div>
+        <div class="code-content">
+          <div><span class="c-purple2">const</span> <span class="c-blue2">rohit</span> <span class="c-gray2">=</span> <span class="c-orange">{</span></div>
+          <div>&nbsp;&nbsp;<span class="c-blue2">aka</span><span class="c-gray2">:</span> <span class="c-green2">'Anubhav'</span><span class="c-gray2">,</span></div>
+          <div>&nbsp;&nbsp;<span class="c-blue2">role</span><span class="c-gray2">:</span> <span class="c-green2">'Founder & Dev'</span><span class="c-gray2">,</span></div>
+          <div>&nbsp;&nbsp;<span class="c-blue2">org</span><span class="c-gray2">:</span> <span class="c-green2">'Mtaiirus'</span><span class="c-gray2">,</span></div>
+          <div>&nbsp;&nbsp;<span class="c-blue2">stack</span><span class="c-gray2">:</span> <span class="c-orange">[</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-green2">'HTML'</span><span class="c-gray2">,</span> <span class="c-green2">'CSS'</span><span class="c-gray2">,</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-green2">'PHP'</span><span class="c-gray2">,</span> <span class="c-green2">'Python'</span></div>
+          <div>&nbsp;&nbsp;<span class="c-orange">]</span><span class="c-gray2">,</span></div>
+          <div>&nbsp;&nbsp;<span class="c-blue2">free4all</span><span class="c-gray2">:</span> <span class="c-purple2">true</span></div>
+          <div><span class="c-orange">}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-inner">
+    <p class="section-label">// 01 — About</p>
+    <h2>Who's behind <span>Mtaiirus?</span></h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I'm Rohit, also known as Anubhav Chaudhary — the Founder and Developer of Mtaiirus. I build platforms that give free access to study materials and entertainment for everyone, because knowledge shouldn't be locked behind a paywall.</p>
+        <p>Together with my co-founder and CEO Jeet (aka Runway), we've grown Mtaiirus into a network of live services used by a real community on Telegram. I handle the code; Jeet handles the vision. Together, we handle chaos.</p>
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-num">5+</div>
+            <div class="stat-label">Live services</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Free for all</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">🏴‍☠️</div>
+            <div class="stat-label">Pirate spirit</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="crew-card">
+          <div class="crew-title">// Team Mtaiirus</div>
+          <div class="crew-member">
+            <div class="avatar" style="background: #ffe8de; color: var(--accent);">RA</div>
+            <div class="crew-info">
+              <div class="crew-name">Rohit aka Anubhav</div>
+              <div class="crew-role">Founder & Developer</div>
+            </div>
+            <span class="badge" style="background: #ffe8de; color: #b53000;">DEV</span>
+          </div>
+          <div class="crew-member">
+            <div class="avatar" style="background: #ede8fe; color: var(--accent2);">JT</div>
+            <div class="crew-info">
+              <div class="crew-name">Jeet aka Runway</div>
+              <div class="crew-role">CEO & Co-Founder</div>
+            </div>
+            <span class="badge" style="background: #ede8fe; color: #4c2eff;">CEO</span>
+          </div>
+        </div>
+        <div style="margin-top: 1.5rem;">
+          <p style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.75rem;">Currently building</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span style="background: #ffe8de; color: #b53000; font-size: 0.8rem; font-weight: 600; padding: 5px 12px; border-radius: 2px;">Free study tools</span>
+            <span style="background: #ede8fe; color: #4c2eff; font-size: 0.8rem; font-weight: 600; padding: 5px 12px; border-radius: 2px;">Entertainment</span>
+            <span style="background: #e8f5e9; color: #2e7d32; font-size: 0.8rem; font-weight: 600; padding: 5px 12px; border-radius: 2px;">Community</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="section-inner">
+    <p class="section-label">// 02 — Skills</p>
+    <h2><span>What</span> I build with.</h2>
+    <div class="skills-grid" id="skills-grid"></div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="section-inner">
+    <p class="section-label">// 03 — Projects</p>
+    <h2>What <span>Mtaiirus</span> ships.</h2>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-thumb" style="background: #ffe8de; color: var(--accent);">PW</div>
+        <div class="project-body">
+          <div class="project-tags"><span class="tag">Live</span><span class="tag">Study</span></div>
+          <div class="project-title">PW — Study Platform</div>
+          <div class="project-desc">Free academic resources for students. No login walls, no fees. Just open access to quality study material.</div>
+          <div class="project-links"><a href="https://mtaiirus.pages.dev/">Visit →</a></div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-thumb" style="background: #ede8fe; color: var(--accent2);">NXT</div>
+        <div class="project-body">
+          <div class="project-tags"><span class="tag tag-purple">Live</span><span class="tag tag-purple">Entertainment</span></div>
+          <div class="project-title">NXT — Entertainment</div>
+          <div class="project-desc">Entertainment for everyone, built and maintained by Team Mtaiirus. Part of the live service network.</div>
+          <div class="project-links"><a href="https://mtaiirus.pages.dev/">Visit →</a></div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-thumb" style="background: #e8f5e9; color: #2e7d32;">VIBRANT</div>
+        <div class="project-body">
+          <div class="project-tags"><span class="tag">Live</span><span class="tag">Community</span></div>
+          <div class="project-title">Vibrant + More Services</div>
+          <div class="project-desc">SW, S&F, and VIBRANT — all live, all free. A growing network of services built for the Mtaiirus community.</div>
+          <div class="project-links"><a href="https://mtaiirus.pages.dev/">Visit →</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-inner">
+    <p class="section-label">// 04 — Contact</p>
+    <h2>Find me online.</h2>
+    <div class="contact-grid">
+      <div class="contact-text">
+        <p>Want to collab, suggest something, or just say hi? Hit me up on Telegram or Instagram. I'm always around.</p>
+        <div class="contact-links">
+          <a href="https://instagram.com/mtaiirus" class="contact-link">
+            <div class="contact-icon">IG</div>
+            @mtaiirus
+          </a>
+          <a href="https://t.me/mtaiirus" class="contact-link">
+            <div class="contact-icon">TG</div>
+            @mtaiirus
+          </a>
+          <a href="https://mtaiirus.pages.dev/" class="contact-link">
+            <div class="contact-icon">WB</div>
+            mtaiirus.pages.dev
+          </a>
+        </div>
+        <div class="social-row">
+          <a href="https://instagram.com/mtaiirus" class="social-btn">📸 Instagram</a>
+          <a href="https://t.me/mtaiirus" class="social-btn">✈️ Telegram</a>
+        </div>
+      </div>
+      <div style="background: rgba(255,255,255,0.12); border-radius: 4px; padding: 2rem; border: 1px solid rgba(255,255,255,0.2);">
+        <p style="font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 1rem;">// Mission</p>
+        <p style="font-size: 1.1rem; color: #fff; line-height: 1.8; font-weight: 500;">"Free study resources and entertainment for everyone — no paywalls, no gatekeeping."</p>
+        <p style="margin-top: 1.5rem; font-size: 0.85rem; color: rgba(255,255,255,0.6);">— Rohit aka Anubhav, Founder of Mtaiirus</p>
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.15);">
+          <p style="font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-bottom: 0.5rem;">Built with</p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <span style="background: rgba(255,255,255,0.15); color: #fff; font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 2px;">HTML</span>
+            <span style="background: rgba(255,255,255,0.15); color: #fff; font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 2px;">CSS</span>
+            <span style="background: rgba(255,255,255,0.15); color: #fff; font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 2px;">PHP</span>
+            <span style="background: rgba(255,255,255,0.15); color: #fff; font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 2px;">Python</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Built by <b>Rohit aka Anubhav</b> · Team <b>Mtaiirus</b></span>
+  <span>© 2024 · Free for all 🏴‍☠️</span>
+</footer>
+
+<script>
+const skills = [
+  { name: 'HTML', pct: 92, color: '#ff4d00' },
+  { name: 'CSS', pct: 88, color: '#ff4d00' },
+  { name: 'PHP', pct: 78, color: '#6c2eff' },
+  { name: 'Python', pct: 75, color: '#6c2eff' },
+];
+const grid = document.getElementById('skills-grid');
+skills.forEach(s => {
+  const pill = document.createElement('div');
+  pill.className = 'skill-pill';
+  pill.innerHTML = `<div class="skill-name">${s.name}</div><div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="${s.pct}" data-color="${s.color}" style="width:0%; background:${s.color}"></div></div>`;
+  grid.appendChild(pill);
+});
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.skill-bar-fill').forEach(bar => { bar.style.width = bar.dataset.pct + '%'; });
+      observer.disconnect();
+    }
+  });
+}, { threshold: 0.2 });
+const skillsSection = document.getElementById('skills');
+if (skillsSection) observer.observe(skillsSection);
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
