@@ -1,15 +1,21 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AS Multiverse — Mission JEET</title>
-  <link rel="icon" href="https://i.postimg.cc/26F5zTH7/4661462-1-Mission-JEET-Logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#D4540E">
+  <title>Mtaiirus — Mission JEET Batches</title>
+  <meta name="description" content="Access free premium Mission JEET batches on Mtaiirus. No sign-up. No subscription. Just study.">
+  <link rel="icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" />
+  <link rel="apple-touch-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    /* ── Reset & Base ──────────────────────────────────────── */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     html {
@@ -18,69 +24,81 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
+    :root {
+      --bg: #F5F2EB;
+      --bg2: #ECEAE2;
+      --ink: #1A1814;
+      --ink2: #6B6760;
+      --ink3: #B0ADA7;
+      --accent: #D4540E;
+      --accentl: #F0A87A;
+      --accentb: rgba(212,84,14,.08);
+      --green: #2D6A3F;
+      --greenl: #E4F0E8;
+      --card: #FFFDFB;
+      --border: rgba(26,24,20,.1);
+      --borderh: rgba(26,24,20,.2);
+      --font-heading: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #0f1117;
-      color: #fff;
+      font-family: var(--font-body);
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(212,84,14,.06), transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(240,168,122,.04), transparent 50%),
+        var(--bg);
+      color: var(--ink);
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* ── Ambient Background Glow ──────────────────────────── */
-    body::before {
-      content: '';
-      position: fixed;
-      top: -40%; left: -20%;
-      width: 70vw; height: 70vw;
-      background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: -30%; right: -15%;
-      width: 60vw; height: 60vw;
-      background: radial-gradient(circle, rgba(6,182,212,0.05) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ── Header ───────────────────────────────────────────── */
+    /* ── Header ── */
     .header {
       text-align: center;
-      padding: 64px 24px 48px;
+      padding: 56px 24px 40px;
       position: relative;
       z-index: 1;
     }
 
+    .brand-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      object-fit: contain;
+      border: 2px solid var(--border);
+      background: #fff;
+      margin: 0 auto 16px;
+      display: block;
+    }
+
     .header h1 {
+      font-family: var(--font-heading);
       font-size: clamp(2.5rem, 6vw, 4rem);
       font-weight: 800;
-      letter-spacing: -0.02em;
+      letter-spacing: -1.5px;
       line-height: 1.1;
     }
 
-    .header h1 .white { color: #ffffff; }
+    .header h1 .white { color: var(--ink); }
 
     .header h1 .gradient {
-      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      background: linear-gradient(135deg, #D4540E, #e8651f);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
     .header .subtitle {
-      margin-top: 14px;
-      font-size: 11px;
+      margin-top: 12px;
+      font-size: 12px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.25em;
-      color: rgba(147, 197, 253, 0.5);
-      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.2em;
+      color: var(--ink3);
     }
 
-    /* ── Grid ─────────────────────────────────────────────── */
+    /* ── Grid ── */
     .grid-wrapper {
       max-width: 1280px;
       margin: 0 auto;
@@ -92,7 +110,7 @@
     .batch-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 40px;
+      gap: 32px;
       justify-items: center;
     }
 
@@ -101,20 +119,20 @@
     }
     @media (max-width: 640px) {
       .batch-grid { grid-template-columns: 1fr; }
-      .header { padding: 48px 20px 36px; }
+      .header { padding: 40px 20px 28px; }
     }
 
-    /* ── Batch Card ───────────────────────────────────────── */
+    /* ── Batch Card ── */
     .batch-card {
       width: 100%;
       max-width: 380px;
-      background: rgba(13, 13, 26, 0.8);
+      background: var(--card);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border-radius: 2.5rem;
+      border-radius: 1.5rem;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 32px rgba(26,24,20,.08);
       transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
       opacity: 0;
       transform: translateY(40px);
@@ -125,8 +143,8 @@
     }
 
     .batch-card:hover {
-      border-color: rgba(59, 130, 246, 0.3);
-      box-shadow: 0 24px 80px rgba(59, 130, 246, 0.12), 0 20px 60px rgba(0, 0, 0, 0.4);
+      border-color: var(--accent);
+      box-shadow: 0 16px 48px rgba(212,84,14,.12), 0 8px 32px rgba(26,24,20,.1);
       transform: translateY(-4px);
     }
 
@@ -135,12 +153,12 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── Card Image ───────────────────────────────────────── */
+    /* ── Card Image ── */
     .card-image-wrap {
       position: relative;
       aspect-ratio: 16 / 10;
       overflow: hidden;
-      background: #0a0a14;
+      background: var(--bg2);
     }
 
     .card-image-wrap img {
@@ -150,16 +168,16 @@
     }
 
     .batch-card:hover .card-image-wrap img {
-      transform: scale(1.1);
+      transform: scale(1.08);
     }
 
-    /* ── Enrolled Pin Badge ───────────────────────────────── */
+    /* ── Enrolled Pin Badge ── */
     .enrolled-pin {
       position: absolute;
       top: 16px; right: 16px;
       width: 36px; height: 36px;
-      background: rgba(34, 197, 94, 0.2);
-      border: 1.5px solid rgba(34, 197, 94, 0.5);
+      background: var(--greenl);
+      border: 1.5px solid rgba(45,106,63,.5);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -174,7 +192,7 @@
       position: absolute;
       inset: -4px;
       border-radius: 50%;
-      border: 2px solid rgba(34, 197, 94, 0.3);
+      border: 2px solid rgba(45,106,63,.3);
       animation: pinPulse 2s ease-in-out infinite;
     }
 
@@ -183,28 +201,30 @@
       50%      { transform: scale(1.3); opacity: 0; }
     }
 
-    .enrolled-pin svg { width: 16px; height: 16px; color: #22c55e; }
+    .enrolled-pin svg { width: 16px; height: 16px; color: var(--green); }
 
-    /* ── Card Body ─────────────────────────────────────────── */
+    /* ── Card Body ── */
     .card-body {
-      padding: 32px;
+      padding: 28px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 18px;
     }
 
     .card-title {
-      font-size: 1.2rem;
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--ink);
       text-align: center;
       transition: color 0.3s ease;
       line-height: 1.35;
+      letter-spacing: -.2px;
     }
 
-    .batch-card:hover .card-title { color: #60a5fa; }
+    .batch-card:hover .card-title { color: var(--accent); }
 
-    /* ── Action Buttons ────────────────────────────────────── */
+    /* ── Action Buttons ── */
     .card-actions {
       display: flex;
       gap: 12px;
@@ -219,12 +239,11 @@
       border: none;
       cursor: pointer;
       font-family: inherit;
-      font-weight: 700;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.04em;
       padding: 14px 20px;
-      border-radius: 1rem;
+      border-radius: .875rem;
       transition: all 0.3s ease;
       text-decoration: none;
       line-height: 1;
@@ -234,14 +253,15 @@
 
     .btn-explore {
       flex: 1;
-      background: linear-gradient(135deg, #2563eb, #06b6d4);
-      color: #fff;
+      background: var(--ink);
+      color: var(--bg);
       border: none;
     }
 
     .btn-explore:hover {
-      background: linear-gradient(135deg, #3b82f6, #22d3ee);
-      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 8px 28px rgba(212,84,14,.3);
     }
 
     .btn-explore svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
@@ -249,43 +269,45 @@
 
     .btn-enroll {
       min-width: 80px;
-      border-radius: 1rem;
-      background: rgba(255, 255, 255, 0.05);
-      color: rgba(255, 255, 255, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: .875rem;
+      background: var(--accentb);
+      color: var(--ink2);
+      border: 1px solid var(--border);
     }
 
     .btn-enroll:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--bg2);
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     .btn-enroll svg { width: 16px; height: 16px; }
 
     .btn-enroll.is-enrolled {
-      background: rgba(34, 197, 94, 0.2);
-      color: #4ade80;
-      border-color: rgba(34, 197, 94, 0.5);
-      box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);
+      background: var(--greenl);
+      color: var(--green);
+      border-color: rgba(45,106,63,.5);
+      box-shadow: 0 0 20px rgba(45,106,63,.08);
     }
 
     .btn-enroll.is-enrolled:hover {
-      background: rgba(34, 197, 94, 0.25);
+      background: rgba(45,106,63,.15);
     }
 
-    /* ── Show More ─────────────────────────────────────────── */
+    /* ── Show More ── */
     .show-more-wrap {
       display: flex;
       justify-content: center;
-      margin-top: 48px;
+      margin-top: 44px;
     }
 
     .btn-show-more {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--card);
+      color: var(--ink);
+      border: 1px solid var(--border);
       padding: 16px 36px;
       border-radius: 1rem;
       font-size: 15px;
@@ -296,14 +318,15 @@
     }
 
     .btn-show-more:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--accentb);
+      border-color: var(--accent);
     }
 
     .btn-show-more:active { transform: scale(0.95); }
 
     .btn-show-more svg {
       width: 20px; height: 20px;
-      color: #60a5fa;
+      color: var(--accent);
       transition: transform 0.3s ease;
     }
 
@@ -311,7 +334,7 @@
 
     .hidden { display: none !important; }
 
-    /* ── Loading State ─────────────────────────────────────── */
+    /* ── Loading State ── */
     .loading-state {
       display: flex;
       flex-direction: column;
@@ -325,8 +348,8 @@
 
     .spinner {
       width: 56px; height: 56px;
-      border: 4px solid rgba(59, 130, 246, 0.2);
-      border-top-color: #22d3ee;
+      border: 4px solid var(--accentb);
+      border-top-color: var(--accent);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
@@ -334,10 +357,10 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .loading-text {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--font-heading);
       font-size: 13px;
-      font-weight: 500;
-      color: #67e8f9;
+      font-weight: 600;
+      color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 0.2em;
       animation: pulse 1.5s ease-in-out infinite;
@@ -348,16 +371,10 @@
       50%      { opacity: 0.4; }
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50%      { transform: translateY(-10px); }
-    }
-
-    /* ── Scrollbar ─────────────────────────────────────────── */
     ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #0f1117; }
-    ::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.3); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(59,130,246,0.5); }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accentb); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(212,84,14,.3); }
   </style>
 </head>
 <body>
@@ -368,11 +385,12 @@
     <div class="loading-text">Loading Batches...</div>
   </div>
 
-  <!-- Main Content (hidden until loaded) -->
+  <!-- Main Content -->
   <div id="app" class="hidden">
     <header class="header">
+      <img class="brand-logo" src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" alt="Mtaiirus" onerror="this.style.display='none'" />
       <h1><span class="white">Mission</span> <span class="gradient">JEET</span></h1>
-      <p class="subtitle">AS Multiverse Exclusive Batches</p>
+      <p class="subtitle">Mtaiirus Exclusive Batches — Free Premium Access</p>
     </header>
 
     <div class="grid-wrapper">
@@ -387,7 +405,6 @@
   </div>
 
   <script>
-    /* ── Data ──────────────────────────────────────────────── */
     const BATCHES = [
       { id: 185, title: 'Drona 2.0 JEE Class 11th', thumbnail: 'https://dulae92u7241v.cloudfront.net/1772100600/admin_v2/uploads/courses/thumbnail/2967410_131_drona%202.0%20JEE%20banner%20app.png' },
       { id: 184, title: 'Drona 2.0 NEET Class 11th', thumbnail: 'https://dulae92u7241v.cloudfront.net/1772100600/admin_v2/uploads/courses/thumbnail/241318_131_drona%202.0%20NEET%20banner%20app.png' },
@@ -395,37 +412,28 @@
       { id: 152, title: 'Drona NEET class 11th', thumbnail: 'https://dulae92u7241v.cloudfront.net/1772100600/admin_v2/uploads/courses/thumbnail/4072473_131_Class%2011th%20Mission%20Jeets%20NEET%20App%20Banners.jpg' }
     ];
 
-    const FALLBACK_IMG = 'https://i.postimg.cc/26F5zTH7/4661462-1-Mission-JEET-Logo.png';
-    const LS_KEY = 'as_multiverse_enrollments';
+    const FALLBACK_IMG = 'https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg';
+    const LS_KEY = 'mtaiirus_enrollments';
     const PER_PAGE = 4;
     let visibleCount = 0;
 
-    /* ── Enrollment Helpers ────────────────────────────────── */
     function getEnrollments() {
       try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; }
       catch { return []; }
     }
 
-    function setEnrollments(ids) {
-      localStorage.setItem(LS_KEY, JSON.stringify(ids));
-    }
+    function setEnrollments(ids) { localStorage.setItem(LS_KEY, JSON.stringify(ids)); }
 
-    function isEnrolled(id) {
-      return getEnrollments().includes(id);
-    }
+    function isEnrolled(id) { return getEnrollments().includes(id); }
 
     function toggleEnroll(id) {
       let enrolled = getEnrollments();
-      if (enrolled.includes(id)) {
-        enrolled = enrolled.filter(x => x !== id);
-      } else {
-        enrolled.push(id);
-      }
+      if (enrolled.includes(id)) { enrolled = enrolled.filter(x => x !== id); }
+      else { enrolled.push(id); }
       setEnrollments(enrolled);
       renderAll();
     }
 
-    /* ── Sort: enrolled first ─────────────────────────────── */
     function getSortedBatches() {
       const enrolled = getEnrollments();
       return [...BATCHES].sort((a, b) => {
@@ -435,10 +443,8 @@
       });
     }
 
-    /* ── Card Builder ─────────────────────────────────────── */
     function buildCard(batch, index) {
       const enrolled = isEnrolled(batch.id);
-
       const enrolledPin = enrolled
         ? `<div class="enrolled-pin">
              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -475,19 +481,16 @@
         </div>`;
     }
 
-    /* ── Render ────────────────────────────────────────────── */
     function renderAll() {
       const sorted = getSortedBatches();
       const grid = document.getElementById('batchGrid');
       const showMoreWrap = document.getElementById('showMoreWrap');
 
-      /* Preserve visible count across re-renders */
       if (visibleCount === 0) visibleCount = PER_PAGE;
       const toShow = sorted.slice(0, visibleCount);
 
       grid.innerHTML = toShow.map((b, i) => buildCard(b, i)).join('');
 
-      /* Staggered entrance */
       requestAnimationFrame(() => {
         const cards = grid.querySelectorAll('.batch-card');
         cards.forEach((card, i) => {
@@ -495,7 +498,6 @@
         });
       });
 
-      /* Show More visibility */
       if (visibleCount < sorted.length) {
         showMoreWrap.classList.remove('hidden');
       } else {
@@ -508,7 +510,20 @@
       renderAll();
     }
 
-    /* ── Boot ──────────────────────────────────────────────── */
+    // ═══════════ SECURITY ═══════════
+    (function() {
+      'use strict';
+      var R='kehamhai.html',f=false,t=160;
+      function rd(){if(f)return;f=true;location.replace(R)}
+      setInterval(function(){var w=outerWidth-innerWidth,h=outerHeight-innerHeight;if(w>t||h>t)rd()},600);
+      setInterval(function(){(function(){var d=new Date();debugger;if(new Date()-d>100)rd()})()},3000);
+      document.addEventListener('contextmenu',function(e){e.preventDefault();e.stopPropagation();return false},true);
+      ['selectstart','dragstart','copy','cut'].forEach(function(e){document.addEventListener(e,function(ev){ev.preventDefault();return false})});
+      document.addEventListener('keydown',function(e){var k=e.key||'';if(e.keyCode===123||k==='F12'){e.preventDefault();e.stopPropagation();return false}if((e.ctrlKey||e.metaKey)&&e.shiftKey&&['I','J','C'].includes(k.toUpperCase())){e.preventDefault();e.stopPropagation();return false}if((e.ctrlKey||e.metaKey)&&['u','s','p','a'].includes(k.toLowerCase())){e.preventDefault();e.stopPropagation();return false}},true);
+      try{var n=function(){};['log','warn','error','info','debug'].forEach(function(m){if(console[m])console[m]=n})}catch(_){}
+      document.documentElement.style.setProperty('-webkit-user-select','none');
+    })();
+
     window.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         document.getElementById('loading').classList.add('hidden');
@@ -516,6 +531,6 @@
         renderAll();
       }, 500);
     });
-</script>
+  </script>
 </body>
 </html>
