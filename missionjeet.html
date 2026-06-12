@@ -1,0 +1,528 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AS Multiverse — Mission JEET</title>
+  <link rel="icon" href="https://i.postimg.cc/26F5zTH7/4661462-1-Mission-JEET-Logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ──────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f1117;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Ambient Background Glow ──────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -40%; left: -20%;
+      width: 70vw; height: 70vw;
+      background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -30%; right: -15%;
+      width: 60vw; height: 60vw;
+      background: radial-gradient(circle, rgba(6,182,212,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Header ───────────────────────────────────────────── */
+    .header {
+      text-align: center;
+      padding: 64px 24px 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .header h1 .white { color: #ffffff; }
+
+    .header h1 .gradient {
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header .subtitle {
+      margin-top: 14px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: rgba(147, 197, 253, 0.5);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── Grid ─────────────────────────────────────────────── */
+    .grid-wrapper {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .batch-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      justify-items: center;
+    }
+
+    @media (max-width: 1024px) {
+      .batch-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .batch-grid { grid-template-columns: 1fr; }
+      .header { padding: 48px 20px 36px; }
+    }
+
+    /* ── Batch Card ───────────────────────────────────────── */
+    .batch-card {
+      width: 100%;
+      max-width: 380px;
+      background: rgba(13, 13, 26, 0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 2.5rem;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .batch-card.visible {
+      animation: cardEntrance 0.6s ease forwards;
+    }
+
+    .batch-card:hover {
+      border-color: rgba(59, 130, 246, 0.3);
+      box-shadow: 0 24px 80px rgba(59, 130, 246, 0.12), 0 20px 60px rgba(0, 0, 0, 0.4);
+      transform: translateY(-4px);
+    }
+
+    @keyframes cardEntrance {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Card Image ───────────────────────────────────────── */
+    .card-image-wrap {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background: #0a0a14;
+    }
+
+    .card-image-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .batch-card:hover .card-image-wrap img {
+      transform: scale(1.1);
+    }
+
+    /* ── Enrolled Pin Badge ───────────────────────────────── */
+    .enrolled-pin {
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 36px; height: 36px;
+      background: rgba(34, 197, 94, 0.2);
+      border: 1.5px solid rgba(34, 197, 94, 0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 2;
+    }
+
+    .enrolled-pin::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid rgba(34, 197, 94, 0.3);
+      animation: pinPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pinPulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50%      { transform: scale(1.3); opacity: 0; }
+    }
+
+    .enrolled-pin svg { width: 16px; height: 16px; color: #22c55e; }
+
+    /* ── Card Body ─────────────────────────────────────────── */
+    .card-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+      transition: color 0.3s ease;
+      line-height: 1.35;
+    }
+
+    .batch-card:hover .card-title { color: #60a5fa; }
+
+    /* ── Action Buttons ────────────────────────────────────── */
+    .card-actions {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 14px 20px;
+      border-radius: 1rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    .btn:active { transform: scale(0.95); }
+
+    .btn-explore {
+      flex: 1;
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-explore:hover {
+      background: linear-gradient(135deg, #3b82f6, #22d3ee);
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-explore svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
+    .btn-explore:hover svg { transform: translateX(3px); }
+
+    .btn-enroll {
+      min-width: 80px;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-enroll:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-enroll svg { width: 16px; height: 16px; }
+
+    .btn-enroll.is-enrolled {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border-color: rgba(34, 197, 94, 0.5);
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);
+    }
+
+    .btn-enroll.is-enrolled:hover {
+      background: rgba(34, 197, 94, 0.25);
+    }
+
+    /* ── Show More ─────────────────────────────────────────── */
+    .show-more-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 48px;
+    }
+
+    .btn-show-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 16px 36px;
+      border-radius: 1rem;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .btn-show-more:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-show-more:active { transform: scale(0.95); }
+
+    .btn-show-more svg {
+      width: 20px; height: 20px;
+      color: #60a5fa;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-show-more:hover svg { transform: translateY(3px); }
+
+    .hidden { display: none !important; }
+
+    /* ── Loading State ─────────────────────────────────────── */
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      min-height: 40vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .spinner {
+      width: 56px; height: 56px;
+      border: 4px solid rgba(59, 130, 246, 0.2);
+      border-top-color: #22d3ee;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      color: #67e8f9;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.4; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    /* ── Scrollbar ─────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f1117; }
+    ::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.3); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(59,130,246,0.5); }
+  </style>
+</head>
+<body>
+
+  <!-- Loading State -->
+  <div id="loading" class="loading-state">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading Batches...</div>
+  </div>
+
+  <!-- Main Content (hidden until loaded) -->
+  <div id="app" class="hidden">
+    <header class="header">
+      <h1><span class="white">Mission</span> <span class="gradient">JEET</span></h1>
+      <p class="subtitle">AS Multiverse Exclusive Batches</p>
+    </header>
+
+    <div class="grid-wrapper">
+      <div id="batchGrid" class="batch-grid"></div>
+      <div id="showMoreWrap" class="show-more-wrap hidden">
+        <button id="showMoreBtn" class="btn-show-more" onclick="showMore()">
+          Show More
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── Data ──────────────────────────────────────────────── */
+    const BATCHES = [
+      { id: 185, title: 'Drona 2.0 JEE Class 11th', thumbnail: 'https://dulae92u7241v.cloudfront.net/1772100600/admin_v2/uploads/courses/thumbnail/2967410_131_drona%202.0%20JEE%20banner%20app.png' },
+      { id: 184, title: 'Drona 2.0 NEET Class 11th', thumbnail: 'https://dulae92u7241v.cloudfront.net/1772100600/admin_v2/uploads/courses/thumbnail/241318_131_drona%202.0%20NEET%20banner%20app.png' },
+      { id: 151, title: 'Drona JEE class 11th', thumbnail: 'https://dulae92u7241v.cloudfront.net/1772100600/admin_v2/uploads/courses/thumbnail/7574748_131_Class%2011th%20Mission%20Jeet%20JEE%20App%20Banners.jpg' },
+      { id: 152, title: 'Drona NEET class 11th', thumbnail: 'https://dulae92u7241v.cloudfront.net/1772100600/admin_v2/uploads/courses/thumbnail/4072473_131_Class%2011th%20Mission%20Jeets%20NEET%20App%20Banners.jpg' }
+    ];
+
+    const FALLBACK_IMG = 'https://i.postimg.cc/26F5zTH7/4661462-1-Mission-JEET-Logo.png';
+    const LS_KEY = 'as_multiverse_enrollments';
+    const PER_PAGE = 4;
+    let visibleCount = 0;
+
+    /* ── Enrollment Helpers ────────────────────────────────── */
+    function getEnrollments() {
+      try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; }
+      catch { return []; }
+    }
+
+    function setEnrollments(ids) {
+      localStorage.setItem(LS_KEY, JSON.stringify(ids));
+    }
+
+    function isEnrolled(id) {
+      return getEnrollments().includes(id);
+    }
+
+    function toggleEnroll(id) {
+      let enrolled = getEnrollments();
+      if (enrolled.includes(id)) {
+        enrolled = enrolled.filter(x => x !== id);
+      } else {
+        enrolled.push(id);
+      }
+      setEnrollments(enrolled);
+      renderAll();
+    }
+
+    /* ── Sort: enrolled first ─────────────────────────────── */
+    function getSortedBatches() {
+      const enrolled = getEnrollments();
+      return [...BATCHES].sort((a, b) => {
+        const aE = enrolled.includes(a.id) ? 0 : 1;
+        const bE = enrolled.includes(b.id) ? 0 : 1;
+        return aE - bE;
+      });
+    }
+
+    /* ── Card Builder ─────────────────────────────────────── */
+    function buildCard(batch, index) {
+      const enrolled = isEnrolled(batch.id);
+
+      const enrolledPin = enrolled
+        ? `<div class="enrolled-pin">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+             </svg>
+           </div>`
+        : '';
+
+      const enrollBtnClass = enrolled ? 'btn btn-enroll is-enrolled' : 'btn btn-enroll';
+      const enrollIcon = enrolled
+        ? `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>`
+        : `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>`;
+      const enrollLabel = enrolled ? 'Enrolled' : 'Enroll';
+
+      return `
+        <div class="batch-card" data-index="${index}" style="animation-delay: ${index * 100}ms">
+          <div class="card-image-wrap">
+            <img src="${batch.thumbnail}" alt="${batch.title}" onerror="this.onerror=null;this.src='${FALLBACK_IMG}';" loading="lazy" />
+            ${enrolledPin}
+          </div>
+          <div class="card-body">
+            <div class="card-title">${batch.title}</div>
+            <div class="card-actions">
+              <a href="batch.html?courseId=${batch.id}" class="btn btn-explore">
+                Explore
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+              </a>
+              <button class="${enrollBtnClass}" onclick="toggleEnroll(${batch.id})">
+                ${enrollIcon}
+                <span style="font-size:11px">${enrollLabel}</span>
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    /* ── Render ────────────────────────────────────────────── */
+    function renderAll() {
+      const sorted = getSortedBatches();
+      const grid = document.getElementById('batchGrid');
+      const showMoreWrap = document.getElementById('showMoreWrap');
+
+      /* Preserve visible count across re-renders */
+      if (visibleCount === 0) visibleCount = PER_PAGE;
+      const toShow = sorted.slice(0, visibleCount);
+
+      grid.innerHTML = toShow.map((b, i) => buildCard(b, i)).join('');
+
+      /* Staggered entrance */
+      requestAnimationFrame(() => {
+        const cards = grid.querySelectorAll('.batch-card');
+        cards.forEach((card, i) => {
+          setTimeout(() => card.classList.add('visible'), i * 100);
+        });
+      });
+
+      /* Show More visibility */
+      if (visibleCount < sorted.length) {
+        showMoreWrap.classList.remove('hidden');
+      } else {
+        showMoreWrap.classList.add('hidden');
+      }
+    }
+
+    function showMore() {
+      visibleCount += PER_PAGE;
+      renderAll();
+    }
+
+    /* ── Boot ──────────────────────────────────────────────── */
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+        renderAll();
+      }, 500);
+    });
+  </script>
+
+  <!-- Floating Instagram -->
+  <a href="https://instagram.com/asmultiverse.in" target="_blank" style="position: fixed; bottom: 24px; right: 24px; z-index: 50; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 14px rgba(220, 39, 67, 0.4); transition: transform 0.3s, box-shadow 0.3s; animation: float 3s ease-in-out infinite;" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 0 20px rgba(220, 39, 67, 0.6)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 14px rgba(220, 39, 67, 0.4)';">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+  </a>
+</body>
+</html>
