@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <script src="global-auth.js"></script>
+  <title>AS Multiverse — Media Player</title>
+  <link rel="icon" href="https://i.postimg.cc/26F5zTH7/4661462-1-Mission-JEET-Logo.png" />
+  <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.7.11/dist/shaka-player.compiled.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #000;
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+    }
+
+    /* Import Inter font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@500&display=swap');
+
+    /* Player Container */
+    .player-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    video, #youtube-frame {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    #youtube-frame {
+      border: none;
+    }
+
+    /* Overlay Header */
+    .player-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 16px 20px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: opacity 0.3s ease;
+      pointer-events: auto;
+    }
+
+    .back-button {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      backdrop-filter: blur(8px);
+    }
+
+    .back-button:hover {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.05);
+    }
+
+    .video-title {
+      font-size: 1rem;
+      font-weight: 600;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+
+    /* Controls Overlay */
+    .controls-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 16px 24px;
+      background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+      z-index: 20;
+      transition: opacity 0.3s ease;
+      pointer-events: auto;
+    }
+
+    .hide-ui .player-header,
+    .hide-ui .controls-overlay {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Progress Bar */
+    .progress-section {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .progress-bar-container {
+      position: relative;
+      width: 100%;
+      height: 5px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .progress-buffered {
+      position: absolute;
+      height: 100%;
+      background: rgba(255,255,255,0.3);
+      border-radius: 3px;
+      width: 0%;
+    }
+
+    .progress-played {
+      position: absolute;
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      border-radius: 3px;
+      width: 0%;
+    }
+
+    .progress-handle {
+      position: absolute;
+      top: 50%;
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 8px rgba(6,182,212,0.6);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .progress-bar-container:hover .progress-handle {
+      opacity: 1;
+    }
+
+    /* Controls Row */
+    .controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .controls-left, .controls-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .control-btn {
+      background: none;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #fff;
+      transition: all 0.2s;
+    }
+
+    .control-btn:hover {
+      background: rgba(255,255,255,0.15);
+      transform: scale(1.05);
+    }
+
+    .control-btn:active {
+      transform: scale(0.95);
+    }
+
+    .time-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: 0.5px;
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(239,68,68,0.2);
+      border: 1px solid rgba(239,68,68,0.5);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.9); }
+    }
+
+    /* Volume Slider */
+    .volume-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .volume-slider {
+      width: 0;
+      opacity: 0;
+      transition: all 0.25s;
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.2);
+      height: 4px;
+      border-radius: 2px;
+    }
+
+    .volume-wrapper:hover .volume-slider {
+      width: 80px;
+      opacity: 1;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 10px;
+      height: 10px;
+      background: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    /* Settings Panel */
+    .settings-panel {
+      position: absolute;
+      bottom: 85px;
+      right: 16px;
+      background: rgba(15,23,42,0.96);
+      backdrop-filter: blur(16px);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      min-width: 180px;
+      display: none;
+      z-index: 30;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .settings-panel.show {
+      display: block;
+      animation: fadeUp 0.2s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .settings-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .settings-item {
+      padding: 12px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      transition: background 0.15s;
+    }
+
+    .settings-item:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .settings-item.active {
+      color: #06b6d4;
+      font-weight: 600;
+    }
+
+    /* Double Tap Zones */
+    .tap-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 35%;
+      z-index: 15;
+    }
+    .tap-left { left: 0; }
+    .tap-right { right: 0; }
+
+    .tap-indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      padding: 10px 18px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .tap-indicator.show {
+      opacity: 1;
+      animation: tapPop 0.3s ease;
+    }
+
+    @keyframes tapPop {
+      0% { transform: translate(-50%, -50%) scale(0.7); }
+      70% { transform: translate(-50%, -50%) scale(1.1); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* Lock Screen Overlay */
+    .lock-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .lock-overlay.active {
+      display: flex;
+    }
+
+    .unlock-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 14px 28px;
+      border-radius: 40px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .unlock-btn:active {
+      transform: scale(0.96);
+      background: rgba(255,255,255,0.25);
+    }
+
+    /* Loading & Error */
+    .loading-overlay, .error-overlay {
+      position: absolute;
+      inset: 0;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(59,130,246,0.2);
+      border-top-color: #06b6d4;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-icon {
+      margin-bottom: 16px;
+    }
+
+    .retry-btn {
+      margin-top: 20px;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      border: none;
+      padding: 10px 28px;
+      border-radius: 30px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 640px) {
+      .controls-left, .controls-right { gap: 6px; }
+      .control-btn { width: 32px; height: 32px; }
+      .time-display { font-size: 11px; }
+      .video-title { font-size: 0.85rem; max-width: 200px; }
+      .volume-wrapper { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="player-wrapper" id="playerWrapper">
+  
+  <!-- Header -->
+  <div class="player-header" id="playerHeader">
+    <button class="back-button" onclick="handleBack()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </button>
+    <span class="video-title" id="videoTitle">Loading...</span>
+  </div>
+
+  <!-- Video Element -->
+  <video id="videoPlayer" playsinline webkit-playsinline></video>
+  <iframe id="youtubeFrame" style="display: none;"></iframe>
+
+  <!-- Double Tap Zones -->
+  <div class="tap-zone tap-left" id="tapLeft">
+    <div class="tap-indicator" id="tapLeftIndicator">← 10s</div>
+  </div>
+  <div class="tap-zone tap-right" id="tapRight">
+    <div class="tap-indicator" id="tapRightIndicator">10s →</div>
+  </div>
+
+  <!-- Controls Overlay -->
+  <div class="controls-overlay" id="controlsOverlay">
+    <div class="progress-section">
+      <div class="progress-bar-container" id="progressBar">
+        <div class="progress-buffered" id="progressBuffered"></div>
+        <div class="progress-played" id="progressPlayed"></div>
+        <div class="progress-handle" id="progressHandle"></div>
+      </div>
+    </div>
+
+    <div class="controls-row">
+      <div class="controls-left">
+        <button class="control-btn" id="playPauseBtn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path id="playIcon" d="M8 5v14l11-7z" />
+            <path id="pauseIcon" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" class="hidden" />
+          </svg>
+        </button>
+
+        <button class="control-btn" id="rewindBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 11l5-5-5-5"/><path d="M21 11v1a8 8 0 0 1-8 8H3"/>
+          </svg>
+        </button>
+
+        <button class="control-btn" id="forwardBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 11l-5-5 5-5"/><path d="M3 11v1a8 8 0 0 0 8 8h10"/>
+          </svg>
+        </button>
+
+        <div class="volume-wrapper">
+          <button class="control-btn" id="muteBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path id="volumeHigh" d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              <line id="volumeMuteLine" x1="1" y1="1" x2="23" y2="23" class="hidden"/>
+            </svg>
+          </button>
+          <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.02" value="1">
+        </div>
+
+        <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
+
+        <div id="liveBadge" class="live-badge hidden">
+          <div class="live-dot"></div> LIVE
+        </div>
+      </div>
+
+      <div class="controls-right">
+        <button class="control-btn" id="lockBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </button>
+
+        <button class="control-btn" id="pipBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><rect x="12" y="14" width="7" height="5" rx="1" ry="1"/>
+          </svg>
+        </button>
+
+        <button class="control-btn" id="settingsBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+
+        <button class="control-btn" id="fullscreenBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Panel -->
+  <div class="settings-panel" id="settingsPanel">
+    <div id="settingsMain">
+      <div class="settings-item" id="qualityMenuItem">
+        <span>🎬 Quality</span>
+        <span id="qualityLabel" style="color:#06b6d4;">Auto</span>
+      </div>
+      <div class="settings-item" id="speedMenuItem">
+        <span>⚡ Speed</span>
+        <span id="speedLabel" style="color:#06b6d4;">Normal</span>
+      </div>
+    </div>
+    <div id="qualityPanel" style="display: none;">
+      <div class="settings-header" id="backFromQuality">← Quality</div>
+      <div id="qualityList"></div>
+    </div>
+    <div id="speedPanel" style="display: none;">
+      <div class="settings-header" id="backFromSpeed">← Speed</div>
+      <div class="settings-item speed-option" data-speed="0.5">0.5x</div>
+      <div class="settings-item speed-option" data-speed="0.75">0.75x</div>
+      <div class="settings-item speed-option active" data-speed="1">Normal</div>
+      <div class="settings-item speed-option" data-speed="1.25">1.25x</div>
+      <div class="settings-item speed-option" data-speed="1.5">1.5x</div>
+      <div class="settings-item speed-option" data-speed="2">2x</div>
+    </div>
+  </div>
+
+  <!-- Lock Overlay -->
+  <div class="lock-overlay" id="lockOverlay">
+    <button class="unlock-btn" id="unlockBtn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      Tap to Unlock
+    </button>
+  </div>
+
+  <!-- Loading & Error -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <p style="margin-top: 16px; color: #06b6d4; font-weight: 500;">LOADING STREAM...</p>
+  </div>
+
+  <div class="error-overlay hidden" id="errorOverlay">
+    <svg class="error-icon" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <h3 style="margin-bottom: 8px;">Playback Error</h3>
+    <p id="errorMessage" style="color: #9ca3af; text-align: center; max-width: 280px;">Failed to load video.</p>
+    <button class="retry-btn" onclick="location.reload()">Retry</button>
+  </div>
+</div>
+
+<script>
+  // ==================== DOM Elements ====================
+  const video = document.getElementById('videoPlayer');
+  const youtubeFrame = document.getElementById('youtubeFrame');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const playIcon = document.getElementById('playIcon');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const rewindBtn = document.getElementById('rewindBtn');
+  const forwardBtn = document.getElementById('forwardBtn');
+  const muteBtn = document.getElementById('muteBtn');
+  const volumeHigh = document.getElementById('volumeHigh');
+  const volumeMuteLine = document.getElementById('volumeMuteLine');
+  const volumeSlider = document.getElementById('volumeSlider');
+  const timeDisplay = document.getElementById('timeDisplay');
+  const liveBadge = document.getElementById('liveBadge');
+  const progressBar = document.getElementById('progressBar');
+  const progressPlayed = document.getElementById('progressPlayed');
+  const progressBuffered = document.getElementById('progressBuffered');
+  const progressHandle = document.getElementById('progressHandle');
+  const lockBtn = document.getElementById('lockBtn');
+  const lockOverlay = document.getElementById('lockOverlay');
+  const unlockBtn = document.getElementById('unlockBtn');
+  const pipBtn = document.getElementById('pipBtn');
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
+  const settingsBtn = document.getElementById('settingsBtn');
+  const settingsPanel = document.getElementById('settingsPanel');
+  const settingsMain = document.getElementById('settingsMain');
+  const qualityPanel = document.getElementById('qualityPanel');
+  const speedPanel = document.getElementById('speedPanel');
+  const qualityLabel = document.getElementById('qualityLabel');
+  const speedLabel = document.getElementById('speedLabel');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  const errorOverlay = document.getElementById('errorOverlay');
+  const errorMessage = document.getElementById('errorMessage');
+  const videoTitleSpan = document.getElementById('videoTitle');
+  const playerWrapper = document.getElementById('playerWrapper');
+
+  let shakaPlayer = null;
+  let isLive = false;
+  let controlsTimeout;
+  let isLocked = false;
+
+  // ==================== Helper Functions ====================
+  function formatTime(seconds) {
+    if (isNaN(seconds) || seconds === Infinity) return '00:00';
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    if (hrs > 0) return `${hrs}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+    return `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+  }
+
+  function resetControlsTimer() {
+    if (isLocked) return;
+    playerWrapper.classList.remove('hide-ui');
+    clearTimeout(controlsTimeout);
+    controlsTimeout = setTimeout(() => {
+      if (!video.paused) {
+        playerWrapper.classList.add('hide-ui');
+        settingsPanel.classList.remove('show');
+      }
+    }, 3500);
+  }
+
+  function togglePlayPause() {
+    if (video.paused) video.play();
+    else video.pause();
+  }
+
+  function updatePlayPauseUI() {
+    if (video.paused) {
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+    } else {
+      playIcon.classList.add('hidden');
+      pauseIcon.classList.remove('hidden');
+    }
+  }
+
+  function updateMuteUI() {
+    if (video.muted) {
+      volumeHigh.classList.add('hidden');
+      volumeMuteLine.classList.remove('hidden');
+    } else {
+      volumeHigh.classList.remove('hidden');
+      volumeMuteLine.classList.add('hidden');
+    }
+  }
+
+  // ==================== Event Listeners ====================
+  playPauseBtn.addEventListener('click', togglePlayPause);
+  video.addEventListener('play', updatePlayPauseUI);
+  video.addEventListener('pause', updatePlayPauseUI);
+
+  rewindBtn.addEventListener('click', () => { video.currentTime -= 10; resetControlsTimer(); });
+  forwardBtn.addEventListener('click', () => { video.currentTime += 10; resetControlsTimer(); });
+
+  muteBtn.addEventListener('click', () => {
+    video.muted = !video.muted;
+    updateMuteUI();
+  });
+
+  volumeSlider.addEventListener('input', (e) => {
+    video.volume = parseFloat(e.target.value);
+    video.muted = video.volume === 0;
+    updateMuteUI();
+  });
+
+  video.addEventListener('volumechange', () => {
+    volumeSlider.value = video.muted ? 0 : video.volume;
+    updateMuteUI();
+  });
+
+  // Progress Bar Seeking
+  progressBar.addEventListener('click', (e) => {
+    if (isLive) return;
+    const rect = progressBar.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    video.currentTime = percent * video.duration;
+    resetControlsTimer();
+  });
+
+  video.addEventListener('timeupdate', () => {
+    if (isLive) return;
+    const percent = (video.currentTime / video.duration) * 100;
+    progressPlayed.style.width = `${percent}%`;
+    progressHandle.style.left = `${percent}%`;
+    timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+
+    if (video.buffered.length > 0) {
+      const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+      const buffPercent = (bufferedEnd / video.duration) * 100;
+      progressBuffered.style.width = `${buffPercent}%`;
+    }
+  });
+
+  // Lock Screen
+  lockBtn.addEventListener('click', () => {
+    isLocked = true;
+    lockOverlay.classList.add('active');
+    playerWrapper.classList.add('hide-ui');
+  });
+
+  unlockBtn.addEventListener('click', () => {
+    isLocked = false;
+    lockOverlay.classList.remove('active');
+    resetControlsTimer();
+  });
+
+  // Picture in Picture
+  pipBtn.addEventListener('click', async () => {
+    try {
+      if (document.pictureInPictureElement) await document.exitPictureInPicture();
+      else await video.requestPictureInPicture();
+    } catch (err) { console.warn('PiP error:', err); }
+  });
+
+  // Fullscreen
+  function toggleFullscreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      playerWrapper.requestFullscreen?.() || playerWrapper.webkitRequestFullscreen?.();
+      screen.orientation?.lock?.('landscape').catch(()=>{});
+    } else {
+      document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+      screen.orientation?.unlock?.();
+    }
+  }
+  fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+  // Settings Menu
+  settingsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    settingsPanel.classList.toggle('show');
+    if (settingsPanel.classList.contains('show')) {
+      settingsMain.style.display = 'block';
+      qualityPanel.style.display = 'none';
+      speedPanel.style.display = 'none';
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!settingsPanel.contains(e.target) && e.target !== settingsBtn) {
+      settingsPanel.classList.remove('show');
+    }
+  });
+
+  document.getElementById('qualityMenuItem').addEventListener('click', () => {
+    settingsMain.style.display = 'none';
+    qualityPanel.style.display = 'block';
+  });
+  document.getElementById('speedMenuItem').addEventListener('click', () => {
+    settingsMain.style.display = 'none';
+    speedPanel.style.display = 'block';
+  });
+  document.getElementById('backFromQuality').addEventListener('click', () => {
+    qualityPanel.style.display = 'none';
+    settingsMain.style.display = 'block';
+  });
+  document.getElementById('backFromSpeed').addEventListener('click', () => {
+    speedPanel.style.display = 'none';
+    settingsMain.style.display = 'block';
+  });
+
+  // Speed Options
+  document.querySelectorAll('.speed-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const speed = parseFloat(opt.dataset.speed);
+      video.playbackRate = speed;
+      speedLabel.textContent = speed === 1 ? 'Normal' : `${speed}x`;
+      document.querySelectorAll('.speed-option').forEach(s => s.classList.remove('active'));
+      opt.classList.add('active');
+      settingsPanel.classList.remove('show');
+    });
+  });
+
+  // Double Tap Seek (Mobile)
+  let lastTapLeft = 0, lastTapRight = 0;
+  const tapLeftZone = document.getElementById('tapLeft');
+  const tapRightZone = document.getElementById('tapRight');
+  const leftIndicator = document.getElementById('tapLeftIndicator');
+  const rightIndicator = document.getElementById('tapRightIndicator');
+
+  function showTapIndicator(el) {
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 400);
+  }
+
+  tapLeftZone.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const now = Date.now();
+    if (now - lastTapLeft < 300) {
+      video.currentTime -= 10;
+      showTapIndicator(leftIndicator);
+      resetControlsTimer();
+    }
+    lastTapLeft = now;
+  });
+
+  tapRightZone.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const now = Date.now();
+    if (now - lastTapRight < 300) {
+      video.currentTime += 10;
+      showTapIndicator(rightIndicator);
+      resetControlsTimer();
+    }
+    lastTapRight = now;
+  });
+
+  // Hide controls on tap when locked
+  playerWrapper.addEventListener('click', (e) => {
+    if (isLocked) return;
+    if (playerWrapper.classList.contains('hide-ui')) {
+      playerWrapper.classList.remove('hide-ui');
+      resetControlsTimer();
+    }
+  });
+
+  // ==================== Media Initialization ====================
+  async function initPlayer() {
+    const params = new URLSearchParams(window.location.search);
+    const url = params.get('url');
+    const title = params.get('title') || 'Mission JEET Video';
+    const isLiveParam = params.get('live') === '1';
+    isLive = isLiveParam;
+
+    videoTitleSpan.textContent = title;
+
+    if (isLive) {
+      timeDisplay.classList.add('hidden');
+      liveBadge.classList.remove('hidden');
+    }
+
+    if (!url) {
+      loadingOverlay.classList.add('hidden');
+      errorOverlay.classList.remove('hidden');
+      errorMessage.textContent = 'No video URL provided.';
+      return;
+    }
+
+    try {
+      // YouTube Detection
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        video.style.display = 'none';
+        youtubeFrame.style.display = 'block';
+        let videoId = '';
+        if (url.includes('v=')) videoId = new URL(url).searchParams.get('v');
+        else if (url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
+        else if (url.includes('embed/')) videoId = url.split('embed/')[1].split('?')[0];
+        youtubeFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+        loadingOverlay.classList.add('hidden');
+        return;
+      }
+
+      // HLS / DASH with Shaka Player
+      if (url.includes('.m3u8') || url.includes('.mpd')) {
+        shaka.polyfill.installAll();
+        if (shaka.Player.isBrowserSupported()) {
+          shakaPlayer = new shaka.Player(video);
+          shakaPlayer.addEventListener('error', (e) => {
+            console.error('Shaka Error', e);
+            loadingOverlay.classList.add('hidden');
+            errorOverlay.classList.remove('hidden');
+            errorMessage.textContent = 'Failed to play protected stream.';
+          });
+          await shakaPlayer.load(url);
+          loadingOverlay.classList.add('hidden');
+          video.play().catch(()=>{});
+          
+          // Build Quality Menu
+          const updateQualityMenu = () => {
+            const tracks = shakaPlayer.getVariantTracks();
+            const qualityList = document.getElementById('qualityList');
+            qualityList.innerHTML = '';
+            
+            const autoItem = document.createElement('div');
+            autoItem.className = 'settings-item active';
+            autoItem.textContent = 'Auto';
+            autoItem.onclick = () => {
+              shakaPlayer.configure({ abr: { enabled: true } });
+              qualityLabel.textContent = 'Auto';
+              document.querySelectorAll('#qualityList .settings-item').forEach(i => i.classList.remove('active'));
+              autoItem.classList.add('active');
+              settingsPanel.classList.remove('show');
+            };
+            qualityList.appendChild(autoItem);
+            
+            const heights = [...new Set(tracks.map(t => t.height).filter(h => h))].sort((a,b)=>b-a);
+            heights.forEach(h => {
+              const item = document.createElement('div');
+              item.className = 'settings-item';
+              item.textContent = `${h}p`;
+              item.onclick = () => {
+                shakaPlayer.configure({ abr: { enabled: false } });
+                const track = shakaPlayer.getVariantTracks().find(t => t.height === h);
+                if (track) shakaPlayer.selectVariantTrack(track, true);
+                qualityLabel.textContent = `${h}p`;
+                document.querySelectorAll('#qualityList .settings-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                settingsPanel.classList.remove('show');
+              };
+              qualityList.appendChild(item);
+            });
+          };
+          updateQualityMenu();
+          shakaPlayer.addEventListener('variantchanged', updateQualityMenu);
+        } else {
+          throw new Error('Browser not supported for Shaka Player.');
+        }
+      } else {
+        // Direct MP4 or other formats
+        video.src = url;
+        video.addEventListener('canplaythrough', () => {
+          loadingOverlay.classList.add('hidden');
+          video.play().catch(()=>{});
+        });
+        video.addEventListener('error', () => {
+          loadingOverlay.classList.add('hidden');
+          errorOverlay.classList.remove('hidden');
+          errorMessage.textContent = 'Video format not supported or broken link.';
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      loadingOverlay.classList.add('hidden');
+      errorOverlay.classList.remove('hidden');
+      errorMessage.textContent = err.message || 'Failed to load video.';
+    }
+    resetControlsTimer();
+  }
+
+  function handleBack() {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+      setTimeout(() => history.back(), 100);
+    } else {
+      history.back();
+    }
+  }
+
+  // Keyboard Shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') { e.preventDefault(); togglePlayPause(); }
+    if (e.code === 'ArrowLeft') { video.currentTime -= 10; resetControlsTimer(); }
+    if (e.code === 'ArrowRight') { video.currentTime += 10; resetControlsTimer(); }
+    if (e.code === 'KeyF') toggleFullscreen();
+    if (e.code === 'KeyM') muteBtn.click();
+  });
+
+  document.addEventListener('DOMContentLoaded', initPlayer);
+</script>
+</body>
+</html>
