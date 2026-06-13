@@ -1,0 +1,964 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#D4540E">
+  <title>Mtaiirus — Topic Contents</title>
+  <meta name="description" content="Access free premium PW topic contents on Mtaiirus. Video lectures, notes, DPPs for JEE, NEET, and board exams.">
+  <link rel="icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+  <link rel="apple-touch-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+    
+    :root {
+      --bg: #F5F2EB;
+      --bg2: #ECEAE2;
+      --ink: #1A1814;
+      --ink2: #6B6760;
+      --ink3: #B0ADA7;
+      --accent: #D4540E;
+      --accentl: #F0A87A;
+      --accentb: rgba(212,84,14,.08);
+      --green: #2D6A3F;
+      --greenl: #E4F0E8;
+      --red: #DC2626;
+      --redl: #FEE2E2;
+      --blue: #1A4B8C;
+      --bluel: #E4EBF7;
+      --card: #FFFDFB;
+      --border: rgba(26,24,20,.1);
+      --borderh: rgba(26,24,20,.2);
+      --shadow: 0 2px 0 var(--border), 0 8px 30px rgba(26,24,20,.06);
+      --shadow-hover: 0 20px 40px rgba(26,24,20,.12);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      overflow-x: hidden;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Floating bg words */
+    .floating-words {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      opacity: .04;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 5vw, 5rem);
+      color: var(--ink);
+      white-space: nowrap;
+      user-select: none;
+    }
+    .float-word {
+      position: absolute;
+      animation: floatAround 26s infinite alternate ease-in-out;
+      letter-spacing: -2px;
+    }
+    .float-word:nth-child(1) { top: 8%; left: 3%; animation-duration: 22s; }
+    .float-word:nth-child(2) { top: 22%; right: 5%; animation-duration: 30s; animation-delay: -5s; }
+    .float-word:nth-child(3) { bottom: 18%; left: 8%; animation-duration: 24s; animation-delay: -8s; }
+    .float-word:nth-child(4) { bottom: 32%; right: 4%; animation-duration: 28s; animation-delay: -13s; }
+    @keyframes floatAround {
+      0% { transform: translate(0,0) rotate(0deg); }
+      25% { transform: translate(35px,-25px) rotate(1.5deg); }
+      50% { transform: translate(-25px,30px) rotate(-1.5deg); }
+      75% { transform: translate(20px,15px) rotate(.8deg); }
+      100% { transform: translate(-15px,-20px) rotate(-.8deg); }
+    }
+
+    /* Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(245,242,235,.96);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+      padding: 0 clamp(16px, 4vw, 40px);
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .brand-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: 1.5px;
+    }
+    .brand-name span { color: var(--accent); }
+    .header-back {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .2s;
+      color: var(--ink2);
+    }
+    .header-back:hover {
+      background: var(--accentb);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .header-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      background: var(--accentb);
+      padding: 6px 16px;
+      border-radius: 100px;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Loading bar */
+    .loading-bar {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(212,84,14,.2);
+      z-index: 1001;
+    }
+    .loading-bar-inner {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      animation: loadingProgress 1.5s ease-in-out infinite;
+    }
+    @keyframes loadingProgress {
+      0% { width: 0%; }
+      50% { width: 70%; }
+      100% { width: 100%; }
+    }
+    .hidden { display: none !important; }
+
+    /* Tabs */
+    .topic-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: rgba(245,242,235,.95);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 64px;
+      z-index: 500;
+      overflow-x: auto;
+      padding: 0 clamp(16px, 4vw, 40px);
+    }
+    .topic-tab {
+      flex: 1;
+      min-width: 100px;
+      padding: 14px 16px;
+      text-align: center;
+      color: var(--ink2);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .topic-tab i {
+      margin-right: 8px;
+      font-size: 12px;
+    }
+    .topic-tab:hover {
+      color: var(--accent);
+    }
+    .topic-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* Main container */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px clamp(16px, 4vw, 40px) 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Grid content */
+    .grid-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 768px) {
+      .grid-content {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Content Card */
+    .content-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      transition: all .3s;
+      position: relative;
+    }
+    .content-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--borderh);
+    }
+    .mark-complete-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--ink3);
+      transition: all .2s;
+      z-index: 10;
+    }
+    .mark-complete-btn:hover {
+      transform: scale(1.1);
+    }
+    .card-top {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .card-icon {
+      width: 90px;
+      height: 90px;
+      border-radius: 12px;
+      background: var(--bg2);
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border);
+    }
+    .card-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .play-overlay {
+      position: absolute;
+      bottom: -6px;
+      right: -6px;
+      background: var(--accent);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+    .play-overlay i {
+      color: white;
+      font-size: 12px;
+      margin-left: 2px;
+    }
+    .card-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .card-meta {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.4;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-duration {
+      font-size: 11px;
+      color: var(--ink3);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      margin-left: 0;
+    }
+    @media (min-width: 768px) {
+      .card-actions {
+        margin-left: 106px;
+      }
+    }
+    .btn-action {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all .2s;
+      border: none;
+      background: var(--bg2);
+      color: var(--ink2);
+    }
+    .btn-action:hover {
+      background: var(--ink);
+      color: var(--bg);
+      transform: translateY(-1px);
+    }
+    .btn-primary-action {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-primary-action:hover {
+      background: var(--accent);
+      filter: brightness(1.05);
+    }
+    .btn-icon-only {
+      width: 40px;
+      height: 40px;
+      flex: none;
+      background: var(--bg2);
+      color: var(--ink2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: none;
+      transition: all .2s;
+    }
+    .btn-icon-only:hover {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    /* Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg2) 25%, var(--bg) 50%, var(--bg2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .skeleton-line {
+      height: 14px;
+      background: var(--bg2);
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .skeleton-line-sm { width: 40%; height: 12px; }
+    .skeleton-line-lg { width: 80%; height: 16px; }
+    .skeleton-btn { height: 40px; background: var(--bg2); border-radius: 10px; }
+    .flex-1 { flex: 1; }
+    .mb-1 { margin-bottom: 4px; }
+    .mb-2 { margin-bottom: 8px; }
+    .w-3\/4 { width: 75%; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      grid-column: 1 / -1;
+    }
+    .empty-state-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      background: var(--bg2);
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: var(--ink3);
+    }
+    .empty-state-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .text-red-400 { color: #ef4444; }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--ink);
+      color: var(--bg);
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.15);
+      animation: slideUp .3s ease;
+      pointer-events: auto;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Security watermark */
+    .security-watermark {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      font-size: 9px;
+      color: rgba(107,103,96,.15);
+      font-family: monospace;
+      z-index: 9999;
+      pointer-events: none;
+      user-select: none;
+    }
+
+   @media (max-width: 700px) {
+      .card-top { flex-direction: column; }
+      .card-icon { width: 100%; height: auto; aspect-ratio: 16/9; }
+      .card-actions { margin-left: 0; }
+      .topic-tab { font-size: 12px; min-width: 80px; }
+      .topic-tab i { margin-right: 4px; }
+      .brand-name { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="floating-words">
+  <div class="float-word">TOPIC CONTENTS</div>
+  <div class="float-word">VIDEO LECTURES</div>
+  <div class="float-word">MTAIIRUS</div>
+  <div class="float-word">STUDY NOW</div>
+</div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand-link">
+      <div class="brand-logo">
+        <img src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" alt="Mtaiirus" onerror="this.parentElement.innerHTML='<span style=\'font-size:20px\'>M</span>'">
+      </div>
+      <span class="brand-name">MTAI<span>IRUS</span></span>
+    </a>
+    <button class="header-back" onclick="window.history.back()" aria-label="Go back">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h1 class="header-title" id="topic-name">Loading...</h1>
+  </div>
+</header>
+
+<div class="loading-bar hidden" id="loading-bar">
+  <div class="loading-bar-inner"></div>
+</div>
+
+<div class="topic-tabs" id="topic-tabs">
+  <div class="topic-tab" data-tab="videos"><i class="fas fa-play-circle"></i> Lectures</div>
+  <div class="topic-tab" data-tab="notes"><i class="fas fa-sticky-note"></i> Notes</div>
+  <div class="topic-tab" data-tab="dpp"><i class="fas fa-tasks"></i> DPP</div>
+  <div class="topic-tab" data-tab="dppVideos"><i class="fas fa-chalkboard"></i> DPP Videos</div>
+</div>
+
+<main class="main-container">
+  <div class="grid-content" id="content-container">
+    <!-- Skeletons -->
+    <div class="content-card">
+      <div class="card-top">
+        <div class="card-icon skeleton"></div>
+        <div class="card-info">
+          <div class="skeleton-line skeleton-line-sm mb-1"></div>
+          <div class="skeleton-line skeleton-line-lg mb-1"></div>
+          <div class="skeleton-line w-3/4"></div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <div class="skeleton-btn flex-1"></div>
+        <div class="skeleton-btn flex-1"></div>
+      </div>
+    </div>
+    <div class="content-card">
+      <div class="card-top">
+        <div class="card-icon skeleton"></div>
+        <div class="card-info">
+          <div class="skeleton-line skeleton-line-sm mb-1"></div>
+          <div class="skeleton-line skeleton-line-lg mb-1"></div>
+          <div class="skeleton-line w-3/4"></div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <div class="skeleton-btn flex-1"></div>
+        <div class="skeleton-btn flex-1"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+<div class="security-watermark">🔒 MTAIIRUS SECURE • v4.8.1</div>
+
+<script>
+(function() {
+  'use strict';
+  
+  // ==================== SECURITY LAYER ====================
+  
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  }, true);
+  
+  document.addEventListener('keydown', function(e) {
+    const key = e.key || '';
+    const keyCode = e.keyCode || e.which;
+    if (keyCode === 123) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (key === 'I' || key === 'J' || key === 'C' || key === 'i' || key === 'j' || key === 'c')) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+    if ((e.ctrlKey || e.metaKey) && (key === 'U' || key === 'u' || key === 'S' || key === 's' || key === 'P' || key === 'p' || key === 'R' || key === 'r')) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  }, true);
+  
+  window.addEventListener('beforeprint', function(e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    window.print = function() { return false; };
+    return false;
+  }, true);
+  
+  const disableEvents = ['copy', 'cut', 'paste', 'selectstart', 'dragstart', 'select', 'selectionchange'];
+  disableEvents.forEach(function(ev) {
+    document.addEventListener(ev, function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }, true);
+  });
+  
+  document.body.style.userSelect = 'none';
+  document.body.style.webkitUserSelect = 'none';
+  document.body.style.msUserSelect = 'none';
+  document.body.style.mozUserSelect = 'none';
+  
+  let devToolsOpen = false;
+  const element = new Image();
+  Object.defineProperty(element, 'id', {
+    get: function() {
+      devToolsOpen = true;
+      window.location.href = 'about:blank';
+      throw new Error('DevTools detected');
+    }
+  });
+  setInterval(function() {
+    devToolsOpen = false;
+    console.log(element);
+    console.clear();
+    if (devToolsOpen) {
+      window.location.href = 'about:blank';
+    }
+  }, 1000);
+  
+  setInterval(function() {
+    var start = performance.now();
+    debugger;
+    var end = performance.now();
+    if (end - start > 100) {
+      window.location.href = 'about:blank';
+    }
+  }, 2000);
+  
+  setInterval(function() {
+    console.clear();
+  }, 500);
+  
+  const noop = function() {};
+  const consoleMethods = ['log', 'warn', 'error', 'info', 'debug', 'table', 'dir', 'dirxml', 'trace', 'group', 'groupCollapsed', 'groupEnd', 'time', 'timeEnd', 'profile', 'profileEnd', 'count', 'clear'];
+  for (var i = 0; i < consoleMethods.length; i++) {
+    if (console[consoleMethods[i]]) {
+      console[consoleMethods[i]] = noop;
+    }
+  }
+  
+  document.onmouseup = function(e) {
+    window.getSelection().removeAllRanges();
+    return false;
+  };
+  
+  setInterval(function() {
+    var threshold = 160;
+    var w = window.outerWidth - window.innerWidth;
+    var h = window.outerHeight - window.innerHeight;
+    if (w > threshold || h > threshold) {
+      window.location.href = 'about:blank';
+    }
+  }, 600);
+  
+  if (window.self !== window.top) {
+    window.top.location = window.self.location;
+  }
+  
+  if (window.location.href.indexOf('view-source:') === 0) {
+    window.location.href = 'about:blank';
+  }
+  
+  window.addEventListener('dragstart', function(e) {
+    e.preventDefault();
+    return false;
+  }, true);
+  
+  console.log('%c🔒 MTAIIRUS SECURE CONTENT • Copying Prohibited', 'color: #D4540E; font-size: 16px; font-weight: bold;');
+  
+  // ==================== END SECURITY ====================
+  
+  // ==================== APP FUNCTIONALITY ====================
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  const batchId = urlParams.get('batchId');
+  const subjectSlug = urlParams.get('subjectSlug');
+  const topicSlug = urlParams.get('topicSlug');
+  const topicName = urlParams.get('topicName') || 'Topic Contents';
+  const subjectId = urlParams.get('subjectId');
+  const topicId = urlParams.get('topicId');
+  
+  document.getElementById('topic-name').textContent = decodeURIComponent(topicName);
+  document.title = `Mtaiirus — ${decodeURIComponent(topicName)}`;
+
+  const WORKER = 'https://pw.2snfjitu.workers.dev';
+  
+  let currentTab = urlParams.get('tab') || 'videos';
+
+  const tabs = document.querySelectorAll('.topic-tab');
+  
+  const activeTabEl = document.querySelector(`.topic-tab[data-tab="${currentTab}"]`);
+  if (activeTabEl) activeTabEl.classList.add('active');
+  else if(tabs[0]) tabs[0].classList.add('active');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentTab = tab.getAttribute('data-tab');
+      fetchContent();
+    });
+  });
+
+  function showToast(msg, type = 'info') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i> ${msg}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    try {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch(e) {
+      return dateStr;
+    }
+  }
+
+  function formatDuration(durationRaw) {
+    if (!durationRaw) return '00:00';
+    if (durationRaw.includes(':')) {
+      const parts = durationRaw.split(':');
+      if (parts.length === 3) {
+        const h = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10);
+        if (h > 0) return `${h}h ${m}m`;
+        return `${m}m`;
+      }
+      if (parts.length === 2) return `${parts[0]}m ${parts[1]}s`;
+    }
+    return durationRaw;
+  }
+
+  // UPDATED: Play video using pwplayer.html with correct parameters
+  window.playVideo = function(videoId, scheduleId) {
+    const targetUrl = `pwplayer.html?video_id=${videoId}&subject_slug=${subjectSlug}&batch_id=${batchId}&schedule_id=${scheduleId}&subject_id=${subjectId}&topicSlug=${topicSlug}`;
+    window.location.href = targetUrl;
+  };
+
+  window.toggleComplete = function(btn, id) {
+    let completed = JSON.parse(localStorage.getItem('mtaiirus_completed_lectures') || '[]');
+    const isCompleted = completed.includes(id);
+    
+    if (isCompleted) {
+      completed = completed.filter(c => c !== id);
+      btn.style.color = 'var(--ink3)';
+      btn.innerHTML = '<i class="far fa-circle" style="font-size: 20px;"></i>';
+      showToast('Marked as incomplete', 'info');
+    } else {
+      completed.push(id);
+      btn.style.color = '#10b981';
+      btn.innerHTML = '<i class="fas fa-check-circle" style="font-size: 20px;"></i>';
+      showToast('Marked as complete!', 'success');
+    }
+    
+    localStorage.setItem('mtaiirus_completed_lectures', JSON.stringify(completed));
+  };
+
+  window.openPdf = async function(contentId) {
+    try {
+      const res = await fetch(`${WORKER}/api/pw/attachments-url?BatchId=${batchId}&SubjectId=${subjectId}&ContentId=${contentId}`);
+      const data = await res.json();
+      if (data.success && data.data && data.data.length > 0) {
+        const att = data.data[0];
+        const actualUrl = att.url || (att.baseUrl + att.key);
+        const viewUrl = `${WORKER}/api/pw/view?url=${encodeURIComponent(actualUrl)}&filename=${encodeURIComponent(att.topic || 'Document')}`;
+        window.open(viewUrl, '_blank');
+      } else {
+        showToast('PDF not available for this item', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to fetch PDF', 'error');
+    }
+  };
+
+  async function fetchContent() {
+    const container = document.getElementById('content-container');
+    const loadingBar = document.getElementById('loading-bar');
+    
+    container.innerHTML = `
+      <div class="content-card"><div class="card-top"><div class="card-icon skeleton"></div><div class="card-info"><div class="skeleton-line skeleton-line-sm mb-1"></div><div class="skeleton-line skeleton-line-lg mb-1"></div><div class="skeleton-line w-3/4"></div></div></div><div class="card-actions"><div class="skeleton-btn flex-1"></div><div class="skeleton-btn flex-1"></div></div></div>
+      <div class="content-card"><div class="card-top"><div class="card-icon skeleton"></div><div class="card-info"><div class="skeleton-line skeleton-line-sm mb-1"></div><div class="skeleton-line skeleton-line-lg mb-1"></div><div class="skeleton-line w-3/4"></div></div></div><div class="card-actions"><div class="skeleton-btn flex-1"></div><div class="skeleton-btn flex-1"></div></div></div>
+    `;
+    loadingBar.classList.remove('hidden');
+
+    try {
+      const res = await fetch(`${WORKER}/api/pw/datacontent?batchId=${batchId}&subjectSlug=${subjectSlug}&topicSlug=${topicSlug}&contentType=${currentTab}`);
+      const data = await res.json();
+      
+      container.innerHTML = '';
+      
+      if (!data.success || !Array.isArray(data.data) || data.data.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">
+              <i class="fas fa-folder-open"></i>
+            </div>
+            <h2 class="empty-state-title">No ${currentTab.replace('-', ' ')} found</h2>
+          </div>
+        `;
+        return;
+      }
+
+      const completedLectures = JSON.parse(localStorage.getItem('mtaiirus_completed_lectures') || '[]');
+
+      data.data.forEach((item, idx) => {
+        const title = item.topic || item.name || (item.homeworkIds && item.homeworkIds[0] && item.homeworkIds[0].topic) || 'Untitled';
+        const date = item.date || item.createdAt;
+        const formattedDate = date ? formatDate(date) : 'Recent';
+        const isCompleted = completedLectures.includes(item._id);
+
+        if (currentTab === 'videos' || currentTab === 'dppVideos') {
+          const vidId = (item.videoDetails && item.videoDetails.findKey) ? item.videoDetails.findKey : item._id;
+          const durationRaw = (item.videoDetails && item.videoDetails.duration) ? item.videoDetails.duration : (item.duration || '00:00');
+          const duration = formatDuration(durationRaw);
+          
+          let imgUrl = 'https://i.ibb.co/9Hm0NqsH/f69ed82b-7169-45fc-a82b-915e453c6340.png';
+          if (item.videoDetails && item.videoDetails.image) imgUrl = item.videoDetails.image;
+          else if (item.previewImage) imgUrl = item.previewImage;
+
+          const tag = currentTab === 'videos' ? 'Video Lecture' : 'DPP Solution';
+          
+          const card = document.createElement('div');
+          card.className = 'content-card';
+          card.style.animation = `slideUp 0.3s ease forwards ${idx * 0.05}s`;
+          card.innerHTML = `
+            <button class="mark-complete-btn" onclick="toggleComplete(this, '${item._id}')" title="Mark as complete">
+              <i class="${isCompleted ? 'fas fa-check-circle' : 'far fa-circle'}" style="font-size: 20px; color: ${isCompleted ? '#10b981' : 'var(--ink3)'};"></i>
+            </button>
+            <div class="card-top">
+              <div class="card-icon">
+                <img src="${imgUrl}" onerror="this.src='https://i.ibb.co/9k8fbHmZ/empty-state.png'" alt="Thumbnail">
+                <div class="play-overlay"><i class="fas fa-play"></i></div>
+              </div>
+              <div class="card-info">
+                <div class="card-meta">${tag} • ${formattedDate}</div>
+                <div class="card-title" title="${title.replace(/</g, '&lt;')}">${title.replace(/</g, '&lt;')}</div>
+                <div class="card-duration"><i class="far fa-clock"></i> ${duration}</div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-action btn-primary-action" onclick="playVideo('${vidId}', '${item._id}')">
+                <i class="fas fa-play"></i> Watch Now
+              </button>
+              <button class="btn-action" onclick="document.querySelector('.topic-tab[data-tab=\\'notes\\']').click();">
+                <i class="fas fa-file-alt"></i> Notes
+              </button>
+            </div>
+          `;
+          container.appendChild(card);
+        } 
+        else if (currentTab === 'dpp' || currentTab === 'notes') {
+          const tag = currentTab === 'dpp' ? 'DPP' : 'Notes';
+          const icon = currentTab === 'dpp' ? 'fa-tasks' : 'fa-sticky-note';
+          
+          const card = document.createElement('div');
+          card.className = 'content-card';
+          card.style.animation = `slideUp 0.3s ease forwards ${idx * 0.05}s`;
+          card.innerHTML = `
+            <div class="card-top">
+              <div class="card-icon" style="background: var(--accentb); display: flex; align-items: center; justify-content: center;">
+                <i class="fas ${icon}" style="font-size: 32px; color: var(--accent);"></i>
+              </div>
+              <div class="card-info">
+                <div class="card-meta">${tag} • ${formattedDate}</div>
+                <div class="card-title" title="${title.replace(/</g, '&lt;')}">${title.replace(/</g, '&lt;')}</div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-action btn-primary-action" onclick="openPdf('${item._id}')">
+                <i class="fas fa-eye"></i> View ${tag}
+              </button>
+              <button class="btn-icon-only" onclick="openPdf('${item._id}')">
+                <i class="fas fa-download"></i>
+              </button>
+            </div>
+          `;
+          container.appendChild(card);
+        }
+      });
+
+    } catch (err) {
+      console.error(err);
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon" style="color: #ef4444; background: rgba(239,68,68,0.1);">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h2 class="empty-state-title text-red-400">Failed to load content</h2>
+        </div>
+      `;
+      showToast('Failed to load content', 'error');
+    } finally {
+      loadingBar.classList.add('hidden');
+    }
+  }
+
+  if (!batchId || !subjectSlug || !topicSlug) {
+    showToast('Invalid course information', 'error');
+    setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+  } else {
+    fetchContent();
+  }
+})();
+</script>
+
+<style>
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+</body>
+</html>
