@@ -3,29 +3,530 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RWA - Batches</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-white min-h-screen">
+    <title>Rojgar with Ankit - Batches</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center space-x-8">
-                    <a href="/rwa" class="flex-shrink-0">
-                        <img src="https://appx-wsb-gcp-mcdn.akamai.net.in/subject/2022-11-09-0.46231084813575274.png" alt="Science And Fun Logo" width="40" height="40">
-                    </a>
-                </div>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f9fafb;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background-color: #000;
+            color: white;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .search-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #374151;
+            background-color: #1f2937;
+            color: white;
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Main Content */
+        main {
+            padding: 24px 16px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .batches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .card-image-container {
+            position: relative;
+            aspect-ratio: 16/9;
+            background-color: #f3f4f6;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .enrolled-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: #22c55e;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .card-content {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.4;
+            color: #111827;
+            flex: 1;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+            flex: 1;
+        }
+
+        .btn-study {
+            background-color: #5a4bda;
+            color: white;
+        }
+
+        .btn-study:hover {
+            background-color: #4a3bba;
+        }
+
+        .btn-enroll {
+            background-color: white;
+            color: #111827;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-enroll:hover {
+            background-color: #f9fafb;
+        }
+
+        .btn-unenroll {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .btn-unenroll:hover {
+            background-color: #dc2626;
+        }
+
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .skeleton-image {
+            width: 100%;
+            height: 100%;
+        }
+
+        .skeleton-text {
+            height: 20px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .skeleton-text-short {
+            width: 75%;
+        }
+
+        /* Responsive */
+        @media (min-width: 640px) {
+            .batches-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .batches-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .batches-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">Rojgar With Ankit</div>
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search for a batch...">
             </div>
         </div>
     </header>
 
-    <main class="py-12 px-4 sm:px-6 lg:px-8">
-        <div id="course-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            </div>
+    <main>
+        <div class="batches-grid" id="batchesGrid">
+            <!-- Batches will be loaded here -->
+        </div>
     </main>
 
-    <script src="https://mtaiirus-api.onrender.com/apv/rwabatch.js"></script>
+    <script>
+        const batches = [
+            {id:"534",name:"UP (GET) GNM 2026 - संजीवनी बैच",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-29-0.8697063953564991.jpeg"},
+            {id:"531",name:"COBRA बैच ( CRPF भर्ती 2026 CONSTABLE & TRADESMAN )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-30-0.762317168158011.jpeg"},
+            {id:"532",name:"IIT JEE 2027 Foundation (परिवर्तन बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-05-01-0.1304535364665007.jpeg"},
+            {id:"545",name:"NDA 2/2026 ( लक्ष्य बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-28-0.9033230730567875.jpeg"},
+            {id:"544",name:"प्रारम्भ 3.O NEET 2027",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-28-0.9703330316291376.jpeg"},
+            {id:"529",name:"राजस्थान CET 10+2, Graducation (नींव बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-16-0.8159316496207744.jpeg"},
+            {id:"533",name:"Class 11th Bihar Board 2027 ( तेजस बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-23-0.162910291174862.jpeg"},
+            {id:"528",name:"Airforce Phase-2 1/2027 Astra Online बैच",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-15-0.8157730050947272.jpeg"},
+            {id:"530",name:"UPSSSC Lower PCS 2026 ( अफसर बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-06-0.44485481500842416.jpeg"},
+            {id:"409",name:"UPSSSC लेखपाल 2025 ( पंचायत बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-03-06-0.04468644357254714.jpeg"},
+            {id:"525",name:"UPSSSC BORING TECHNICIAN ( सिंचाई बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-09-0.6930270452972646.jpeg"},
+            {id:"526",name:"MEMORY BOOSTER COURSE",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-15-0.19403475219637234.jpeg"},
+            {id:"522",name:"UPSSSC Pharmacist क्लीनिक बैच",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-09-0.08546609955545093.jpeg"},
+            {id:"523",name:"UPSSSC ASO (ASO बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-09-0.39898597478422804.jpeg"},
+            {id:"524",name:"UPSSSC AGTA (कृषक बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-09-0.8985953095976774.jpeg"},
+            {id:"535",name:"UP, MP & राजस्थान PCM 11th Class (Toppers Batch 2027)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-20-0.21936805963257833.jpeg"},
+            {id:"536",name:"UP, MP & राजस्थान PCB 11th Class (Toppers Batch 2027)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-20-0.3071452061725154.jpeg"},
+            {id:"537",name:"UP, MP & राजस्थान PCM 11th & 12th Class (Toppers Combine Batch 2027-28)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-20-0.13709112668513856.jpeg"},
+            {id:"538",name:"UP, MP & राजस्थान PCB 11th & 12th Class (Toppers Combine Batch 2027-28)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-20-0.5762513947493895.jpeg"},
+            {id:"540",name:"UP Board English Medium PCB 11th Class (Toppers Batch 2027)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-20-0.013607659983943976.jpeg"},
+            {id:"541",name:"UP Board English Medium PCM 11th Class (Toppers Batch 2027)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-20-0.3739984483619597.jpeg"},
+            {id:"542",name:"UP Board 9th Class (Toppers Batch 2027)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-20-0.7238892604299123.jpeg"},
+            {id:"520",name:"SSB 2026 ( शस्त्र बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-10-0.07896257765274461.jpeg"},
+            {id:"518",name:"BIHAR POLICE (ऑपरेटर बैच) 2026",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-03-22-0.17767761006271798.jpeg"},
+            {id:"510",name:"UP, MP & राजस्थान PCB 12th Class (Toppers Batch 2027)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-03-30-0.2010971674459432.jpeg"},
+            {id:"508",name:"UP, MP & राजस्थान PCM 12th Class (Toppers Batch 2027)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-03-30-0.3647452662910682.jpeg"},
+            {id:"521",name:"ग्रामीण बैंक RRB भर्ती 2026 ( IBPS RRB PO/CLERK ) चौपाल 3.O बैच",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-10-0.9200493272945309.jpeg"},
+            {id:"516",name:"Indian Navy Vacancy MEDICAL ASS. 01/2027, 02/2027 (विक्रांत बैच 2.O)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-13-0.20453243447048597.jpeg"},
+            {id:"515",name:"Indian Navy MR Vacancy 01/2027, 02/2027 (विक्रांत बैच 2.O)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-03-24-0.8737121775162442.jpeg"},
+            {id:"514",name:"Indian Navy SSR Vacancy 01/2027, 02/2027 (विक्रांत बैच 2.O)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-03-19-0.34799925956624045.jpg"},
+            {id:"504",name:"UP Board English Medium PCM 12th Class (Toppers Batch 2027)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-03-28-0.5729168245693593.jpeg"},
+            {id:"511",name:"UP Board English Medium PCB 12th Class (Toppers Batch 2027)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-03-28-0.6410816973802714.jpeg"},
+            {id:"505",name:"UP Board Hindi+ English 12th Class (Topper Batch 2027)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-03-28-0.17639368181861015.jpeg"},
+            {id:"506",name:"Bihar Board 12th Class (Toppers Batch 2027) PCM & PCB",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-03-28-0.805074254014007.jpeg"},
+            {id:"507",name:"UP Board 10th Class (Toppers Batch 2027)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-03-28-0.02196033097146355.jpeg"},
+            {id:"509",name:"POLYTECHNIC 2026 ( सक्षम 2.O बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-03-23-0.6383247440276353.jpeg"},
+            {id:"474",name:"UPPCS 2026-27 (प्रतिज्ञा बैच 2.0)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-04-0.19996881626405927.jpeg"},
+            {id:"527",name:"UPSSSC Lower PCS 2026 ( अफसर बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-04-06-0.44485481500842416.jpeg"},
+            {id:"481",name:"ARMY भर्ती 2026 ( योद्धा बैच ) ( Army Technical Batch )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-18-0.25661377076196257.jpeg"},
+            {id:"480",name:"ARMY भर्ती 2026 ( योद्धा बैच ) ( Army Clerk Batch )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-10-0.1662213471229288.jpeg"},
+            {id:"479",name:"ARMY भर्ती 2026 ( योद्धा बैच ) ( Nursing Assistant Batch )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-10-0.7958837402448219.jpeg"},
+            {id:"478",name:"ARMY भर्ती 2026 ( योद्धा बैच ) ( GD, TDN, WMP Batch )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-27-0.8285774185864987.jpeg"},
+            {id:"486",name:"Indian Navy Medical Assistant Vacancy 2026 (विक्रांत बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-09-0.2127826222667093.jpeg"},
+            {id:"485",name:"Indian Navy MR Vacancy 2026 (विक्रांत बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-06-0.5054623725602236.jpeg"},
+            {id:"484",name:"Indian Navy SSR Vacancy 2026 (विक्रांत बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-06-0.8349197133829378.jpeg"},
+            {id:"468",name:"RAJASTHAN LDC 2026 ( वीर धरा बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-02-0.2250041015569758.jpeg"},
+            {id:"467",name:"English Steno Shorthand Batch 2026",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-05-0.5782588786107901.jpeg"},
+            {id:"466",name:"हिंदी Steno Shorthand Batch 2026",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-05-0.806371028314316.jpeg"},
+            {id:"465",name:"SSC Stenographer 2026 CBT+Shorthand ( HINDI & ENGLISH ) ( साधना बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-05-0.4520474047300106.jpeg"},
+            {id:"464",name:"Education UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.8199893874276112.jpeg"},
+            {id:"463",name:"Physical Education UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.836278063354462.jpeg"},
+            {id:"460",name:"MP POLICE CONSTABLE 2026 ( आजाद बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-05-0.6699649644516523.jpeg"},
+            {id:"459",name:"मध्य प्रदेश ( MP Foundation Batch 2026 )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-05-0.6394472986014351.jpeg"},
+            {id:"423",name:"SSC Foundation Batch 2026 (संकल्प बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-25-0.10803677857551186.jpg"},
+            {id:"434",name:"History UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.07744306022225822.jpeg"},
+            {id:"426",name:"UGC NET JUNE 2026:- Paper 1st (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.06840500718455611.jpeg"},
+            {id:"455",name:"RBI Office Attendant 2026 (सेवक बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.9204665139888426.jpeg"},
+            {id:"440",name:"Hindi UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.39770701453147517.jpeg"},
+            {id:"439",name:"Sanskrit UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.6126923368220186.jpeg"},
+            {id:"438",name:"Sociology UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-06-0.39347505535750205.jpeg"},
+            {id:"437",name:"Political Science UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.0340066073129347.jpeg"},
+            {id:"436",name:"LAW UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.32707841801415793.jpeg"},
+            {id:"435",name:"Home Science UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.5136973953713522.jpeg"},
+            {id:"433",name:"Geography UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.3743910883026953.jpeg"},
+            {id:"432",name:"English UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-02-06-0.7817333254733326.jpeg"},
+            {id:"431",name:"Economics UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.011732996401078055.jpeg"},
+            {id:"430",name:"Computer Science UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.23709335337235216.jpeg"},
+            {id:"429",name:"Commerce UGC NET JUNE 2026:- Paper 2nd (आचार्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.6005748078092806.jpeg"},
+            {id:"424",name:"SSC Foundation Batch 2026 ( लक्ष्य बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-25-0.39589712226158247.jpg"},
+            {id:"421",name:"Jharkhand कक्षपाल सुरक्षा बैच 2026",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-22-0.7876007911124471.jpeg"},
+            {id:"425",name:"BANKING FOUNDATION 2026 (आधार बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-29-0.8446460464484645.jpeg"},
+            {id:"415",name:"UP POLICE कंप्यूटर ऑपरेटर SI & ASI 2025 (ऑपरेटर बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-15-0.7108505155269534.jpeg"},
+            {id:"410",name:"SSC Mains CGL, CHSL, CPO 2025 ( English Special Batch)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2025-12-18-0.6884337771718942.jpeg"},
+            {id:"400",name:"Jharkhand उत्पाद सिपाही भर्ती ( जोहार बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2025-12-14-0.5939636111187042.jpeg"},
+            {id:"371",name:"Bihar Foundation बैच 2025-26",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2025-11-27-0.33784223005718006.jpeg"},
+            {id:"367",name:"KVS & NVS Tier 1 PRT, TGT & PGT वरदान बैच 2025",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2025-11-28-0.011623450350310316.jpeg"},
+            {id:"356",name:"Science Special Foundation Batch 2025",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2025-11-01-0.887265256140315.jpeg"},
+            {id:"354",name:"कनिष्ठ सहायक (सहयोग बैच) 2025",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2025-10-28-0.2338640390980372.jpeg"},
+            {id:"327",name:"BSF RO RM Vacancy 2025 (संचार बैच)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-15-0.30859730384047346.jpeg"},
+            {id:"302",name:"BSF Tradesman Vacancy 2025 (Border Batch)",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-02-0.8677726281211294.jpeg"},
+            {id:"291",name:"RRB TECHNICIAN 2025 ( इंजीनियर बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2025-07-14-0.6748070515165596.jpeg"},
+            {id:"239",name:"CISF TRADESMAN 2025 ( वीर बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-12-0.30415536223067774.jpeg"},
+            {id:"187",name:"CISF FIREMAN 2024 भर्ती ( ज्वाला बैच )",course_thumbnail:"https://appx-content-v2.classx.co.in/paid_course3/2026-01-02-0.6736691392016477.jpeg"},
+            {id:"152",name:"UP PCS 2025-26 ( NCERT सार बैच )",course_thumbnail:"https://appxcontent.kaxa.in/paid_course3/2024-04-11-0.0051751509287225606.jpeg"},
+            {id:"148",name:"DSSSB TGT संस्कृत ( SCHOLAR BATCH )",course_thumbnail:"https://appxcontent.kaxa.in/paid_course3/2024-03-18-0.4632666071537279.jpeg"},
+            {id:"147",name:"DSSSB TGT हिंदी ( SCHOLAR BATCH )",course_thumbnail:"https://appxcontent.kaxa.in/paid_course3/2024-03-18-0.22763002446186942.jpeg"},
+            {id:"146",name:"DSSSB TGT SST ( SCHOLAR BATCH )",course_thumbnail:"https://appxcontent.kaxa.in/paid_course3/2024-03-18-0.2484507784594836.jpeg"},
+            {id:"145",name:"DSSSB TGT ENGLISH ( SCHOLAR BATCH )",course_thumbnail:"https://appxcontent.kaxa.in/paid_course3/2024-03-18-0.17720631694237765.jpeg"},
+            {id:"144",name:"DSSSB TGT MATHS ( SCHOLAR BATCH )",course_thumbnail:"https://appxcontent.kaxa.in/paid_course3/2024-03-18-0.43704695079629574.jpeg"},
+            {id:"143",name:"DSSSB PRT : TGT & PGT PART -A ONLY ( SCHOLAR BATCH )",course_thumbnail:"https://appxcontent.kaxa.in/paid_course3/2024-03-18-0.6226069875169307.jpeg"},
+            {id:"141",name:"DSSSB+SSC MTS ( दफ्तरी बैच )",course_thumbnail:"https://appxcontent.kaxa.in/paid_course3/2024-03-20-0.6209060663446702.jpeg"},
+            {id:"142",name:"DSSSB PRT COMPLETE PART (A+B)",course_thumbnail:"https://appxcontent.kaxa.in/paid_course3/2024-03-18-0.65063304567142.jpeg"},
+            {id:"139",name:"छत्तीसगढ़ पुलिस 2024 ( युग बैच )",course_thumbnail:"https://appxcontent.kaxa.in/paid_course3/2024-03-06-0.4866574907071075.jpeg"},
+            {id:"129",name:"झारखण्ड पुलिस 2024 ( सेवक बैच )",course_thumbnail:"https://appxcontent.kaxa.in/paid_course3/2024-02-24-0.6053056268633854.jpeg"},
+            {id:"106",name:"UP SUPERTET 2023-24 ( गुरु जी बैच )",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course3/2023-10-21-0.36251594444595625.jpeg"},
+            {id:"105",name:"बिहार SSC 2023 ( संकल्प बैच )",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course3/2023-10-21-0.8525934789886838.jpeg"},
+            {id:"102",name:"UPSSSC कनिष्ठ सहायक एवं वन रक्षक ( सहयोग बैच )",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course3/2023-10-21-0.303495679400674.jpeg"},
+            {id:"101",name:"UPSI 2023 ( विनायक बैच )",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course3/2023-10-21-0.802944857013548.jpeg"},
+            {id:"98",name:"RO & ARO 2023 ( अधिकारी बैच )",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course3/2023-10-21-0.9584348230628916.jpeg"},
+            {id:"97",name:"अपर निजि सचिव ( APS ) अधिकारी बैच",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course3/2023-10-21-0.5668467474966119.jpeg"},
+            {id:"94",name:"UPSSSC PET 2023 ( वरदान 3.0 बैच )",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course3/2023-10-21-0.5213073672078723.jpeg"},
+            {id:"90",name:"SSC CPO 2023 पराक्रम बैच",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course3/2023-10-21-0.23278154597208567.jpeg"},
+            {id:"81",name:"CTET बुनियाद २.० बैच",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course3/2023-05-18-0.6916365734445253.jpg"},
+            {id:"77",name:"UPSSSC VDO RE-EXAM ( प्रगति बैच )",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course3/2023-04-14-0.3183032009984108.jpeg"},
+            {id:"65",name:"UPSI 2023 (VOD) बैच",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course3/2023-11-29-0.9240361889209192.jpeg"},
+            {id:"61",name:"KVS (यकीन बैच) 2022",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course/2023-01-01-0.8717092646215063.jpg"},
+            {id:"24",name:"Hindi Special By Ankit Bhati Sir",course_thumbnail:"https://appx-wsb-gcp-mcdn.akamai.net.in/paid_course/2021-02-01-0.6766507657910175.jpeg"}
+        ];
 
+        let enrolledBatches = [];
+        let isLoading = false;
+
+        // Load enrolled batches from localStorage
+        function loadEnrolledBatches() {
+            try {
+                const stored = localStorage.getItem('rwaEnrolledBatches');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (Array.isArray(parsed)) {
+                        enrolledBatches = parsed.map(b => typeof b === 'object' ? b.id : b);
+                        console.log('Loaded enrolled batches:', enrolledBatches);
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to parse enrolled batches', e);
+                localStorage.removeItem('rwaEnrolledBatches');
+                enrolledBatches = [];
+            }
+        }
+
+        // Save enrolled batches to localStorage
+        function saveEnrolledBatches() {
+            try {
+                const enrolledData = batches.filter(b => enrolledBatches.includes(b.id));
+                localStorage.setItem('rwaEnrolledBatches', JSON.stringify(enrolledData));
+                console.log('Saved enrolled batches:', enrolledData);
+            } catch (e) {
+                console.error('Failed to save enrolled batches', e);
+            }
+        }
+
+        // Check if batch is enrolled
+        function isEnrolled(batchId) {
+            return enrolledBatches.includes(batchId);
+        }
+
+        // Enroll in a batch
+        function enrollBatch(batchId) {
+            if (!isEnrolled(batchId)) {
+                enrolledBatches.push(batchId);
+                const batch = batches.find(b => b.id === batchId);
+                saveEnrolledBatches();
+                const searchQuery = document.getElementById('searchInput').value;
+                renderBatches(searchQuery);
+                if (batch) {
+                    alert('Successfully enrolled in ' + batch.name + '!');
+                }
+            }
+        }
+
+        // Unenroll from a batch
+        function unenrollBatch(batchId) {
+            if (isEnrolled(batchId)) {
+                enrolledBatches = enrolledBatches.filter(id => id !== batchId);
+                const batch = batches.find(b => b.id === batchId);
+                saveEnrolledBatches();
+                const searchQuery = document.getElementById('searchInput').value;
+                renderBatches(searchQuery);
+                if (batch) {
+                    alert('Unenrolled from ' + batch.name);
+                }
+            }
+        }
+
+        // Study a batch
+        function studyBatch(batchId, batchName) {
+            console.log('studyBatch clicked:', batchId, batchName);
+            const url = 'subjects.html?courseId=' + batchId;
+            console.log('Navigating to:', url);
+            window.location.href = url;
+        }
+
+        // Create card HTML
+        function createCard(batch) {
+            const enrolled = isEnrolled(batch.id);
+            const defaultImage = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225" fill="%235a4bda"%3E%3Crect width="400" height="225"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="white" font-size="20"%3EBatch%3C/text%3E%3C/svg%3E';
+            
+            const escapedName = batch.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            
+            return `
+                <div class="card">
+                    <div class="card-image-container">
+                        <img 
+                            src="${batch.course_thumbnail || defaultImage}" 
+                            alt="${batch.name}" 
+                            class="card-image"
+                            onerror="this.onerror=null; this.src='${defaultImage}';"
+                            loading="lazy"
+                        >
+                        ${enrolled ? '<span class="enrolled-badge">Enrolled</span>' : ''}
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${batch.name}</h3>
+                        <div class="card-actions">
+                            <button class="btn btn-study" onclick="studyBatch('${batch.id}', '${escapedName}')">
+                                📖 Study
+                            </button>
+                            ${enrolled 
+                                ? `<button class="btn btn-unenroll" onclick="unenrollBatch('${batch.id}')">❌ Unenroll</button>`
+                                : `<button class="btn btn-enroll" onclick="enrollBatch('${batch.id}')">🎁 Enroll</button>`
+                            }
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Create skeleton card HTML
+        function createSkeletonCard() {
+            return `
+                <div class="card">
+                    <div class="card-image-container">
+                        <div class="skeleton skeleton-image"></div>
+                    </div>
+                    <div class="card-content">
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text skeleton-text-short"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render batches
+        function renderBatches(searchQuery) {
+            const grid = document.getElementById('batchesGrid');
+            
+            if (!grid) {
+                console.error('batchesGrid element not found');
+                return;
+            }
+
+            if (isLoading) {
+                grid.innerHTML = Array(8).fill(null).map(function() { return createSkeletonCard(); }).join('');
+                return;
+            }
+
+            const query = searchQuery || '';
+            const filteredBatches = query 
+                ? batches.filter(function(b) { return b.name.toLowerCase().includes(query.toLowerCase()); })
+                : batches;
+
+            console.log('Rendering ' + filteredBatches.length + ' batches');
+            grid.innerHTML = filteredBatches.map(function(batch) { return createCard(batch); }).join('');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
+            loadEnrolledBatches();
+            
+            // Render immediately without delay
+            isLoading = false;
+            renderBatches('');
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    renderBatches(e.target.value);
+                });
+            } else {
+                console.error('searchInput element not found');
+            }
+        });
+    </script>
 </body>
 </html>
