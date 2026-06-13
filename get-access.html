@@ -1,0 +1,611 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#D4540E">
+  <title>Mtaiirus — Secure Access Portal</title>
+  <meta name="description" content="Get secure access to all Mtaiirus free premium courses. Unlock JEE, NEET, and board exam content instantly.">
+  <link rel="icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+  <link rel="apple-touch-icon" href="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-primary: #F5F2EB;
+      --bg-card: #FFFDFB;
+      --accent: #D4540E;
+      --accentl: #F0A87A;
+      --accentb: rgba(212,84,14,0.1);
+      --text-primary: #1A1814;
+      --text-secondary: #6B6760;
+      --text-muted: #B0ADA7;
+      --border-subtle: rgba(26,24,20,0.08);
+      --border-default: rgba(26,24,20,0.12);
+      --radius-md: 12px;
+      --radius-2xl: 24px;
+      --shadow-elevated: 0 20px 60px rgba(26,24,20,0.12);
+      --shadow-glow: 0 0 30px rgba(212,84,14,0.2);
+      --transition-default: 0.3s ease;
+      --transition-spring: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+      font-family: 'DM Sans', sans-serif;
+      overflow: hidden;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    
+    /* Floating bg words - Mtaiirus style */
+    .floating-words {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      opacity: .03;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 5vw, 5rem);
+      color: var(--text-primary);
+      white-space: nowrap;
+      user-select: none;
+    }
+    .float-word {
+      position: absolute;
+      animation: floatAround 26s infinite alternate ease-in-out;
+      letter-spacing: -2px;
+    }
+    .float-word:nth-child(1) { top: 8%; left: 3%; animation-duration: 22s; }
+    .float-word:nth-child(2) { top: 22%; right: 5%; animation-duration: 30s; animation-delay: -5s; }
+    .float-word:nth-child(3) { bottom: 18%; left: 8%; animation-duration: 24s; animation-delay: -8s; }
+    .float-word:nth-child(4) { bottom: 32%; right: 4%; animation-duration: 28s; animation-delay: -13s; }
+    .float-word:nth-child(5) { top: 48%; left: 28%; animation-duration: 32s; animation-delay: -4s; }
+    .float-word:nth-child(6) { top: 68%; right: 18%; animation-duration: 20s; animation-delay: -10s; }
+    @keyframes floatAround {
+      0% { transform: translate(0,0) rotate(0deg); }
+      25% { transform: translate(35px,-25px) rotate(1.5deg); }
+      50% { transform: translate(-25px,30px) rotate(-1.5deg); }
+      75% { transform: translate(20px,15px) rotate(.8deg); }
+      100% { transform: translate(-15px,-20px) rotate(-.8deg); }
+    }
+
+    .glass-card {
+      position: relative;
+      z-index: 10;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-2xl);
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      box-shadow: var(--shadow-elevated);
+      transition: all var(--transition-spring);
+      margin: 20px;
+    }
+    
+    .logo-img {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-md);
+      margin: 0 auto 24px;
+      box-shadow: var(--shadow-glow);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .brand-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+    
+    .brand-name span {
+      color: var(--accent);
+    }
+    
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .step {
+      display: none;
+      animation: scaleIn 0.3s ease;
+    }
+    
+    .step.active {
+      display: block;
+    }
+    
+    @keyframes scaleIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .code-display {
+      background: var(--accentb);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .code-value {
+      font-family: 'Courier New', monospace;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      word-break: break-all;
+    }
+    
+    .code-label {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 3px solid var(--accentb);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 24px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(45,106,63,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      color: #2D6A3F;
+      border: 2px solid rgba(45,106,63,0.2);
+      animation: scaleIn 0.5s ease;
+    }
+    
+    .timer {
+      font-family: 'Courier New', monospace;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin: 24px 0;
+      letter-spacing: -1px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition-default);
+      border: none;
+      text-decoration: none;
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+    }
+    
+    .btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+    
+    .btn-accent:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(212,84,14,0.3);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+    }
+    
+    .btn-outline:hover {
+      border-color: var(--accent);
+      background: var(--accentb);
+      color: var(--accent);
+    }
+    
+    .mt-4 { margin-top: 16px; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .gap-3 { gap: 12px; }
+
+    /* Security watermark */
+    .security-watermark {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      font-size: 9px;
+      color: rgba(107,103,96,.15);
+      font-family: monospace;
+      z-index: 9999;
+      pointer-events: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-words">
+    <div class="float-word">MTAIIRUS</div>
+    <div class="float-word">FREE ACCESS</div>
+    <div class="float-word">PREMIUM COURSES</div>
+    <div class="float-word">JEE · NEET</div>
+    <div class="float-word">UNLOCK NOW</div>
+    <div class="float-word">STUDY FREE</div>
+  </div>
+
+  <div class="glass-card">
+    <img src="https://i.ibb.co/G3TLgSgJ/pngtree-mv-vm-letter-vector-logo-image-332121.jpg" alt="Mtaiirus" class="logo-img" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>MTAI<span>IRUS</span></div>'">
+    <div class="brand-name" style="display: none;">MTAI<span>IRUS</span></div>
+    
+    <!-- STEP 1: Generating -->
+    <div id="step-1" class="step active">
+      <div class="loading-spinner"></div>
+      <h1 class="brand-name" style="font-size: 1.5rem; margin-bottom: 12px;">Generating Access</h1>
+      <p class="subtitle">Creating your secure access key automatically...</p>
+    </div>
+
+    <!-- STEP 2: Code Generated -->
+    <div id="step-2" class="step">
+      <h1 class="brand-name" style="font-size: 1.5rem; margin-bottom: 12px;">Access Key Generated</h1>
+      <p class="subtitle">Your access key has been generated successfully</p>
+      
+      <div class="code-display">
+        <div class="code-value" id="generated-code"></div>
+        <div class="code-label">Your Master Key</div>
+      </div>
+      
+      <div class="flex flex-col gap-3">
+        <button id="btn-activate" class="btn btn-accent">
+          <i class="fas fa-unlock-alt"></i> Activate & Continue
+        </button>
+        <button id="btn-copy-code" class="btn btn-outline">
+          <i class="far fa-copy"></i> Copy Key
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Success -->
+    <div id="step-3" class="step">
+      <div class="success-icon">
+        <i class="fas fa-check-circle" style="font-size: 40px;"></i>
+      </div>
+      <h1 class="brand-name" style="font-size: 1.5rem; margin-bottom: 12px;">Access Activated</h1>
+      <p class="subtitle">You have unrestricted access to all premium content.</p>
+      
+      <div id="timer-display" class="timer">24:00:00</div>
+      
+      <button id="btn-enter" class="btn btn-accent mt-4">
+        <i class="fas fa-rocket"></i> Enter Mtaiirus
+      </button>
+    </div>
+  </div>
+
+  <div class="security-watermark">🔒 MTAIIRUS SECURE • v4.8.1</div>
+
+  <script>
+    (function() {
+      'use strict';
+      
+      // ==================== SECURITY LAYER ====================
+      
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }, true);
+      
+      document.addEventListener('keydown', function(e) {
+        const key = e.key || '';
+        const keyCode = e.keyCode || e.which;
+        if (keyCode === 123) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (key === 'I' || key === 'J' || key === 'C' || key === 'i' || key === 'j' || key === 'c')) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && (key === 'U' || key === 'u' || key === 'S' || key === 's' || key === 'P' || key === 'p' || key === 'R' || key === 'r')) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      }, true);
+      
+      window.addEventListener('beforeprint', function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.print = function() { return false; };
+        return false;
+      }, true);
+      
+      const disableEvents = ['copy', 'cut', 'paste', 'selectstart', 'dragstart', 'select', 'selectionchange'];
+      disableEvents.forEach(function(ev) {
+        document.addEventListener(ev, function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }, true);
+      });
+      
+      document.body.style.userSelect = 'none';
+      document.body.style.webkitUserSelect = 'none';
+      document.body.style.msUserSelect = 'none';
+      document.body.style.mozUserSelect = 'none';
+      
+      let devToolsOpen = false;
+      const element = new Image();
+      Object.defineProperty(element, 'id', {
+        get: function() {
+          devToolsOpen = true;
+          window.location.href = 'about:blank';
+          throw new Error('DevTools detected');
+        }
+      });
+      setInterval(function() {
+        devToolsOpen = false;
+        console.log(element);
+        console.clear();
+        if (devToolsOpen) {
+          window.location.href = 'about:blank';
+        }
+      }, 1000);
+      
+      setInterval(function() {
+        var start = performance.now();
+        debugger;
+        var end = performance.now();
+        if (end - start > 100) {
+          window.location.href = 'about:blank';
+        }
+      }, 2000);
+      
+      setInterval(function() {
+        console.clear();
+      }, 500);
+      
+      const noop = function() {};
+      const consoleMethods = ['log', 'warn', 'error', 'info', 'debug', 'table', 'dir', 'dirxml', 'trace', 'group', 'groupCollapsed', 'groupEnd', 'time', 'timeEnd', 'profile', 'profileEnd', 'count', 'clear'];
+      for (var i = 0; i < consoleMethods.length; i++) {
+        if (console[consoleMethods[i]]) {
+          console[consoleMethods[i]] = noop;
+        }
+      }
+      
+      document.onmouseup = function(e) {
+        window.getSelection().removeAllRanges();
+        return false;
+      };
+      
+      setInterval(function() {
+        var threshold = 160;
+        var w = window.outerWidth - window.innerWidth;
+        var h = window.outerHeight - window.innerHeight;
+        if (w > threshold || h > threshold) {
+          window.location.href = 'about:blank';
+        }
+      }, 600);
+      
+      if (window.self !== window.top) {
+        window.top.location = window.self.location;
+      }
+      
+      if (window.location.href.indexOf('view-source:') === 0) {
+        window.location.href = 'about:blank';
+      }
+      
+      window.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+      }, true);
+      
+      console.log('%c🔒 MTAIIRUS SECURE CONTENT • Copying Prohibited', 'color: #D4540E; font-size: 16px; font-weight: bold;');
+      
+      // ==================== END SECURITY ====================
+      
+      // ==================== APP FUNCTIONALITY ====================
+      
+      const MASTER_KEYS = ['MTAIIRUS2026', 'FREEPREMIUM', 'STUDYFREE', 'ACCESS2026'];
+      const ACCESS_KEY = 'mtaiirus_access_expiry';
+      let timerInterval;
+
+      function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+
+      function showStep(stepNum) {
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+        const targetStep = document.getElementById(`step-${stepNum}`);
+        if (targetStep) {
+          targetStep.classList.add('active');
+        }
+      }
+
+      function startTimer(expiryTime) {
+        if (timerInterval) clearInterval(timerInterval);
+        
+        const display = document.getElementById('timer-display');
+        
+        function update() {
+          const now = Date.now();
+          const diff = expiryTime - now;
+          
+          if (diff <= 0) {
+            clearInterval(timerInterval);
+            localStorage.removeItem(ACCESS_KEY);
+            window.location.reload();
+            return;
+          }
+          
+          const h = Math.floor(diff / (1000 * 60 * 60));
+          const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((diff % (1000 * 60)) / 1000);
+          
+          display.textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+        
+        update();
+        timerInterval = setInterval(update, 1000);
+      }
+
+      function grantAccess() {
+        const expiry = Date.now() + (24 * 60 * 60 * 1000);
+        localStorage.setItem(ACCESS_KEY, expiry.toString());
+        
+        showStep(3);
+        startTimer(expiry);
+
+        setTimeout(() => {
+          const ret = localStorage.getItem('auth_return_url');
+          if (ret) {
+            localStorage.removeItem('auth_return_url');
+            window.location.href = ret;
+          } else {
+            window.location.href = 'index.html';
+          }
+        }, 2000);
+      }
+
+      // Auto-generate and grant access when page loads
+      async function autoGenerateAccess() {
+        try {
+          // Check if already has valid access
+          const existingExpiry = localStorage.getItem(ACCESS_KEY);
+          if (existingExpiry && parseInt(existingExpiry, 10) > Date.now()) {
+            showStep(3);
+            startTimer(parseInt(existingExpiry, 10));
+            return;
+          }
+
+          // Show generating state for 1.5 seconds
+          await delay(1500);
+          
+          // Pick a random master key
+          const masterKey = MASTER_KEYS[Math.floor(Math.random() * MASTER_KEYS.length)];
+          
+          // Generate additional random suffix for uniqueness
+          const suffix = Math.random().toString(36).substring(2, 8).toUpperCase();
+          const generatedCode = masterKey + '-' + suffix;
+          
+          // Display the generated code
+          document.getElementById('generated-code').textContent = generatedCode;
+          showStep(2);
+          
+          // Store the code temporarily
+          sessionStorage.setItem('current_generated_code', generatedCode);
+          
+        } catch (error) {
+          console.error('Auto-generation failed:', error);
+          const fallbackKey = MASTER_KEYS[0] + '-' + Date.now().toString(36).toUpperCase();
+          document.getElementById('generated-code').textContent = fallbackKey;
+          showStep(2);
+          sessionStorage.setItem('current_generated_code', fallbackKey);
+        }
+      }
+
+      // Activate button
+      document.getElementById('btn-activate').addEventListener('click', () => {
+        const code = sessionStorage.getItem('current_generated_code');
+        if (code) {
+          const masterKeyPart = code.split('-')[0];
+          if (MASTER_KEYS.includes(masterKeyPart)) {
+            grantAccess();
+          }
+        }
+      });
+
+      // Copy code button
+      document.getElementById('btn-copy-code').addEventListener('click', async () => {
+        const code = sessionStorage.getItem('current_generated_code');
+        const btn = document.getElementById('btn-copy-code');
+        const originalText = btn.innerHTML;
+        
+        try {
+          await navigator.clipboard.writeText(code);
+          btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          setTimeout(() => btn.innerHTML = originalText, 2000);
+        } catch(err) {
+          const tempInput = document.createElement('input');
+          tempInput.value = code;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+          btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          setTimeout(() => btn.innerHTML = originalText, 2000);
+        }
+      });
+
+      // Enter button
+      document.getElementById('btn-enter').addEventListener('click', () => {
+        const ret = localStorage.getItem('auth_return_url');
+        if (ret) {
+          localStorage.removeItem('auth_return_url');
+          window.location.href = ret;
+        } else {
+          window.location.href = 'index.html';
+        }
+      });
+
+      // Initialize
+      autoGenerateAccess();
+    })();
+  </script>
+</body>
+</html>
