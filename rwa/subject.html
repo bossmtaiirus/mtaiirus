@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjects - Rojgar with Ankit</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f9fafb; min-height: 100vh; }
+        header { background-color: #000; color: white; height: 56px; display: flex; align-items: center; padding: 0 16px; position: sticky; top: 0; z-index: 50; }
+        .header-content { display: flex; align-items: center; gap: 16px; width: 100%; max-width: 1400px; margin: 0 auto; }
+        .back-button { background: rgba(255,255,255,0.1); border: none; color: white; cursor: pointer; padding: 10px; display: flex; align-items: center; justify-content: center; border-radius: 8px; width: 40px; height: 40px; }
+        .back-button:hover { background: rgba(255,255,255,0.2); }
+        .page-title { font-size: 20px; font-weight: 600; }
+        main { padding: 24px 16px; max-width: 1400px; margin: 0 auto; }
+        .subjects-list { display: flex; flex-direction: column; gap: 12px; }
+        .subject-card { background: white; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+        .subject-card:hover { box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .subject-info { display: flex; align-items: center; gap: 16px; }
+        .subject-logo { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background-color: #f3f4f6; }
+        .subject-name { font-size: 16px; font-weight: bold; color: #111827; }
+        .chevron-right { color: #9ca3af; width: 20px; height: 20px; }
+        .skeleton { background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; border-radius: 6px; }
+        @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .skeleton-card { background: white; border-radius: 8px; padding: 16px; display: flex; align-items: center; gap: 16px; }
+        .skeleton-logo { width: 48px; height: 48px; border-radius: 50%; }
+        .skeleton-text { height: 24px; width: 200px; }
+        .error-container { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+        .error-icon { width: 48px; height: 48px; color: #ef4444; margin-bottom: 16px; }
+        .error-title { font-size: 20px; font-weight: bold; margin-bottom: 8px; }
+        .error-message { color: #ef4444; }
+        .empty-container { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+        .empty-image { width: 192px; height: 192px; margin-bottom: 16px; }
+        .empty-title { font-size: 20px; font-weight: bold; margin-bottom: 8px; }
+        .empty-message { color: #6b7280; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <button class="back-button" onclick="goBack()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+            </button>
+            <h1 class="page-title">Subjects</h1>
+        </div>
+    </header>
+
+    <main>
+        <div class="subjects-list" id="subjectsList"></div>
+    </main>
+
+    <script>
+        const CONFIG_URL = 'https://rwa.therankforge.site/api/proxy?url=https://api-aditya-beige.vercel.app/api/rwa/api-url';
+        let API_URL;
+        
+        let subjects = [];
+        let isLoading = true;
+        let error = null;
+        let courseId = null;
+
+        function getCourseId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('courseId') || urlParams.get('id');
+        }
+
+        async function initAPI() {
+            try {
+                const response = await fetch(CONFIG_URL);
+                if (response.ok) {
+                    const data = await response.json();
+                    API_URL = data.apiUrl || data.url || data || 'https://apiserver.deltastudy.site';
+                }
+            } catch (e) {}
+        }
+
+        async function fetchSubjects() {
+            courseId = getCourseId();
+            
+            if (!courseId) {
+                error = 'Please open this page from the Batches page. Missing course ID.';
+                isLoading = false;
+                renderSubjects();
+                return;
+            }
+
+            try {
+                await initAPI();
+                if (!API_URL) throw new Error('API URL not configured');
+                const response = await fetch(`https://rwa.therankforge.site/api/proxy?url=${encodeURIComponent(`${API_URL}/api/rwa/subjects/${courseId}`)}`);
+                if (!response.ok) throw new Error('Failed to fetch subjects');
+                const data = await response.json();
+                if (data.status !== 200) throw new Error(data.message || 'Failed to fetch subjects');
+                subjects = data.data || [];
+            } catch (e) {
+                error = e.message;
+            } finally {
+                isLoading = false;
+                renderSubjects();
+            }
+        }
+
+        function goBack() { window.location.href = 'batches.html'; }
+
+        function navigateToSubject(subjectJson) {
+            const subject = typeof subjectJson === 'string' ? JSON.parse(subjectJson) : subjectJson;
+            window.location.href = `topics.html?courseId=${courseId}&subjectId=${subject.subjectid}&subjectName=${encodeURIComponent(subject.subject_name)}`;
+        }
+
+        function createSubjectCard(subject) {
+            const subjectJson = encodeURIComponent(JSON.stringify(subject));
+            return `
+                <div class="subject-card" onclick="navigateToSubject(decodeURIComponent('${subjectJson}'))">
+                    <div class="subject-info">
+                        <img src="${subject.subject_logo || 'https://placehold.co/48x48/5a4bda/white?text=S'}" alt="${subject.subject_name}" class="subject-logo">
+                        <h3 class="subject-name">${subject.subject_name}</h3>
+                    </div>
+                    <svg class="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                </div>`;
+        }
+
+        function createSkeletonCard() { return `<div class="skeleton-card"><div class="skeleton skeleton-logo"></div><div class="skeleton skeleton-text"></div></div>`; }
+
+        function renderSubjects() {
+            const list = document.getElementById('subjectsList');
+            if (isLoading) { list.innerHTML = Array(6).fill(0).map(() => createSkeletonCard()).join(''); return; }
+            if (error) {
+                list.innerHTML = `<div class="error-container"><svg class="error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><h2 class="error-title">Error Loading Subjects</h2><p class="error-message">${error}</p></div>`; return;
+            }
+            if (subjects.length === 0) {
+                list.innerHTML = `<div class="empty-container"><img src="https://static.pw.live/study-mf/assets/images/recent-learning-no-data-1770062657.svg" alt="No Subjects" class="empty-image"><h2 class="empty-title">No Subjects Found</h2><p class="empty-message">There are no subjects available for this course.</p></div>`; return;
+            }
+            list.innerHTML = subjects.map(subject => createSubjectCard(subject)).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchSubjects);
+    </script>
+</body>
+</html>
+
