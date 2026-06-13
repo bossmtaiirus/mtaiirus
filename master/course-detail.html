@@ -1,0 +1,697 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Master Sahab - Course Detail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // ── Anti-DevTools Protection ─────────────────────────────────────────────
+    (function() {
+      const THRESHOLD = 160;
+
+      function isDevToolsOpen() {
+        return (
+          window.outerWidth - window.innerWidth > THRESHOLD ||
+          window.outerHeight - window.innerHeight > THRESHOLD
+        );
+      }
+
+      function hideContent() {
+        document.documentElement.style.display = "none";
+      }
+
+      function showContent() {
+        document.documentElement.style.display = "";
+      }
+
+      // Check on resize
+      window.addEventListener("resize", function() {
+        if (isDevToolsOpen()) hideContent();
+        else showContent();
+      });
+
+      // Check on load
+      if (isDevToolsOpen()) hideContent();
+
+      // Debugger trap — pauses execution if DevTools is open
+      setInterval(function() {
+        const start = performance.now();
+        (function() { debugger; })();
+        if (performance.now() - start > 100) hideContent();
+      }, 1000);
+
+      // Disable right-click
+      document.addEventListener("contextmenu", function(e) {
+        e.preventDefault();
+      });
+
+      // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+      document.addEventListener("keydown", function(e) {
+        if (
+          e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) ||
+          (e.ctrlKey && e.key === "U")
+        ) {
+          e.preventDefault();
+          hideContent();
+        }
+      });
+    })();
+  </script>
+  <style>
+    .tab-active {
+      border-bottom: 2px solid #111;
+      color: #111;
+      font-weight: 700;
+    }
+    .tab-inactive {
+      border-bottom: 2px solid transparent;
+      color: #888;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .tile-active { background:#111; color:#fff; }
+    .tile-inactive { background:#fff; color:#666; border:1px solid #e5e7eb; }
+    .tile-inactive:hover { background:#f3f4f6; }
+    @keyframes pulse-sk { 0%,100%{opacity:1} 50%{opacity:.5} }
+    .sk { background:#e5e7eb; border-radius:6px; animation: pulse-sk 1.5s infinite; }
+  </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col">
+
+  <!-- ── Header ─────────────────────────────────────────────────────────────── -->
+  <header class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+    <div class="container mx-auto px-4 h-16 flex items-center max-w-7xl">
+      <a href="index.html" class="flex items-center gap-2">
+        <img
+          src="https://d2alr3mt323vql.cloudfront.net/0/admin_v1/application_management/clientlogo/3390552566_Group%2018440%20%284%29.png"
+          alt="Master Sahab"
+          class="h-10 w-auto"
+        />
+      </a>
+    </div>
+  </header>
+
+  <!-- ── Main ───────────────────────────────────────────────────────────────── -->
+  <main class="flex-1 container mx-auto px-4 py-6 max-w-7xl">
+
+    <!-- Breadcrumb -->
+    <nav class="text-xs text-gray-500 mb-5 flex items-center gap-1">
+      <a href="index.html" class="hover:text-gray-800">Home</a>
+      <span>›</span>
+      <span class="text-gray-700">Details</span>
+      <span>›</span>
+    </nav>
+
+    <!-- Loading skeleton -->
+    <div id="skeleton" class="animate-pulse space-y-4">
+      <div class="h-8 bg-gray-200 rounded w-1/2"></div>
+      <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+      <div class="h-12 bg-gray-200 rounded w-48"></div>
+    </div>
+
+    <!-- Content (hidden until loaded) -->
+    <div id="page-content" class="hidden">
+      <div class="flex flex-col lg:flex-row gap-8">
+
+        <!-- ── Left Column ──────────────────────────────────────────────────── -->
+        <div class="flex-1 min-w-0">
+
+          <!-- Title -->
+          <h1 id="course-title" class="text-2xl font-bold text-gray-900 mb-2"></h1>
+
+          <!-- Validity -->
+          <div class="flex items-center gap-1.5 text-sm text-gray-600 mb-5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/>
+            </svg>
+            <span>Validity: <strong id="course-validity" class="text-gray-800"></strong></span>
+          </div>
+
+          <!-- Price + Buy (mobile) -->
+          <div class="flex items-center gap-4 mb-6 lg:hidden">
+            <div>
+              <div class="text-2xl font-bold text-gray-900" id="course-price-m"></div>
+              <div class="text-xs text-gray-500 mt-0.5">Inclusive of GST</div>
+            </div>
+            <button id="buy-btn-mobile" onclick="handleBuy()" class="flex-1 bg-gray-900 hover:bg-black text-white font-bold py-3 rounded-lg text-sm transition-colors">
+              Buy Now
+            </button>
+          </div>
+
+          <!-- Tabs -->
+          <div class="border-b border-gray-200 mb-6 flex gap-6">
+            <button onclick="switchTab('description')" id="tab-description" class="pb-3 text-sm uppercase tracking-wide tab-active">Description</button>
+            <button onclick="switchTab('batches')" id="tab-batches" class="pb-3 text-sm uppercase tracking-wide tab-inactive">Batches</button>
+          </div>
+
+          <!-- Description Tab -->
+          <div id="panel-description">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-bold text-gray-900 uppercase">Description</h2>
+              <button
+                onclick="toggleLang()"
+                id="lang-btn"
+                class="text-xs font-semibold bg-gray-800 text-white px-3 py-1.5 rounded hover:bg-gray-700 transition-colors"
+              >change to Hindi</button>
+            </div>
+            <ul id="desc-list" class="space-y-2 text-sm text-gray-700 list-disc list-inside leading-relaxed"></ul>
+          </div>
+
+          <!-- Batches Tab — 3-level content navigation -->
+          <div id="panel-batches" class="hidden">
+
+            <!-- Sub-tabs (tiles) -->
+            <div id="tile-tabs" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar mb-4"></div>
+
+            <!-- Breadcrumb -->
+            <div id="content-breadcrumb" class="hidden items-center gap-2 text-[10px] font-bold text-gray-400 mb-4 bg-gray-50 p-2.5 rounded-lg border border-gray-100 overflow-x-auto no-scrollbar"></div>
+
+            <!-- Content area -->
+            <div id="content-area" class="min-h-[300px]"></div>
+
+          </div>
+
+        </div>
+
+        <!-- ── Right Column — Course Card ───────────────────────────────────── -->
+        <div class="lg:w-72 xl:w-80 flex-shrink-0">
+          <div class="sticky top-24 border border-gray-200 rounded-xl overflow-hidden shadow-md">
+
+            <!-- Card image -->
+            <div class="relative">
+              <img
+                id="card-image"
+                src=""
+                alt="Course"
+                class="w-full object-cover"
+                style="height:180px"
+                onerror="this.src='https://d1xo3otg0k74xn.cloudfront.net/566/admin_v1/bundle_management/course/45193644743_PRO%202027%20BANNER%20.jpg'"
+              />
+              <!-- New badge -->
+              <span class="absolute top-2 left-2 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">New</span>
+              <!-- Price badge -->
+              <div class="absolute top-2 right-2 bg-black/60 px-2 py-0.5 rounded">
+                <span id="card-price-badge" class="text-[#c9f04f] text-xs font-bold"></span>
+              </div>
+            </div>
+
+            <!-- Card body -->
+            <div class="p-4 bg-white">
+              <h3 id="card-title" class="font-bold text-gray-900 text-sm mb-3 leading-snug"></h3>
+              <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/>
+                </svg>
+                <span>Validity: <strong id="card-validity" class="text-gray-700"></strong></span>
+              </div>
+              <div id="buy-btn-card">
+                <button onclick="handleBuy()" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-2.5 rounded-lg text-sm transition-colors">
+                  Buy Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div id="error-box" class="hidden text-center py-16 text-red-500 font-medium"></div>
+
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────────────── -->
+  <footer class="bg-[#1e2330] text-white mt-12">
+    <div class="container mx-auto px-6 py-10 max-w-7xl">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+
+        <!-- Brand -->
+        <div class="col-span-2 md:col-span-1">
+          <div class="flex items-center gap-2 mb-2">
+            <img
+              src="https://d2alr3mt323vql.cloudfront.net/0/admin_v1/application_management/clientlogo/3390552566_Group%2018440%20%284%29.png"
+              alt="Master Sahab"
+              class="h-10 w-10 rounded-full object-cover bg-white p-0.5"
+            />
+            <span class="font-bold text-sm">Master Sahab</span>
+          </div>
+          <p class="text-xs text-gray-400 mt-1">Master Sahab</p>
+          <p class="text-xs text-gray-400">Address:</p>
+          <p class="text-xs text-gray-400">Bihar</p>
+        </div>
+
+        <!-- Company -->
+        <div>
+          <h4 class="font-bold text-sm mb-3">Company</h4>
+          <ul class="space-y-2 text-xs text-gray-400">
+            <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Products -->
+        <div>
+          <h4 class="font-bold text-sm mb-3">Products</h4>
+          <ul class="space-y-2 text-xs text-gray-400">
+            <li><a href="course-detail.html?id=45307" class="hover:text-white transition-colors">SHEMUSHI BATCH</a></li>
+            <li><a href="course-detail.html?id=45306" class="hover:text-white transition-colors">MANIKA</a></li>
+          </ul>
+        </div>
+
+        <!-- Help & Support -->
+        <div>
+          <h4 class="font-bold text-sm mb-3">Help &amp; Support</h4>
+          <ul class="space-y-2 text-xs text-gray-400">
+            <li><a href="#" class="hover:text-white transition-colors">FAQ's</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Terms &amp; Conditions</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Refund/Cancellation Policy</a></li>
+          </ul>
+        </div>
+
+        <!-- Download App -->
+        <div>
+          <h4 class="font-bold text-sm mb-3">Download App</h4>
+          <div class="space-y-2">
+            <a href="#" class="flex items-center gap-2 bg-[#2a3040] hover:bg-[#333d52] transition-colors rounded-lg px-3 py-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-400" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76a2 2 0 0 0 2.73.74l9.34-5.4-2.59-2.6-9.48 7.26zM20.77 9.29l-2.13-1.23-2.91 2.91 2.91 2.91 2.16-1.25a2 2 0 0 0 0-3.34zM1 1.56A2 2 0 0 0 .5 3v18a2 2 0 0 0 .5 1.44l.08.07 10.08-10.08v-.24L1.08 1.49 1 1.56zm11.59 11.9-3.36-3.36 3.36-3.36 3.77 2.18-3.77 4.54z"/></svg>
+              <div>
+                <div class="text-[9px] text-gray-400 uppercase tracking-wide">Get it on</div>
+                <div class="text-xs font-semibold">Google Play</div>
+              </div>
+            </a>
+            <a href="#" class="flex items-center gap-2 bg-[#2a3040] hover:bg-[#333d52] transition-colors rounded-lg px-3 py-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
+              <div>
+                <div class="text-[9px] text-gray-400 uppercase tracking-wide">Download on</div>
+                <div class="text-xs font-semibold">Windows</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer bottom -->
+    <div class="border-t border-[#2e3547]">
+      <div class="container mx-auto px-6 py-4 max-w-7xl flex items-center justify-between">
+        <p class="text-xs text-gray-500">Master Sahab All Right Reserved, 2026</p>
+        <div class="flex items-center gap-4">
+          <!-- Instagram -->
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <!-- Telegram -->
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.17 13.667l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.978.892z"/></svg>
+          </a>
+          <!-- YouTube -->
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const PARENT_ID = "44743";
+    const params = new URLSearchParams(window.location.search);
+    const COURSE_ID = params.get("id") || "45307";
+
+    // ── Description data ────────────────────────────────────────────────────────
+    const descEn = [
+      "We will cover Sanskrit for Class 10th students.",
+      "This is a Live Interactive Course, and the complete syllabus will be covered by October. However, you will have access to the course until your board exams.",
+      "Live Doubt-Solving Sessions will be conducted as part of this course.",
+      "Class Recordings will be available immediately after the live sessions on the Master Sahab app.",
+      "Class Notes will be provided in PDF format for each session on the Master Sahab app.",
+      "Frequent Tests will be conducted to assess your progress after completing specific portions of the syllabus.",
+      "The entire course will remain accessible to you until your board exams in 2027.",
+      "Classes start in MAY 2026.",
+      "This course price is for complete batch (not monthly)",
+      "This batch is non-refundable and non-transferable"
+    ];
+    const descHi = [
+      "हम कक्षा 10वीं के छात्रों के लिए संस्कृत पढ़ाएंगे।",
+      "यह एक लाइव इंटरएक्टिव कोर्स है, और पूरा सिलेबस अक्टूबर तक कवर किया जाएगा।",
+      "इस कोर्स के हिस्से के रूप में लाइव डाउट-सॉल्विंग सेशन आयोजित किए जाएंगे।",
+      "क्लास रिकॉर्डिंग लाइव सेशन के तुरंत बाद Master Sahab ऐप पर उपलब्ध होगी।",
+      "प्रत्येक सेशन के लिए PDF फॉर्मेट में क्लास नोट्स Master Sahab ऐप पर दिए जाएंगे।",
+      "सिलेबस के विशिष्ट भागों को पूरा करने के बाद बार-बार टेस्ट आयोजित किए जाएंगे।",
+      "2027 में आपकी बोर्ड परीक्षा तक पूरा कोर्स सुलभ रहेगा।",
+      "कक्षाएं मई 2026 से शुरू होती हैं।",
+      "यह कोर्स की कीमत पूरे बैच के लिए है (मासिक नहीं)",
+      "यह बैच नॉन-रिफंडेबल और नॉन-ट्रांसफरेबल है"
+    ];
+    let isHindi = false;
+
+    function toggleLang() {
+      isHindi = !isHindi;
+      document.getElementById("lang-btn").textContent = isHindi ? "change to English" : "change to Hindi";
+      renderDesc(isHindi ? descHi : descEn);
+    }
+    function renderDesc(items) {
+      document.getElementById("desc-list").innerHTML = items.map(t => `<li>${t}</li>`).join("");
+    }
+
+    // ── Main tabs ───────────────────────────────────────────────────────────────
+    function switchTab(tab) {
+      ["description","batches"].forEach(t => {
+        document.getElementById(`tab-${t}`).className =
+          `pb-3 text-sm uppercase tracking-wide ${t===tab?"tab-active":"tab-inactive"}`;
+        document.getElementById(`panel-${t}`).classList.toggle("hidden", t!==tab);
+      });
+      // Load content tiles when Batches tab opened first time
+      if (tab === "batches" && tilesData.length > 0 && !activeTileId) {
+        activeTileId = tilesData[0].id;
+        renderTileTabs();
+        renderContent();
+      }
+    }
+
+    function handleBuy() {
+      // Save enrollment to localStorage
+      const enrolled = JSON.parse(localStorage.getItem("enrolledCourses") || "{}");
+      enrolled[COURSE_ID] = { enrolledAt: Date.now(), courseId: COURSE_ID };
+      localStorage.setItem("enrolledCourses", JSON.stringify(enrolled));
+      updateBuyButtons();
+    }
+
+    function isEnrolled() {
+      const enrolled = JSON.parse(localStorage.getItem("enrolledCourses") || "{}");
+      return !!enrolled[COURSE_ID];
+    }
+
+    function updateBuyButtons() {
+      const enrolled = isEnrolled();
+      const btnHtml = enrolled
+        ? `<span class="flex items-center justify-center gap-2 text-green-600 font-bold text-sm py-2.5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            Enrolled
+           </span>`
+        : `<button onclick="handleBuy()" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-2.5 rounded-lg text-sm transition-colors">Buy Now</button>`;
+
+      // Right card button
+      document.getElementById("buy-btn-card").innerHTML = btnHtml;
+
+      // Mobile button
+      const mobileBtn = document.getElementById("buy-btn-mobile");
+      if (enrolled) {
+        mobileBtn.outerHTML = `<span id="buy-btn-mobile" class="flex items-center gap-1.5 text-green-600 font-bold text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          Enrolled
+        </span>`;
+      } else {
+        mobileBtn.textContent = "Buy Now";
+      }
+    }
+
+    // ── 3-level content state ───────────────────────────────────────────────────
+    let tilesData    = [];
+    let activeTileId = null;
+    let activeSubject = null;
+    let activeTopic   = null;
+    let masterList    = [];
+    let loadingMaster = false;
+
+    // ── Proxy API helper ────────────────────────────────────────────────────────
+    async function apiPost(endpoint, body) {
+      const res = await fetch(`https://mastersahab.therankforge.site/proxy/api${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      return res.json();
+    }
+
+    // ── Tile tabs ───────────────────────────────────────────────────────────────
+    function renderTileTabs() {
+      document.getElementById("tile-tabs").innerHTML = tilesData.map(tile => `
+        <button onclick="selectTile('${tile.id}')"
+          class="px-5 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap
+            ${activeTileId===tile.id ? 'tile-active' : 'tile-inactive'}">
+          ${tile.tile_name}
+        </button>`).join("");
+    }
+
+    function selectTile(id) {
+      activeTileId  = id;
+      activeSubject = null;
+      activeTopic   = null;
+      masterList    = [];
+      renderTileTabs();
+      renderBreadcrumb();
+      renderContent();
+    }
+
+    // ── Breadcrumb ──────────────────────────────────────────────────────────────
+    function renderBreadcrumb() {
+      const bc   = document.getElementById("content-breadcrumb");
+      const tile = tilesData.find(t => t.id === activeTileId);
+      if (!activeSubject && !activeTopic) { bc.classList.add("hidden"); bc.classList.remove("flex"); return; }
+      bc.classList.remove("hidden"); bc.classList.add("flex");
+      const chevron = `<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>`;
+      let html = `<button onclick="goToSubjects()" class="hover:text-blue-600 uppercase tracking-wider whitespace-nowrap">${tile?.tile_name||""}</button>
+        ${chevron}
+        <button onclick="goToTopics()" class="uppercase tracking-wider whitespace-nowrap ${activeTopic?"hover:text-blue-600":"text-blue-600"}">${activeSubject?.title||""}</button>`;
+      if (activeTopic) html += `${chevron}<span class="text-blue-600 uppercase tracking-wider whitespace-nowrap">${activeTopic.title}</span>`;
+      bc.innerHTML = html;
+    }
+
+    function goToSubjects() { activeSubject=null; activeTopic=null; masterList=[]; renderBreadcrumb(); renderContent(); }
+    function goToTopics()   { activeTopic=null;   masterList=[];    renderBreadcrumb(); renderContent(); }
+
+    // ── Render content area ─────────────────────────────────────────────────────
+    function renderContent() {
+      const area = document.getElementById("content-area");
+      const tile = tilesData.find(t => t.id === activeTileId);
+      if (!tile) { area.innerHTML = `<p class="text-center py-10 text-gray-400">No content available.</p>`; return; }
+
+      // Level 3 — master content list
+      if (activeTopic) {
+        if (loadingMaster) { area.innerHTML = skeletonList(); return; }
+        if (!masterList.length) { area.innerHTML = `<p class="text-center py-10 text-gray-400">No items found.</p>`; return; }
+        area.innerHTML = `<div class="space-y-3">${masterList.map((item,i) => contentCard(item,i)).join("")}</div>`;
+        return;
+      }
+
+      // Level 2 — topics
+      if (activeSubject) {
+        const list = activeSubject.list || [];
+        area.innerHTML = `<div class="space-y-3">${list.map((item,i) => listCard(item,i,"topic","Topics")).join("")}</div>`;
+        return;
+      }
+
+      // Level 1 — subjects
+      const list = tile.meta?.list || [];
+      area.innerHTML = `<div class="space-y-3">${list.map((item,i) => listCard(item,i,"subject","Chapters")).join("")}</div>`;
+    }
+
+    // ── Card templates ──────────────────────────────────────────────────────────
+    function listCard(item, idx, type, label) {
+      const fn = type==="subject" ? `selectSubject(${idx})` : `selectTopic(${idx})`;
+      return `
+        <div onclick="${fn}" class="bg-white border border-gray-100 rounded-xl overflow-hidden hover:border-blue-200 transition-all cursor-pointer group shadow-sm p-3">
+          <div class="flex items-center gap-4">
+            <div class="w-24 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-gray-50 border border-gray-100">
+              <img src="${item.image_icon||""}" alt="${item.title}"
+                class="w-full h-full object-cover"
+                onerror="this.src='https://d2alr3mt323vql.cloudfront.net/0/admin_v1/application_management/clientlogo/3390552566_Group%2018440%20%284%29.png'"/>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-bold text-gray-800 text-[13px] uppercase leading-tight">${item.title}</h3>
+              <p class="text-[11px] text-gray-400 font-medium mt-1">${item.count||0} ${label}</p>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function contentCard(item, idx) {
+      const isPDF     = item.file_type === "1";
+      const isLive    = item.is_live   === "1";
+      const isUpcoming= item.video_type=== "8";
+      const dateStr   = formatDate(item.start_date || item.created);
+      return `
+        <div class="bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+          <div class="flex items-stretch">
+            <div class="w-20 flex-shrink-0 bg-gray-50">
+              <img src="https://d2alr3mt323vql.cloudfront.net/0/admin_v1/application_management/clientlogo/3390552566_Group%2018440%20%284%29.png"
+                class="w-full h-full object-cover"/>
+            </div>
+            <div class="flex-1 min-w-0 p-3 flex flex-col justify-between">
+              <div>
+                ${(isLive||isUpcoming)?`<div class="flex gap-1 mb-1">
+                  ${isLive?`<span class="inline-flex items-center rounded-full bg-red-600 text-white text-[9px] font-bold px-2 py-0.5 animate-pulse">LIVE</span>`:""}
+                  ${isUpcoming?`<span class="inline-flex items-center rounded-full bg-blue-50 text-blue-600 border border-blue-100 text-[9px] font-bold px-2 py-0.5">Upcoming</span>`:""}
+                </div>`:""}
+                <h3 class="font-bold text-gray-900 text-[13px] leading-snug uppercase">${item.title}</h3>
+                ${!isPDF&&dateStr?`<p class="text-[11px] text-gray-500 mt-1">${dateStr}</p>`:""}
+              </div>
+              <div class="mt-2">
+                <button onclick="handleContent(${idx})"
+                  class="h-7 px-3 rounded-lg bg-gray-900 hover:bg-black text-white font-bold text-[10px] uppercase tracking-wide transition-colors">
+                  ${isPDF?"View":"Watch Now"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function skeletonList() {
+      return `<div class="space-y-3">${[...Array(5)].map(()=>`
+        <div class="bg-white border border-gray-100 rounded-xl p-3">
+          <div class="flex items-center gap-4">
+            <div class="sk w-24 h-14 rounded-lg"></div>
+            <div class="flex-1 space-y-2">
+              <div class="sk h-4 w-1/2 rounded"></div>
+              <div class="sk h-3 w-1/4 rounded"></div>
+            </div>
+            <div class="sk h-8 w-8 rounded-full"></div>
+          </div>
+        </div>`).join("")}</div>`;
+    }
+
+    // ── Navigation ──────────────────────────────────────────────────────────────
+    function selectSubject(idx) {
+      const tile = tilesData.find(t => t.id === activeTileId);
+      if (!tile) return;
+      activeSubject = tile.meta.list[idx];
+      activeTopic   = null;
+      masterList    = [];
+      renderBreadcrumb();
+      renderContent();
+    }
+
+    function selectTopic(idx) {
+      if (!activeSubject) return;
+      activeTopic = activeSubject.list[idx];
+      renderBreadcrumb();
+      fetchMasterData();
+    }
+
+    async function fetchMasterData() {
+      const tile = tilesData.find(t => t.id === activeTileId);
+      if (!tile || !activeSubject || !activeTopic) return;
+      loadingMaster = true; masterList = []; renderContent();
+      try {
+        const data = await apiPost("?endpoint=get_master_data", {
+          course_id:  COURSE_ID,
+          tile_id:    tile.id,
+          type:       tile.type,
+          revert_api: tile.revert_api,
+          topic_id:   activeTopic.id,
+          subject_id: activeSubject.id,
+          layer: 3, page: 1,
+          parent_id: PARENT_ID
+        });
+        if (data.status && data.data?.list) masterList = data.data.list;
+      } catch(e) { console.error(e); }
+      finally { loadingMaster = false; renderContent(); }
+    }
+
+    // ── Content actions ─────────────────────────────────────────────────────────
+    function handleContent(idx) {
+      const item = masterList[idx];
+      if (!item) return;
+      if (item.file_type === "1") {
+        if (item.file_url) openPdf(item.file_url, item.title);
+        else alert("File not available.");
+      } else if (item.file_type === "3") {
+        const url = item.file_url || item.vdc_id;
+        if (url) window.location.href = `player.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(item.title||"Video")}`;
+      }
+    }
+
+    // ── PDF Modal ───────────────────────────────────────────────────────────────
+    function openPdf(url, name) {
+      document.getElementById("pdf-title").textContent = name || "Document";
+      document.getElementById("pdf-iframe").src =
+        `https://pdfweb.classx.co.in/pdfjs/web/viewer-new.html?file=${encodeURIComponent(url)}&save_flag=1`;
+      document.getElementById("pdf-modal").classList.add("open");
+    }
+    function closePdf() {
+      document.getElementById("pdf-modal").classList.remove("open");
+      document.getElementById("pdf-iframe").src = "";
+    }
+
+    // ── Helpers ─────────────────────────────────────────────────────────────────
+    function formatDate(ts) {
+      if (!ts || ts==="0") return "";
+      const d = new Date(parseInt(ts,10)*1000);
+      const mo = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      return `${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()} | ${d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",hour12:true})}`;
+    }
+
+    // ── Init ────────────────────────────────────────────────────────────────────
+    async function init() {
+      try {
+        const data = await apiPost("?endpoint=course-details", {
+          course_id: COURSE_ID, parent_id: PARENT_ID
+        });
+        if (!data.status || !data.data) throw new Error("Course not found");
+
+        const detail = data.data.course_detail;
+        tilesData    = data.data.tiles || [];
+
+        const title    = detail.title    || "Course";
+        const validity = detail.validity || "—";
+        const sp       = detail.course_sp ? `₹${detail.course_sp}` : (detail.mrp ? `₹${detail.mrp}` : "");
+        const image    = detail.desc_header_image || "";
+
+        document.title = `${title} - Master Sahab`;
+        document.getElementById("course-title").textContent     = title;
+        document.getElementById("course-validity").textContent  = validity;
+        document.getElementById("course-price-m").textContent   = sp;
+        document.getElementById("card-title").textContent       = title;
+        document.getElementById("card-validity").textContent    = validity;
+        document.getElementById("card-price-badge").textContent = sp;
+        if (image) document.getElementById("card-image").src    = image;
+
+        renderDesc(descEn);
+
+        document.getElementById("skeleton").classList.add("hidden");
+        document.getElementById("page-content").classList.remove("hidden");
+
+        // Check enrollment state
+        updateBuyButtons();
+
+      } catch(err) {
+        document.getElementById("skeleton").classList.add("hidden");
+        document.getElementById("error-box").classList.remove("hidden");
+        document.getElementById("error-box").textContent = "Error: " + err.message;
+      }
+    }
+
+    init();
+  </script>
+
+  <!-- PDF Modal -->
+  <div id="pdf-modal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;"
+       class="flex-col">
+    <div style="background:#fff;border-radius:16px;width:95vw;height:95vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5)">
+      <div style="padding:14px 16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;">
+        <span id="pdf-title" style="font-weight:700;font-size:15px;color:#111;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:16px;"></span>
+        <button onclick="closePdf()" style="background:none;border:none;cursor:pointer;padding:6px;border-radius:50%;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <iframe id="pdf-iframe" src="" class="flex-1 border-0 w-full" style="flex:1;border:none;width:100%;"></iframe>
+    </div>
+  </div>
+
+  <style>
+    #pdf-modal.open { display: flex !important; }
+  </style>
+
+</body>
+</html>
