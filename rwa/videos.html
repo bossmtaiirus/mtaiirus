@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f9fafb; min-height: 100vh; }
+        header { background-color: #000; color: white; height: 56px; display: flex; align-items: center; padding: 0 16px; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .header-content { display: flex; align-items: center; gap: 16px; width: 100%; max-width: 1400px; margin: 0 auto; }
+        .back-button { background: rgba(255,255,255,0.1); border: none; color: white; cursor: pointer; padding: 10px; display: flex; align-items: center; justify-content: center; border-radius: 8px; width: 40px; height: 40px; }
+        .back-button:hover { background: rgba(255,255,255,0.2); }
+        .page-title { font-size: 20px; font-weight: 600; }
+        main { padding: 24px 16px; max-width: 1400px; margin: 0 auto; }
+        .tabs { display: flex; gap: 4px; margin-bottom: 20px; background: #e5e7eb; padding: 4px; border-radius: 8px; width: fit-content; }
+        .tab { padding: 8px 20px; background: transparent; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.2s; color: #374151; }
+        .tab.active { background: #5a4bda; color: white; }
+        .content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .card-image { width: 100%; height: 180px; object-fit: cover; background: #f3f4f6; }
+        .card-body { padding: 16px; }
+        .card-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #111827; line-height: 1.3; }
+        .skeleton { background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; border-radius: 4px; }
+        @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .skeleton-image { width: 100%; height: 180px; border-radius: 12px 12px 0 0; }
+        .skeleton-text { height: 18px; width: 100%; margin-bottom: 10px; border-radius: 4px; }
+        .skeleton-text.short { width: 70%; }
+        .error-container { text-align: center; padding: 40px 20px; }
+        .error-icon { width: 48px; height: 48px; color: #ef4444; margin-bottom: 16px; }
+        .error-title { font-size: 20px; font-weight: bold; margin-bottom: 8px; color: #111827; }
+        .error-message { color: #ef4444; }
+        .empty-container { text-align: center; padding: 40px 20px; }
+        .empty-title { font-size: 20px; font-weight: bold; margin-bottom: 8px; color: #111827; }
+        .empty-message { color: #6b7280; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <button class="back-button" onclick="goBack()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+            </button>
+            <h1 class="page-title" id="pageTitle">Content</h1>
+        </div>
+    </header>
+
+    <main>
+        <div class="tabs">
+            <button class="tab active" id="videosTab" onclick="showTab('videos')">Videos</button>
+            <button class="tab" id="notesTab" onclick="showTab('notes')">Notes</button>
+        </div>
+        <div class="content-grid" id="contentGrid"></div>
+    </main>
+
+    <script>
+        const CONFIG_URL = 'https://rwa.therankforge.site/api/proxy?url=https://api-aditya-beige.vercel.app/api/rwa/api-url';
+        let API_URL;
+        
+        let videos = [];
+        let notes = [];
+        let isLoading = true;
+        let error = null;
+        let courseId = null;
+        let subjectId = null;
+        let topicId = null;
+        let activeTab = 'videos';
+
+        function getParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            courseId = urlParams.get('courseId');
+            subjectId = urlParams.get('subjectId');
+            topicId = urlParams.get('topicId');
+            const topicName = urlParams.get('topicName') || 'Content';
+            document.getElementById('pageTitle').textContent = topicName;
+            return { courseId, subjectId, topicId };
+        }
+
+        async function initAPI() {
+            try {
+                const response = await fetch(CONFIG_URL);
+                if (response.ok) {
+                    const data = await response.json();
+                    API_URL = data.apiUrl || data.url || data || 'https://apiserver.deltastudy.site';
+                }
+            } catch (e) {}
+        }
+
+        async function fetchContent() {
+            const { courseId, subjectId, topicId } = getParams();
+            
+            if (!courseId || !subjectId || !topicId) {
+                error = 'Missing parameters.';
+                isLoading = false;
+                renderContent();
+                return;
+            }
+
+            try {
+                await initAPI();
+                if (!API_URL) throw new Error('API URL not configured');
+                const response = await fetch(`https://rwa.therankforge.site/api/proxy?url=${encodeURIComponent(`${API_URL}/api/rwa/contents/${courseId}/${subjectId}/${topicId}`)}`);
+                if (!response.ok) throw new Error('Failed to fetch content');
+                const data = await response.json();
+                if (data.status !== 200) throw new Error(data.message || 'Failed to fetch content');
+                
+                const allItems = data.data || [];
+                videos = allItems.filter(item => item.material_type === 'VIDEO');
+                notes = allItems.filter(item => item.material_type === 'PDF' || (item.material_type === 'VIDEO' && item.pdf_url));
+                
+                if (videos.length === 0 && notes.length > 0) {
+                    activeTab = 'notes';
+                    document.getElementById('videosTab').classList.remove('active');
+                    document.getElementById('notesTab').classList.add('active');
+                }
+            } catch (e) {
+                error = e.message;
+            } finally {
+                isLoading = false;
+                renderContent();
+            }
+        }
+
+        function goBack() { 
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseId = urlParams.get('courseId');
+            const subjectId = urlParams.get('subjectId');
+            window.location.href = `../rwa/topics.html?courseId=${courseId}&subjectId=${subjectId}`;
+        }
+
+        function showTab(tab) {
+            activeTab = tab;
+            document.getElementById('videosTab').classList.toggle('active', tab === 'videos');
+            document.getElementById('notesTab').classList.toggle('active', tab === 'notes');
+            renderContent();
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            return dateStr.split(' ')[0].split('-').reverse().join('/');
+        }
+
+        function playVideo(videoId) {
+            window.location.href = `../rwa/player.html?videoid=${videoId}&courseid=${courseId}`;
+        }
+
+        function openPdf(pdfUrl, title) {
+            window.open(`https://pdfweb.classx.co.in/pdfjs/web/viewer-new.html?file=${encodeURIComponent(pdfUrl)}`, '_blank');
+        }
+
+function createVideoCard(video) {
+             return `
+                 <div class="card">
+                     <img src="${video.thumbnail}" alt="${video.title}" class="card-image" onerror="this.src='https://placehold.co/400x250/5a4bda/white?text=Video'">
+                     <div class="card-body" style="display: flex; flex-direction: column;">
+                         <p class="text-xs text-gray-500 mb-2">${formatDate(video.date_and_time)}</p>
+                         <h3 class="card-title line-clamp-2" style="flex-grow: 1; margin-bottom: 12px; min-height: 3rem;">${video.title}</h3>
+                         <button class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700" style="background-color: #5a4bda; margin-top: auto;" onclick="playVideo('${video.id}')">Play Now</button>
+                     </div>
+                 </div>`;
+         }
+
+        function createNoteCard(note) {
+            return `
+                <div class="card p-5 flex items-center justify-between" onclick="openPdf('${note.pdf_url}', '${note.title}')">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-red-100 text-red-600 p-3 rounded-xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M4 6V4a2 2 0 0 1 2-2h8.5L20 7.5V16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-base line-clamp-1 mb-1">${note.title}</h3>
+                            <p class="text-sm text-gray-500">${formatDate(note.date_and_time)}</p>
+                        </div>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-400"><path d="m9 18 6-6-6-6"/></svg>
+                </div>`;
+        }
+
+        function createSkeletonCard() {
+            return `<div class="card"><div class="skeleton skeleton-image"></div><div class="card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div></div>`;
+        }
+
+        function renderContent() {
+            const grid = document.getElementById('contentGrid');
+            
+            if (isLoading) {
+                grid.innerHTML = Array(6).fill(0).map(() => createSkeletonCard()).join('');
+                return;
+            }
+            
+            if (error) {
+                grid.innerHTML = `<div class="error-container"><svg class="error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><h2 class="error-title">Error Loading Content</h2><p class="error-message">${error}</p></div>`;
+                return;
+            }
+
+            if (activeTab === 'videos') {
+                if (videos.length === 0) {
+                    grid.innerHTML = `<div class="empty-container"><h2 class="empty-title">No Videos Available</h2><p class="empty-message">No videos found for this topic.</p></div>`;
+                } else {
+                    grid.innerHTML = videos.map(createVideoCard).join('');
+                }
+            } else {
+                if (notes.length === 0) {
+                    grid.innerHTML = `<div class="empty-container"><h2 class="empty-title">No Notes Available</h2><p class="empty-message">No notes found for this topic.</p></div>`;
+                } else {
+                    grid.innerHTML = notes.map(createNoteCard).join('');
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchContent);
+    </script>
+</body>
+</html>
