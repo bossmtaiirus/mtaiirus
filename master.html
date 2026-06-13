@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Master Sahab - Available Batches</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card:hover .card-img {
+      transform: scale(1.05);
+    }
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 1.5s infinite;
+    }
+    @keyframes skeleton-loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-white pb-20">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+    <div class="container mx-auto px-4 h-16 flex items-center">
+      <a href="/">
+        <img
+          src="https://d2alr3mt323vql.cloudfront.net/0/admin_v1/application_management/clientlogo/3390552566_Group%2018440%20%284%29.png"
+          alt="Master Sahab"
+          class="h-10 w-auto cursor-pointer"
+        />
+      </a>
+      <!-- Search Bar -->
+      <div class="ml-auto">
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search batches..." 
+          class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent w-64"
+        />
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+
+    <!-- Section Heading -->
+    <div class="mb-10">
+      <h2 class="text-2xl font-bold text-gray-900">Available Batches</h2>
+      <p class="text-gray-500 text-sm mt-1">Select a course to begin your learning journey.</p>
+    </div>
+
+    <!-- Cards Grid -->
+    <div id="batchesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Batches will be loaded here dynamically -->
+    </div>
+  </main>
+
+  <script>
+    // Batch data - Replace with your actual data or API call
+    const batches = [
+      {
+        id: "45307",
+        name: "JUNNON PRO SHEMUSHI BATCH - 2027",
+        thumbnail: "https://d1xo3otg0k74xn.cloudfront.net/566/admin_v1/bundle_management/course/45193644743_PRO%202027%20BANNER%20.jpg",
+        price: "₹599",
+        validity: "365 Days",
+        isTrending: true,
+        isPurchased: true
+      },
+      {
+        id: "45306",
+        name: "JUNNON PRO MANIKA BATCH - 2027",
+        thumbnail: "https://d1xo3otg0k74xn.cloudfront.net/566/admin_v1/bundle_management/course/45193644743_PRO%202027%20BANNER%20.jpg",
+        price: "₹599",
+        validity: "365 Days",
+        isTrending: false,
+        isPurchased: true
+      },
+      {
+        id: "45308",
+        name: "NEET UG CRASH COURSE - 2027",
+        thumbnail: "https://d1xo3otg0k74xn.cloudfront.net/566/admin_v1/bundle_management/course/45193644743_PRO%202027%20BANNER%20.jpg",
+        price: "₹799",
+        validity: "180 Days",
+        isTrending: true,
+        isPurchased: false
+      },
+      {
+        id: "45309",
+        name: "JEE MAINS FOUNDATION BATCH - 2027",
+        thumbnail: "https://d1xo3otg0k74xn.cloudfront.net/566/admin_v1/bundle_management/course/45193644743_PRO%202027%20BANNER%20.jpg",
+        price: "₹699",
+        validity: "365 Days",
+        isTrending: false,
+        isPurchased: false
+      },
+      {
+        id: "45310",
+        name: "CLASS 12 BOARDS PREPARATION - PCM",
+        thumbnail: "https://d1xo3otg0k74xn.cloudfront.net/566/admin_v1/bundle_management/course/45193644743_PRO%202027%20BANNER%20.jpg",
+        price: "₹499",
+        validity: "90 Days",
+        isTrending: false,
+        isPurchased: true
+      },
+      {
+        id: "45311",
+        name: "CLASS 12 BOARDS PREPARATION - PCB",
+        thumbnail: "https://d1xo3otg0k74xn.cloudfront.net/566/admin_v1/bundle_management/course/45193644743_PRO%202027%20BANNER%20.jpg",
+        price: "₹499",
+        validity: "90 Days",
+        isTrending: true,
+        isPurchased: false
+      }
+    ];
+
+    let isLoading = false;
+
+    // Create batch card HTML
+    function createBatchCard(batch) {
+      return `
+        <div class="card group border border-gray-200 rounded-xl flex flex-col bg-white shadow-sm hover:shadow-md transition-shadow">
+          <!-- Image -->
+          <div class="relative w-full rounded-t-xl overflow-hidden" style="height:180px">
+            <img
+              src="${batch.thumbnail}"
+              alt="${batch.name}"
+              class="card-img w-full h-full object-cover transition-transform duration-300"
+              onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22180%22%3E%3Crect width=%22400%22 height=%22180%22 fill=%22%23454545%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22white%22 font-size=%2216%22%3E${encodeURIComponent(batch.name.substring(0, 20))}%3C/text%3E%3C/svg%3E';"
+              loading="lazy"
+            />
+            ${batch.isTrending ? `
+            <!-- Trending Badge -->
+            <span class="absolute top-2.5 left-2.5 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 uppercase tracking-wide rounded-full">
+              Trending
+            </span>
+            ` : ''}
+            ${batch.price ? `
+            <!-- Price Badge -->
+            <div class="absolute top-2.5 right-2.5 bg-black/55 px-2 py-0.5 rounded">
+              <span class="text-[#c9f04f] text-xs font-bold">${batch.price}</span>
+            </div>
+            ` : ''}
+          </div>
+
+          <!-- Card Body -->
+          <div class="p-3.5 flex-grow flex flex-col gap-2.5">
+            <h3 class="text-[13.5px] font-bold text-gray-900 leading-snug line-clamp-2">
+              ${batch.name}
+            </h3>
+
+            <hr class="bg-gray-100 border-gray-100" />
+
+            <!-- Validity -->
+            ${batch.validity ? `
+            <div class="flex items-center text-xs text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 2v4"/><path d="M16 2v4"/>
+                <rect width="18" height="18" x="3" y="4" rx="2"/>
+                <path d="M3 10h18"/>
+              </svg>
+              <span>Validity</span>
+              <span class="ml-auto font-semibold text-gray-700">${batch.validity}</span>
+            </div>
+            <hr class="bg-gray-100 border-gray-100" />
+            ` : ''}
+
+            ${batch.isPurchased ? `
+            <span class="text-[13px] font-bold text-gray-700">Purchased</span>
+            ` : `
+            <span class="text-[13px] font-bold text-green-600">Available</span>
+            `}
+
+            <!-- Button -->
+            <a href="course-detail.html?id=${batch.id}">
+              <button class="w-full h-10 rounded-lg bg-[#454545] hover:bg-[#333333] text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 7v14"/>
+                  <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+                </svg>
+                View Content
+              </button>
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    // Create skeleton card for loading state
+    function createSkeletonCard() {
+      return `
+        <div class="card group border border-gray-200 rounded-xl flex flex-col bg-white shadow-sm">
+          <div class="w-full rounded-t-xl skeleton" style="height:180px"></div>
+          <div class="p-3.5 flex-grow flex flex-col gap-2.5">
+            <div class="skeleton h-5 w-full rounded"></div>
+            <div class="skeleton h-4 w-3/4 rounded"></div>
+            <div class="skeleton h-10 w-full rounded-lg mt-2"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render batches to the grid
+    function renderBatches(searchQuery = '') {
+      const grid = document.getElementById('batchesGrid');
+      
+      if (!grid) {
+        console.error('batchesGrid element not found');
+        return;
+      }
+
+      if (isLoading) {
+        grid.innerHTML = Array(6).fill(null).map(() => createSkeletonCard()).join('');
+        return;
+      }
+
+      const query = searchQuery.toLowerCase().trim();
+      const filteredBatches = query 
+        ? batches.filter(b => b.name.toLowerCase().includes(query))
+        : batches;
+
+      console.log(`Rendering ${filteredBatches.length} batches`);
+      
+      if (filteredBatches.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <p class="text-gray-500 text-lg">No batches found matching "${searchQuery}"</p>
+          </div>
+        `;
+      } else {
+        grid.innerHTML = filteredBatches.map(batch => createBatchCard(batch)).join('');
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Page loaded, rendering batches...');
+      
+      // Render batches immediately
+      isLoading = false;
+      renderBatches();
+
+      // Set up search functionality
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          renderBatches(e.target.value);
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
