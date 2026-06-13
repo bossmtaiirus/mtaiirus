@@ -1,0 +1,593 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Site Under Maintenance | Coming Soon</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0b1120 0%, #19233c 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      padding: 1.5rem;
+    }
+
+    /* main card */
+    .maintenance-card {
+      max-width: 680px;
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(12px);
+      border-radius: 2.5rem;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 25px 45px -12px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08);
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    @media (min-width: 560px) {
+      .maintenance-card {
+        padding: 3rem 3rem;
+      }
+    }
+
+    /* icon row */
+    .icon-stack {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.8rem;
+      font-size: 3.2rem;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    }
+
+    .icon-stack span {
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .icon-stack span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .icon-stack span:nth-child(3) {
+      animation-delay: 0.5s;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* heading */
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(120deg, #ffffff, #b9d0f0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 0.8rem;
+    }
+
+    @media (min-width: 520px) {
+      h1 {
+        font-size: 2.8rem;
+      }
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(59,130,246,0.2);
+      backdrop-filter: blur(4px);
+      padding: 0.25rem 1rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #90caf9;
+      letter-spacing: 0.3px;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(59,130,246,0.3);
+    }
+
+    /* description */
+    .description {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #cfdfed;
+      margin: 1.2rem 0 1.5rem;
+      font-weight: 450;
+    }
+
+    /* progress area */
+    .progress-section {
+      background: rgba(0,0,0,0.35);
+      border-radius: 1.8rem;
+      padding: 1.2rem 1.5rem;
+      margin: 1.6rem 0 1.8rem;
+      text-align: left;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #b9d0f0;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar-bg {
+      background: #1e2a3e;
+      border-radius: 60px;
+      height: 8px;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .progress-fill {
+      width: 72%;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      height: 100%;
+      border-radius: 60px;
+      animation: shimmer 1.8s infinite ease-out;
+      position: relative;
+    }
+
+    @keyframes shimmer {
+      0% { opacity: 0.85; width: 72%; }
+      50% { opacity: 1; width: 78%; }
+      100% { opacity: 0.85; width: 72%; }
+    }
+
+    .eta {
+      font-size: 0.75rem;
+      margin-top: 0.6rem;
+      color: #8aaec0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* tasks grid */
+    .tasks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      margin: 1.2rem 0 0.8rem;
+    }
+
+    .task-chip {
+      background: rgba(255,255,255,0.08);
+      padding: 0.3rem 0.9rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #bbd7fb;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* notify card */
+    .notify-card {
+      background: rgba(0,0,0,0.35);
+      border-radius: 1.5rem;
+      padding: 1rem 1.2rem;
+      margin: 1.5rem 0 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+    }
+
+    .notify-text {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #e2f0ff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .email-input {
+      background: #0f172ad9;
+      border: 1px solid #2d3a5e;
+      padding: 0.55rem 1rem;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      color: white;
+      font-family: inherit;
+      outline: none;
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .email-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+    }
+
+    .notify-btn {
+      background: #3b82f6;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      border-radius: 60px;
+      color: white;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: 0.2s;
+      font-family: inherit;
+    }
+
+    .notify-btn:hover {
+      background: #2563eb;
+      transform: scale(0.97);
+    }
+
+    .toast-msg {
+      font-size: 0.7rem;
+      color: #86efac;
+      margin-top: 0.3rem;
+      min-height: 1.6rem;
+    }
+
+    /* links row */
+    .links-row {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    .fake-link {
+      font-size: 0.75rem;
+      color: #90caf9;
+      text-decoration: none;
+      background: rgba(255,255,255,0.05);
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .fake-link:hover {
+      background: rgba(59,130,246,0.2);
+      border-color: #3b82f6;
+    }
+
+    hr {
+      margin: 1rem 0 0.5rem;
+      border: none;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .footer {
+      font-size: 0.7rem;
+      color: #6b8dae;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      .maintenance-card {
+        padding: 1.8rem;
+      }
+      .notify-card {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .input-group {
+        flex-direction: column;
+      }
+      .notify-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="maintenance-card">
+  <div class="icon-stack">
+    <span>🔧</span>
+    <span>⚙️</span>
+    <span>🛠️</span>
+  </div>
+  <h1>Under Maintenance</h1>
+  <div class="badge">Scheduled upgrades · We'll be back soon</div>
+  
+  <div class="description">
+    Our website is currently undergoing planned maintenance. We're improving performance, 
+    adding new features, and making things smoother for you. The site will be online shortly.
+  </div>
+
+  <!-- progress simulation -->
+  <div class="progress-section">
+    <div class="progress-header">
+      <span>Maintenance progress</span>
+      <span id="progressValue">~72%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-fill" id="progressFill" style="width: 72%;"></div>
+    </div>
+    <div class="eta">
+      <span>⏱️</span> <span id="etaMessage">Estimated completion: ~2 hours left</span>
+    </div>
+  </div>
+
+  <!-- tasks chips -->
+  <div class="tasks">
+    <span class="task-chip">📀 Database optimization</span>
+    <span class="task-chip">🎨 UI refresh</span>
+    <span class="task-chip">🔒 Security patches</span>
+    <span class="task-chip">⚡ Cache & CDN</span>
+  </div>
+
+  <!-- notify subscription (mock) -->
+  <div class="notify-card">
+    <div class="notify-text">
+      📬 Get notified when we're live:
+    </div>
+    <div class="input-group">
+      <input type="email" class="email-input" id="notifyEmail" placeholder="your@email.com" autocomplete="email">
+      <button class="notify-btn" id="notifyBtn">Notify me</button>
+    </div>
+  </div>
+  <div id="toastMsg" class="toast-msg"></div>
+
+  <!-- info & alternative links (mock) -->
+  <div class="links-row">
+    <span class="fake-link" id="statusLink">📊 Status dashboard</span>
+    <span class="fake-link" id="twitterLink">🐦 X / Twitter</span>
+    <span class="fake-link" id="supportLink">✉️ Support</span>
+  </div>
+  <hr />
+  <div class="footer">
+    ⚙️ Maintenance window active • All services will resume automatically • Thank you for your patience
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ---- dynamic progress simulation ----
+    let currentPercent = 72;      // start at 72%
+    const maxPercent = 96;        // never show 100% until real maintenance ends
+    const minPercent = 62;
+    const progressFill = document.getElementById('progressFill');
+    const progressSpan = document.getElementById('progressValue');
+    const etaSpan = document.getElementById('etaMessage');
+    
+    function updateProgressUI(value) {
+      let clamped = Math.min(maxPercent, Math.max(minPercent, value));
+      if (progressFill) progressFill.style.width = clamped + '%';
+      if (progressSpan) progressSpan.innerText = `~${Math.floor(clamped)}%`;
+      
+      // update eta text based on %
+      if (clamped < 70) {
+        etaSpan.innerText = 'Estimated completion: ~3 hours left';
+      } else if (clamped >= 70 && clamped < 80) {
+        etaSpan.innerText = 'Estimated completion: ~2 hours left';
+      } else if (clamped >= 80 && clamped < 90) {
+        etaSpan.innerText = 'Estimated completion: ~1 hour left — finalizing';
+      } else if (clamped >= 90) {
+        etaSpan.innerText = 'Almost ready! Final verifications — back very soon';
+      } else {
+        etaSpan.innerText = 'Estimated completion: within 3 hours';
+      }
+    }
+    
+    // slow progress increase
+    let progressInterval = setInterval(() => {
+      if (currentPercent < maxPercent) {
+        let increment = Math.random() * 1.2 + 0.3;
+        let newVal = currentPercent + increment;
+        if (newVal >= maxPercent) {
+          newVal = maxPercent;
+        }
+        currentPercent = parseFloat(newVal.toFixed(1));
+        updateProgressUI(currentPercent);
+      } else {
+        // keep at max percent but still show "almost ready"
+        if (currentPercent > maxPercent) currentPercent = maxPercent;
+        updateProgressUI(currentPercent);
+      }
+    }, 7000);
+    
+    // extra rotating messages for live tip (subtle)
+    const rotatingMessages = [
+      "🔄 Deploying new microservices",
+      "⚙️ Optimizing database queries",
+      "🎨 Finalizing dashboard redesign",
+      "🔐 Applying latest TLS certificates",
+      "📦 Updating asset delivery network",
+      "🧪 Running end-to-end tests",
+      "✨ Polishing user experience"
+    ];
+    let msgIndex = 0;
+    const liveTipElement = document.createElement('div');
+    // find location inside progress-section or after progress? we add inside .progress-section but softer
+    const progressSection = document.querySelector('.progress-section');
+    if (progressSection && !document.querySelector('.live-tip-extra')) {
+      const tipSpan = document.createElement('div');
+      tipSpan.className = 'live-tip-extra';
+      tipSpan.style.fontSize = '0.7rem';
+      tipSpan.style.marginTop = '0.6rem';
+      tipSpan.style.color = '#8aaec0';
+      tipSpan.style.display = 'flex';
+      tipSpan.style.alignItems = 'center';
+      tipSpan.style.gap = '5px';
+      tipSpan.innerHTML = `🔧 <span id="rotatingTipMsg">${rotatingMessages[0]}</span>`;
+      progressSection.appendChild(tipSpan);
+      
+      setInterval(() => {
+        const tipMsgSpan = document.getElementById('rotatingTipMsg');
+        if (tipMsgSpan) {
+          msgIndex = (msgIndex + 1) % rotatingMessages.length;
+          tipMsgSpan.innerText = rotatingMessages[msgIndex];
+        }
+      }, 11000);
+    }
+    
+    // ---- NOTIFICATION MOCK (store in localStorage) ----
+    const notifyButton = document.getElementById('notifyBtn');
+    const emailField = document.getElementById('notifyEmail');
+    const toastDiv = document.getElementById('toastMsg');
+    let toastTimeout;
+    
+    function showToastMessage(text, isError = false) {
+      if (toastDiv) {
+        toastDiv.innerText = text;
+        toastDiv.style.color = isError ? '#f87171' : '#86efac';
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          if (toastDiv) toastDiv.innerText = '';
+        }, 4000);
+      }
+    }
+    
+    function handleNotify() {
+      let email = emailField.value.trim();
+      if (!email) {
+        showToastMessage('✏️ Please enter an email address.', true);
+        return;
+      }
+      const emailRegex = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
+      if (!emailRegex.test(email)) {
+        showToastMessage('⚠️ Enter a valid email (e.g., name@domain.com).', true);
+        return;
+      }
+      // mock subscription
+      let subscribers = JSON.parse(localStorage.getItem('maintenance_subscribers') || '[]');
+      if (!subscribers.includes(email)) {
+        subscribers.push(email);
+        localStorage.setItem('maintenance_subscribers', JSON.stringify(subscribers));
+        showToastMessage(`✅ Thanks! We'll notify "${email}" when the site is back online.`);
+        emailField.value = '';
+      } else {
+        showToastMessage(`📧 ${email} is already on the notification list. We'll keep you posted!`);
+        emailField.value = '';
+      }
+    }
+    
+    if (notifyButton) {
+      notifyButton.addEventListener('click', handleNotify);
+    }
+    if (emailField) {
+      emailField.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleNotify();
+      });
+    }
+    
+    // ---- mock links (status, twitter, support) ----
+    const statusLink = document.getElementById('statusLink');
+    const twitterLink = document.getElementById('twitterLink');
+    const supportLink = document.getElementById('supportLink');
+    
+    function mockLinkHandler(name) {
+      showToastMessage(`🚧 ${name} page will be available again after maintenance. Stay tuned!`);
+    }
+    
+    if (statusLink) {
+      statusLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        mockLinkHandler('Status dashboard');
+      });
+    }
+    if (twitterLink) {
+      twitterLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        mockLinkHandler('X / Twitter');
+      });
+    }
+    if (supportLink) {
+      supportLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        mockLinkHandler('Support center');
+      });
+    }
+    
+    // ---- optional dynamic eta based on time of day ----
+    function setGreetingSuffix() {
+      const hours = new Date().getHours();
+      let greeting = '';
+      if (hours < 12) greeting = 'Morning';
+      else if (hours < 18) greeting = 'Afternoon';
+      else greeting = 'Evening';
+      // small effect: update extra message if needed, but just for charm
+      const etaElem = document.getElementById('etaMessage');
+      if (etaElem && !etaElem.innerText.includes('Almost ready')) {
+        // keep the main eta, no override needed, but we can adjust a subtle note
+      }
+    }
+    setGreetingSuffix();
+    
+    // prefill any existing message welcome
+    const existingTip = document.querySelector('.live-tip-extra');
+    if (!existingTip && progressSection) {
+      // second fallback (already created above, but ensure)
+    }
+    
+    // animate the icon stack on hover (gentle)
+    const icons = document.querySelectorAll('.icon-stack span');
+    if (icons.length) {
+      const container = document.querySelector('.icon-stack');
+      if (container) {
+        container.addEventListener('mouseenter', () => {
+          icons.forEach((icon, idx) => {
+            icon.style.animation = 'float 0.6s ease-in-out infinite';
+          });
+        });
+        container.addEventListener('mouseleave', () => {
+          icons.forEach((icon) => {
+            icon.style.animation = 'float 3s ease-in-out infinite';
+          });
+        });
+      }
+    }
+    
+    // initial progress UI sync
+    updateProgressUI(currentPercent);
+    
+    // optional: display current pending tasks shimmer effect from localStorage persisted demo
+    console.log('Under maintenance page ready — all interactive mocks are active.');
+    
+    // minor extra: if someone clicks on task chips for fun, show toast
+    const chips = document.querySelectorAll('.task-chip');
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        showToastMessage(`🔧 ${chip.innerText} — in progress, almost ready!`, false);
+      });
+    });
+    
+  })();
+</script>
+</body>
+</html>
